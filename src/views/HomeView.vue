@@ -1,11 +1,21 @@
 <template>
-  <section>
-    <h1>Welcome to Cuts Project</h1>
-    <p>Great hair, great day - Cuts Project style!.</p>
-    <p>where every cut tells</p>
-  </section>
+  <div class="bg-black text-white font-sans">
+    <!-- <Header /> -->
+    <HeroSection />
+    <!-- <IntroSection />
+    <FeatureSection />
+    <GallerySection />
+    <ServiceSection />
+    <Footer /> -->
+  </div>
 </template>
 
 <script setup>
-// Content
+// import Header from '@/components/HeaDer.vue'
+import HeroSection from '@/components/HeroSection.vue'
+// import IntroSection from '@/components/IntroSection.vue'
+// import FeatureSection from '@/components/FeatureSection.vue'
+// import GallerySection from '@/components/GallerySection.vue'
+// import ServiceSection from '@/components/ServiceSection.vue'
+// import Footer from '@/components/FooTer.vue'
 </script>
