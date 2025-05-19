@@ -1,5 +1,5 @@
 <script setup>
-import Header from './components/HeaDer.vue'
+import Header from './components/NavBar.vue'
 import Footer from './components/FooTer.vue'
 </script>
 
@@ -9,7 +9,7 @@ import Footer from './components/FooTer.vue'
     <!-- Header -->
     <Header />
 
-    <main class="flex-grow p-4">
+    <main>
       <RouterView />
     </main>
 
