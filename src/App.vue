@@ -1,17 +1,20 @@
 <script setup>
 import Header from './components/HeaDer.vue'
+import Footer from './components/FooTer.vue'
 </script>
 
 <!-- src/App.vue -->
 <template>
-  <div id="app">
+  <div id="app" class="flex flex-col min-h-screen">
+    <!-- Header -->
     <Header />
-    <main class="flex-grow">
+
+    <main class="flex-grow p-4">
       <RouterView />
     </main>
-    <!-- <main class="p-4">
-      <router-view />
-    </main> -->
+
+    <!-- Footer -->
+    <Footer />
   </div>
 </template>
 

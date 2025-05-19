@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// Import komponen halaman
 import Home from '@/views/HomeView.vue'
 import Gallery from '@/views/GalleryView.vue'
 import About from '@/views/AboutView.vue'

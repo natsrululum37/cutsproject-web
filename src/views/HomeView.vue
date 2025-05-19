@@ -1,7 +1,8 @@
 <template>
   <section>
-    <h1>Welcome to Home</h1>
-    <p>This is the home page of our demo app.</p>
+    <h1>Welcome to Cuts Project</h1>
+    <p>Great hair, great day - Cuts Project style!.</p>
+    <p>where every cut tells</p>
   </section>
 </template>
 
