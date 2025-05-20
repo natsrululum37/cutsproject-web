@@ -11,11 +11,19 @@
       <form class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-yellow-400 p-8 rounded-lg shadow-lg">
         <div class="col-span-1">
           <label class="block mb-1">Nama Lengkap</label>
-          <input type="text" placeholder="Masukkan nama Anda" class="w-full p-3 rounded bg-black text-white focus:outline-none" />
+          <input
+            type="text"
+            placeholder="Masukkan nama Anda"
+            class="w-full p-3 rounded bg-black text-white focus:outline-none"
+          />
         </div>
         <div class="col-span-1">
           <label class="block mb-1">Nomor Telepon</label>
-          <input type="tel" placeholder="+62..." class="w-full p-3 rounded bg-black text-white focus:outline-none" />
+          <input
+            type="tel"
+            placeholder="+62..."
+            class="w-full p-3 rounded bg-black text-white focus:outline-none"
+          />
         </div>
         <div class="col-span-1">
           <label class="block mb-1">Tanggal</label>
@@ -37,10 +45,17 @@
         </div>
         <div class="col-span-2">
           <label class="block mb-1">Catatan Tambahan</label>
-          <textarea rows="3" placeholder="Tuliskan permintaan khusus jika ada..." class="w-full p-3 rounded bg-black text-white focus:outline-none"></textarea>
+          <textarea
+            rows="3"
+            placeholder="Tuliskan permintaan khusus jika ada..."
+            class="w-full p-3 rounded bg-black text-white focus:outline-none"
+          ></textarea>
         </div>
         <div class="col-span-2 text-center">
-          <button type="submit" class="bg-black text-white px-8 py-3 rounded font-semibold hover:bg-yellow-500 transition">
+          <button
+            type="submit"
+            class="bg-black text-white px-8 py-3 rounded font-semibold hover:bg-yellow-500 transition"
+          >
             Kirim Reservasi
           </button>
         </div>
