@@ -15,7 +15,7 @@
             />
             <div class="absolute -inset-1 bg-yellow-400/30 rounded-full blur-sm group-hover:bg-yellow-400/40 logo-pulse transition-all duration-500 group-hover:blur-md"></div>
           </div>
-          <span class="text-yellow-400 text-2xl font-bold tracking-wide relative overflow-hidden">
+          <span class="text-white text-2xl font-bold tracking-wide relative overflow-hidden">
             CUTSPROJECT
             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-yellow-400/0 via-yellow-400 to-yellow-400/0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></span>
           </span>
@@ -27,12 +27,12 @@
             type="text"
             v-model="searchQuery"
             placeholder="Cari..."
-            class="w-full px-4 py-2.5 rounded-lg bg-gray-800/70 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-transparent placeholder-gray-400 transition-all duration-300"
+            class="w-full px-4 py-2.5 rounded-lg bg-black/80 text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-yellow-400/70 focus:border-transparent placeholder-gray-400 transition-all duration-300"
             @focus="isSearchFocused = true"
             @blur="isSearchFocused = false"
           />
           <span
-            class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 group-hover:text-yellow-400 transition-colors duration-300"
+            class="absolute inset-y-0 right-0 flex items-center pr-3 text-white group-hover:text-yellow-400 transition-colors duration-300"
             :class="{'text-yellow-400': isSearchFocused || searchQuery}"
           >
             <MagnifyingGlassIcon class="h-5 w-5" />

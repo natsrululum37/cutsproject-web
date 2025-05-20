@@ -6,6 +6,7 @@ import About from '@/views/AboutView.vue'
 import Contact from '@/views/ContactView.vue'
 import Reservation from '@/views/ReservationView.vue'
 import Service from '@/views/ServiceView.vue'
+import ReviewViews from '@/views/ReviewViews.vue'
 
 const routes = [
   { path: '/', component: Home },
@@ -13,6 +14,7 @@ const routes = [
   { path: '/gallery', component: Gallery },
   { path: '/about', component: About },
   { path: '/contact', component: Contact },
+  { path: '/review', component: ReviewViews },
   { path: '/reservation', component: Reservation },
 ]
 
