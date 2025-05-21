@@ -1,9 +1,5 @@
 <template>
-  <div
-    ref="sliderContainer"
-    class="w-full max-w-full mx-auto relative"
-    aria-label="Image Slider"
-  >
+  <div ref="sliderContainer" class="w-full max-w-full mx-auto relative" aria-label="Image Slider">
     <swiper
       :modules="swiperModules"
       :slides-per-view="1"
@@ -88,13 +84,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import {
-  Autoplay,
-  Pagination,
-  Navigation,
-  EffectFade,
-  A11y,
-} from 'swiper/modules'
+import { Autoplay, Pagination, Navigation, EffectFade, A11y } from 'swiper/modules'
 
 import 'swiper/css'
 import 'swiper/css/pagination'
@@ -188,17 +178,20 @@ const onSwiper = (swiper) => {
 // Pause autoplay when slider is not in viewport (for better performance)
 onMounted(() => {
   if ('IntersectionObserver' in window) {
-    observer.value = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        if (swiperInstance.value && !swiperInstance.value.autoplay.running) {
-          swiperInstance.value.autoplay.start()
+    observer.value = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          if (swiperInstance.value && !swiperInstance.value.autoplay.running) {
+            swiperInstance.value.autoplay.start()
+          }
+        } else {
+          if (swiperInstance.value && swiperInstance.value.autoplay.running) {
+            swiperInstance.value.autoplay.stop()
+          }
         }
-      } else {
-        if (swiperInstance.value && swiperInstance.value.autoplay.running) {
-          swiperInstance.value.autoplay.stop()
-        }
-      }
-    }, { threshold: 0.3 })
+      },
+      { threshold: 0.3 },
+    )
 
     if (sliderContainer.value) {
       observer.value.observe(sliderContainer.value)

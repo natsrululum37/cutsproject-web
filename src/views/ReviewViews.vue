@@ -19,11 +19,7 @@
       >
         <p class="text-gray-300 mb-4 italic">"{{ testimonial.text }}"</p>
         <div class="flex items-center gap-3">
-          <img
-            :src="testimonial.photo"
-            alt="Foto"
-            class="w-10 h-10 rounded-full object-cover"
-          />
+          <img :src="testimonial.photo" alt="Foto" class="w-10 h-10 rounded-full object-cover" />
           <div>
             <h4 class="font-semibold">{{ testimonial.name }}</h4>
             <p class="text-sm text-gray-400">{{ testimonial.role }}</p>

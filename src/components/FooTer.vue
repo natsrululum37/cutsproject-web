@@ -1,16 +1,18 @@
 <template>
   <footer class="overflow-hidden text-white" :style="gradientStyle">
-    <div class="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-8 px-6 py-16">
+    <div
+      class="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-8 px-6 py-16"
+    >
       <!-- Logo & Tagline -->
       <div class="space-y-4">
         <h2 class="text-3xl font-extrabold tracking-tight flex items-center gap-1">
           <span>CUT</span>
-            <img
-              src="@/assets/images/logo.webp"
-              alt="S"
-              class="w-10 h-10 inline-block -mx-0.5 align-middle"
-            />
-            <span>PROJECT</span>
+          <img
+            src="@/assets/images/logo.webp"
+            alt="S"
+            class="w-10 h-10 inline-block -mx-0.5 align-middle"
+          />
+          <span>PROJECT</span>
         </h2>
         <div class="text-sm text-gray-400">
           <p class="uppercase font-semibold">Tradisi Lelaki, Gaya Masa Kini</p>
@@ -29,7 +31,9 @@
 
       <!-- Kontak Sosial -->
       <div class="space-y-4">
-        <h3 class="text-lg font-semibold text-white border-b border-yellow-500 pb-2">Hubungi Kami</h3>
+        <h3 class="text-lg font-semibold text-white border-b border-yellow-500 pb-2">
+          Hubungi Kami
+        </h3>
         <ul class="space-y-3 text-sm text-gray-400">
           <li>
             <a
@@ -74,7 +78,9 @@
       </div>
 
       <!-- Copyright -->
-      <div class="col-span-full pt-10 text-center text-xs text-gray-500 border-t border-gray-700 mt-12">
+      <div
+        class="col-span-full pt-10 text-center text-xs text-gray-500 border-t border-gray-700 mt-12"
+      >
         <div class="flex flex-wrap justify-center items-center gap-2">
           <span>© {{ year }} Cutsproject.com</span>
           <span>·</span>

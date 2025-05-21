@@ -22,7 +22,8 @@
     <div class="py-20 px-4">
       <!-- About Section Component -->
       <AboutSection />
-
+      <TeamSection />
+      
       <!-- FAQ -->
       <div class="max-w-6xl mx-auto pt-12">
         <FaqSection />
@@ -34,6 +35,7 @@
 <script setup>
 import FaqSection from '@/components/FaqSection.vue'
 import AboutSection from '@/components/AboutSection.vue'
+import TeamSection from '@/components/TeamSection.vue'
 </script>
 
 <script>

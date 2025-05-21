@@ -6,7 +6,11 @@
       >
         <!-- Image -->
         <div class="w-full lg:w-1/2">
-          <img src="@/assets/images/tools.webp" alt="FAQ tailwind section" class="w-full rounded-xl object-cover" />
+          <img
+            src="@/assets/images/tools.webp"
+            alt="FAQ tailwind section"
+            class="w-full rounded-xl object-cover"
+          />
         </div>
 
         <!-- Accordion Section -->

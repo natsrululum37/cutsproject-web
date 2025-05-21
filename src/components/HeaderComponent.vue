@@ -15,10 +15,18 @@
 
         <!-- Mobile Actions -->
         <div class="md:hidden flex items-center space-x-4">
-          <button @click="toggleSearch" class="text-gray-300 hover:text-white p-2 rounded-full focus:outline-none" aria-label="Search">
+          <button
+            @click="toggleSearch"
+            class="text-gray-300 hover:text-white p-2 rounded-full focus:outline-none"
+            aria-label="Search"
+          >
             <MagnifyingGlassIcon class="h-5 w-5" />
           </button>
-          <button @click="toggleMenu" class="text-gray-300 hover:text-white p-2 rounded-full focus:outline-none" aria-label="Menu">
+          <button
+            @click="toggleMenu"
+            class="text-gray-300 hover:text-white p-2 rounded-full focus:outline-none"
+            aria-label="Menu"
+          >
             <Bars3Icon class="h-6 w-6" />
           </button>
         </div>
@@ -93,7 +101,10 @@
               @keyup.enter="performSearch"
               aria-label="Search services"
             />
-            <button @click="isSearchOpen = false" class="absolute right-2 top-2 text-gray-400 hover:text-white">
+            <button
+              @click="isSearchOpen = false"
+              class="absolute right-2 top-2 text-gray-400 hover:text-white"
+            >
               <XMarkIcon class="w-5 h-5" />
             </button>
           </div>
@@ -155,10 +166,7 @@
                   @click="isOpen = false"
                   class="flex items-center text-gray-300 hover:text-white transition"
                 >
-                  <component
-                    :is="navigation?.getMenuIcon?.(item.name)"
-                    class="w-5 h-5 mr-3"
-                  />
+                  <component :is="navigation?.getMenuIcon?.(item.name)" class="w-5 h-5 mr-3" />
                   {{ item.name }}
                 </RouterLink>
               </nav>
