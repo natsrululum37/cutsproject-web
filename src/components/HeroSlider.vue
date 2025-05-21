@@ -35,7 +35,9 @@
         <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/30"></div>
 
         <!-- Hero Content Overlay -->
-        <div class="absolute inset-0 flex flex-col items-start justify-center px-8 lg:px-16 text-white z-10">
+        <div
+          class="absolute inset-0 flex flex-col items-start justify-center px-8 lg:px-16 text-white z-10"
+        >
           <h1 class="text-3xl lg:text-5xl font-bold mb-4">{{ slide.title }}</h1>
           <p class="mb-6 max-w-lg">{{ slide.subtitle }}</p>
           <button
@@ -58,16 +60,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Autoplay, Pagination, Navigation, EffectFade, A11y } from 'swiper/modules';
+import { ref } from 'vue'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Autoplay, Pagination, Navigation, EffectFade, A11y } from 'swiper/modules'
 
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-import 'swiper/css/effect-fade';
-import 'swiper/css/a11y';
+import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/navigation'
+import 'swiper/css/effect-fade'
+import 'swiper/css/a11y'
 
 // Slide data
 const slides = [
@@ -98,30 +100,30 @@ const slides = [
     ctaText: 'View Gallery',
     ctaLink: '/gallery',
   },
-];
+]
 
 // Swiper configuration
-const swiperModules = [Autoplay, Pagination, Navigation, EffectFade, A11y];
+const swiperModules = [Autoplay, Pagination, Navigation, EffectFade, A11y]
 
 const autoplayConfig = {
   delay: 5000,
   disableOnInteraction: false,
   pauseOnMouseEnter: true,
-};
+}
 
 const paginationConfig = {
   clickable: true,
   el: '.swiper-pagination',
   dynamicBullets: true,
   renderBullet: (index, className) => {
-    return `<span class="${className}" role="button" aria-label="Go to slide ${index + 1}"></span>`;
+    return `<span class="${className}" role="button" aria-label="Go to slide ${index + 1}"></span>`
   },
-};
+}
 
 const navigationConfig = {
   prevEl: '.swiper-button-prev',
   nextEl: '.swiper-button-next',
-};
+}
 
 const a11yConfig = {
   prevSlideMessage: 'Previous slide',
@@ -129,18 +131,18 @@ const a11yConfig = {
   firstSlideMessage: 'This is the first slide',
   lastSlideMessage: 'This is the last slide',
   paginationBulletMessage: 'Go to slide {{index}}',
-};
+}
 
-const swiperInstance = ref(null);
+const swiperInstance = ref(null)
 
 const onSwiper = (swiper) => {
-  swiperInstance.value = swiper;
-};
+  swiperInstance.value = swiper
+}
 
 const navigateTo = (link) => {
   // Implement navigation logic here, e.g., using Vue Router
-  console.log(`Navigating to ${link}`);
-};
+  console.log(`Navigating to ${link}`)
+}
 </script>
 
 <style scoped>
@@ -179,7 +181,7 @@ const navigateTo = (link) => {
 
 :deep(.swiper-pagination-bullet-active) {
   opacity: 1;
-  background: #FFD700;
+  background: #ffd700;
   width: 12px;
   height: 12px;
 }

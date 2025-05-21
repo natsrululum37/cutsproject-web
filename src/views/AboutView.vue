@@ -1,7 +1,7 @@
 <template>
   <section class="bg-[#121212] text-white">
     <!-- Hero Fullscreen Image -->
-    <div class="relative w-full h-screen max-h-[500px] overflow-hidden">
+    <div class="relative w-full h-[500px] overflow-hidden">
       <img
         src="@/assets/images/CUTS.webp"
         alt="CutsProject Barbershop Hero Image"
@@ -44,9 +44,10 @@ export default {
     meta: [
       {
         name: 'description',
-        content: 'CutsProject Barber Shop, simbol keahlian dan gaya dalam dunia grooming sejak 2018. Layanan cukur dan perawatan rambut terbaik oleh tim barber profesional.'
-      }
-    ]
-  }
+        content:
+          'CutsProject Barber Shop, simbol keahlian dan gaya dalam dunia grooming sejak 2018. Layanan cukur dan perawatan rambut terbaik oleh tim barber profesional.',
+      },
+    ],
+  },
 }
 </script>

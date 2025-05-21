@@ -1,21 +1,21 @@
 <template>
   <section class="py-24">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col justify-center items-center gap-x-16 gap-y-5 xl:gap-28 lg:flex-row lg:justify-between max-lg:max-w-2xl mx-auto max-w-full">
+      <div
+        class="flex flex-col justify-center items-center gap-x-16 gap-y-5 xl:gap-28 lg:flex-row lg:justify-between max-lg:max-w-2xl mx-auto max-w-full"
+      >
         <!-- Image -->
         <div class="w-full lg:w-1/2">
-          <img
-            src=""
-            alt="FAQ tailwind section"
-            class="w-full rounded-xl object-cover"
-          />
+          <img src="@/assets/images/tools.webp" alt="FAQ tailwind section" class="w-full rounded-xl object-cover" />
         </div>
 
         <!-- Accordion Section -->
         <div class="w-full lg:w-1/2">
           <div class="lg:max-w-xl">
-            <div class="mb-6 lg:mb-16">
-              <h2 class="text-5xl text-justify font-bold text-white leading-[3.25rem] mb-5 lg:text-justify">
+            <div class="mb-1 lg:mb-1">
+              <h2
+                class="text-5xl text-justify font-bold text-white leading-[3.25rem] mb-1 lg:text-justify"
+              >
                 FAQ ABOUT CUTS PROJECT
               </h2>
             </div>
@@ -31,7 +31,10 @@
                 >
                   <h5 class="text-justify">{{ faq.title }}</h5>
                   <svg
-                    :class="['transition duration-500 group-hover:text-[#B8860B]', { 'rotate-180 text-[#B8860B]': openIndex === index }]"
+                    :class="[
+                      'transition duration-500 group-hover:text-[#B8860B]',
+                      { 'rotate-180 text-[#B8860B]': openIndex === index },
+                    ]"
                     width="22"
                     height="22"
                     viewBox="0 0 22 22"
@@ -47,17 +50,20 @@
                     />
                   </svg>
                 </button>
-                <div v-show="openIndex === index" class="accordion-content w-full px-0 overflow-hidden pr-4 transition-all duration-300 mt-4">
-                <p class="text-base font-normal text-gray-600 text-justify">
-                {{ faq.content }}
-                </p>
-                </div>
+                <div
+                  v-show="openIndex === index"
+                  class="accordion-content w-full px-0 overflow-hidden pr-4 transition-all duration-300 mt-4"
+                >
+                  <p class="text-base font-normal text-gray-600 text-justify">
+                    {{ faq.content }}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
   </section>
 </template>
 
@@ -71,26 +77,25 @@ const faqs = ref([
     content: `Tentu saja! Tim barber profesional kami akan dengan senang hati mendengarkan keinginan Anda dan
     menyesuaikan potongan rambut sesuai gaya yang Anda inginkan. Kami selalu memprioritaskan konsultasi terlebih
     dahulu untuk memastikan hasil akhir sesuai dengan ekspektasi Anda, sekaligus memberikan saran profesional berdasarkan
-    bentuk wajah dan tekstur rambut Anda.`
+    bentuk wajah dan tekstur rambut Anda.`,
   },
   {
     title: 'Haruskah saya reservasi terlebih dahulu atau bisa langsung datang?',
     content: `Kami sangat merekomendasikan untuk melakukan reservasi terlebih dahulu, terutama di akhir pekan atau
     hari libur, karena antrean bisa cukup panjang. Dengan reservasi, kami dapat memastikan Anda mendapatkan waktu
     yang tepat tanpa harus menunggu lama. Namun, jika Anda ingin langsung datang, kami akan berusaha melayani sebaik
-    mungkin sesuai dengan ketersediaan slot yang ada.`
+    mungkin sesuai dengan ketersediaan slot yang ada.`,
   },
   {
     title: 'Apakah CUTS PROJECT hanya melayani pria atau bisa untuk wanita juga?',
     content: `Saat ini, CUTS PROJECT adalah barbershop yang secara khusus didedikasikan untuk perawatan rambut dan
     grooming pria. Layanan kami dirancang untuk memenuhi kebutuhan gaya pria modern, mulai dari potongan klasik hingga
-    kontemporer. Namun, kami bisa memberikan rekomendasi tempat salon terdekat yang cocok untuk wanita jika diperlukan.`
+    kontemporer. Namun, kami bisa memberikan rekomendasi tempat salon terdekat yang cocok untuk wanita jika diperlukan.`,
   },
   {
-    title: 'Bagaimana proses pembayarannya?',
-    content: `Di CUTS PROJECT, kami menyediakan berbagai metode pembayaran yang aman dan fleksibel untuk kenyamanan Anda.
-    Anda bisa melakukan pembayaran secara tunai (cash), melalui QRIS, atau menggunakan kartu debit/kredit.`
-  }
+    title: 'What is the payment process?',
+    content: `Our payment process is secure and straightforward. Choose your plan, enter your billing details, and confirm. You'll receive a confirmation email and an invoice immediately.`,
+  },
 ])
 
 // Track which accordion is open

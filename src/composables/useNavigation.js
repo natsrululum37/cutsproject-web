@@ -54,6 +54,6 @@ export function useNavigation(route, headerState) {
     menu,
     isActiveRoute,
     getMenuIcon,
-    toggleMenu
+    toggleMenu,
   })
 }
