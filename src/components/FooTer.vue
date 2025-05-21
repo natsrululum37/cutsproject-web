@@ -4,7 +4,13 @@
       <!-- Logo & Tagline -->
       <div class="space-y-4">
         <h2 class="text-3xl font-extrabold tracking-tight flex items-center gap-1">
-          CUTS<span class="text-yellow-400">⚡</span>PROJECT
+          <span>CUT</span>
+            <img
+              src="@/assets/images/logo.webp"
+              alt="S"
+              class="w-10 h-10 inline-block -mx-0.5 align-middle"
+            />
+            <span>PROJECT</span>
         </h2>
         <div class="text-sm text-gray-400">
           <p class="uppercase font-semibold">Tradisi Lelaki, Gaya Masa Kini</p>

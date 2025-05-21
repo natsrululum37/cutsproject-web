@@ -1,63 +1,59 @@
 <template>
   <header
     class="sticky top-0 left-0 w-full z-50 transition-all duration-300"
-    :class="{ 'bg-black/90 backdrop-blur-sm shadow-lg': isScrolled }"
+    :class="{ 'bg-black/90 backdrop-blur-md shadow-md': isScrolled }"
     aria-label="Main navigation"
   >
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
-        <div class="flex-shrink-0">
-          <RouterLink
-            to="/"
-            class="text-white text-xl font-bold"
-            aria-label="CUTSPROJECT home page"
-          >
-            <span>CUT</span>
-            <img
-              src="@/assets/images/logo.webp"
-              alt="S"
-              class="w-7 h-7 inline-block -mx-0.5 align-middle"
-            />
-            <span>PROJECT</span>
-          </RouterLink>
+        <RouterLink to="/" class="flex items-center space-x-2 text-white text-xl font-bold">
+          <span>CUT</span>
+          <img src="@/assets/images/logo.webp" alt="S" class="w-7 h-7" />
+          <span>PROJECT</span>
+        </RouterLink>
+
+        <!-- Mobile Actions -->
+        <div class="md:hidden flex items-center space-x-4">
+          <button @click="toggleSearch" class="text-gray-300 hover:text-white p-2 rounded-full focus:outline-none" aria-label="Search">
+            <MagnifyingGlassIcon class="h-5 w-5" />
+          </button>
+          <button @click="toggleMenu" class="text-gray-300 hover:text-white p-2 rounded-full focus:outline-none" aria-label="Menu">
+            <Bars3Icon class="h-6 w-6" />
+          </button>
         </div>
 
-        <!-- Search Bar (Desktop) -->
-        <div class="hidden md:flex items-center relative mx-6 flex-1 max-w-xs">
-          <div class="relative w-full">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <MagnifyingGlassIcon class="w-4 h-4 text-gray-400" aria-hidden="true" />
-            </div>
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex space-x-6 items-center">
+          <div class="relative w-64">
             <input
               type="search"
               v-model="searchQuery"
-              class="w-full py-2 pl-10 pr-4 text-sm text-white bg-zinc-800/70 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-400"
+              class="w-full bg-zinc-800/70 text-white text-sm rounded-md py-2 pl-10 pr-4 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-yellow-400"
               placeholder="Cari layanan..."
-              aria-label="Search services"
               @focus="isSearchFocused = true"
               @blur="isSearchFocused = false"
               @keyup.enter="performSearch"
+              aria-label="Search services"
             />
-          </div>
-          <Transition
-            enter-active-class="transition duration-200 ease-out"
-            enter-from-class="transform scale-95 opacity-0"
-            enter-to-class="transform scale-100 opacity-100"
-            leave-active-class="transition duration-100 ease-in"
-            leave-from-class="transform scale-100 opacity-100"
-            leave-to-class="transform scale-95 opacity-0"
-          >
-            <div
-              v-if="isSearchFocused && searchQuery.length > 0"
-              class="absolute top-full left-0 w-full mt-1 bg-zinc-800 rounded-md shadow-lg z-10"
+            <MagnifyingGlassIcon class="absolute top-2.5 left-3 w-4 h-4 text-gray-400" />
+            <Transition
+              enter-active-class="transition duration-200 ease-out"
+              enter-from-class="opacity-0 scale-95"
+              enter-to-class="opacity-100 scale-100"
+              leave-active-class="transition duration-150 ease-in"
+              leave-from-class="opacity-100 scale-100"
+              leave-to-class="opacity-0 scale-95"
             >
-              <ul class="py-1 text-sm">
+              <ul
+                v-if="isSearchFocused && searchQuery.length > 0"
+                class="absolute top-full mt-2 left-0 w-full bg-zinc-800 rounded-md shadow-lg z-50"
+              >
                 <li
                   v-for="result in searchResults"
                   :key="result.id"
-                  class="px-4 py-2 hover:bg-zinc-700 cursor-pointer"
                   @click="selectSearchResult(result)"
+                  class="px-4 py-2 text-white hover:bg-zinc-700 cursor-pointer"
                 >
                   {{ result.name }}
                 </li>
@@ -65,162 +61,109 @@
                   Tidak ada hasil
                 </li>
               </ul>
-            </div>
-          </Transition>
-        </div>
-
-        <!-- Desktop Menu -->
-        <div class="hidden md:flex space-x-4">
+            </Transition>
+          </div>
           <RouterLink
             v-for="item in navigation?.menu || []"
             :key="item.name"
             :to="item.link"
-            class="relative text-gray-200 hover:text-white px-2 py-1.5 transition duration-300 group"
+            class="relative text-gray-300 hover:text-white font-medium"
             :class="{ 'text-yellow-400': navigation?.isActiveRoute?.(item.link) }"
           >
             {{ item.name }}
             <span
-              class="absolute left-0 bottom-0 w-full h-0.5 bg-yellow-400 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
+              class="absolute bottom-0 left-0 h-0.5 bg-yellow-400 w-full scale-x-0 group-hover:scale-x-100 origin-left transition-transform"
               :class="{ 'scale-x-100': navigation?.isActiveRoute?.(item.link) }"
             ></span>
           </RouterLink>
         </div>
-
-        <!-- Mobile Actions -->
-        <div class="md:hidden flex items-center space-x-3">
-          <!-- Search Button -->
-          <button
-            @click="toggleSearch"
-            class="text-gray-200 hover:text-white focus:outline-none focus:text-white"
-            aria-label="Search"
-          >
-            <MagnifyingGlassIcon class="h-5 w-5" />
-          </button>
-
-          <!-- Hamburger Menu -->
-          <button
-            @click="toggleMenu"
-            class="text-gray-200 hover:text-white focus:outline-none focus:text-white"
-            aria-label="Open main menu"
-            :aria-expanded="isOpen"
-          >
-            <Bars3Icon class="h-6 w-6" />
-          </button>
-        </div>
       </div>
 
       <!-- Mobile Search Bar -->
-      <Transition
-        enter-active-class="transition duration-200 ease-out"
-        enter-from-class="transform -translate-y-full opacity-0"
-        enter-to-class="transform translate-y-0 opacity-100"
-        leave-active-class="transition duration-200 ease-in"
-        leave-from-class="transform translate-y-0 opacity-100"
-        leave-to-class="transform -translate-y-full opacity-0"
-      >
-        <div v-if="isSearchOpen" class="md:hidden py-2">
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <MagnifyingGlassIcon class="w-4 h-4 text-gray-400" aria-hidden="true" />
-            </div>
+      <Transition name="slide-fade">
+        <div v-if="isSearchOpen" class="md:hidden mt-2 relative z-40">
+          <div class="relative mx-1">
+            <MagnifyingGlassIcon class="absolute top-2.5 left-3 w-4 h-4 text-gray-400" />
             <input
-              type="search"
               v-model="searchQuery"
-              class="w-full py-2 pl-10 pr-10 text-sm text-white bg-zinc-800/70 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-400"
-              placeholder="Cari layanan..."
-              aria-label="Search services"
-              @keyup.enter="performSearch"
               ref="mobileSearchInput"
+              type="search"
+              class="w-full py-2 pl-10 pr-10 bg-zinc-800/80 text-white text-sm rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-400"
+              placeholder="Cari layanan..."
+              @keyup.enter="performSearch"
+              aria-label="Search services"
             />
-            <button
-              @click="isSearchOpen = false"
-              class="absolute inset-y-0 right-0 flex items-center pr-3"
-              aria-label="Close search"
-            >
-              <XMarkIcon class="w-5 h-5 text-gray-400" />
+            <button @click="isSearchOpen = false" class="absolute right-2 top-2 text-gray-400 hover:text-white">
+              <XMarkIcon class="w-5 h-5" />
             </button>
           </div>
-          <div
+          <ul
             v-if="searchQuery.length > 0"
-            class="absolute left-0 right-0 bg-zinc-800 rounded-b-md shadow-lg z-10 mx-4"
+            class="absolute mx-1 mt-2 bg-zinc-800 rounded-md shadow-md w-full z-30"
           >
-            <ul class="py-1 text-sm">
-              <li
-                v-for="result in searchResults"
-                :key="result.id"
-                class="px-4 py-2 hover:bg-zinc-700 cursor-pointer"
-                @click="selectSearchResult(result)"
-              >
-                {{ result.name }}
-              </li>
-              <li v-if="searchResults.length === 0" class="px-4 py-2 text-gray-400">
-                Tidak ada hasil
-              </li>
-            </ul>
-          </div>
+            <li
+              v-for="result in searchResults"
+              :key="result.id"
+              class="px-4 py-2 text-white hover:bg-zinc-700 cursor-pointer"
+              @click="selectSearchResult(result)"
+            >
+              {{ result.name }}
+            </li>
+            <li v-if="searchResults.length === 0" class="px-4 py-2 text-gray-400">
+              Tidak ada hasil
+            </li>
+          </ul>
         </div>
       </Transition>
     </nav>
 
-    <!-- Mobile Menu -->
+    <!-- Mobile Menu Drawer -->
     <TransitionRoot :show="isOpen" as="template">
-      <Dialog as="div" class="md:hidden relative z-50" @close="isOpen = false">
+      <Dialog as="div" class="relative z-50 md:hidden" @close="isOpen = false">
         <TransitionChild
-          as="template"
-          enter="transition ease-out duration-300"
+          enter="transition-opacity ease-linear duration-300"
           enter-from="opacity-0"
           enter-to="opacity-100"
-          leave="transition ease-in duration-200"
+          leave="transition-opacity ease-linear duration-200"
           leave-from="opacity-100"
           leave-to="opacity-0"
         >
-          <div class="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm" />
+          <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" />
         </TransitionChild>
 
-        <div class="fixed inset-0 z-50 overflow-y-auto">
-          <div class="relative flex min-h-full items-start justify-end p-4 text-center sm:p-0">
-            <TransitionChild
-              as="template"
-              enter="transition ease-in-out duration-300 transform"
-              enter-from="translate-x-full"
-              enter-to="translate-x-0"
-              leave="transition ease-in-out duration-300 transform"
-              leave-from="translate-x-0"
-              leave-to="translate-x-full"
-            >
-              <DialogPanel
-                class="relative w-full max-w-xs transform overflow-hidden bg-zinc-900 p-6 text-left shadow-xl transition-all"
-              >
-                <div class="flex items-center justify-between">
-                  <h2 class="text-white font-bold text-lg">Menu</h2>
-                  <button
-                    @click="isOpen = false"
-                    class="text-gray-400 hover:text-white"
-                    aria-label="Close menu"
-                  >
-                    <XMarkIcon class="h-6 w-6" />
-                  </button>
-                </div>
-
-                <div class="mt-6 space-y-4">
-                  <RouterLink
-                    v-for="item in navigation?.menu || []"
-                    :key="item.name"
-                    :to="item.link"
-                    class="flex items-center text-gray-300 hover:text-white transition duration-300"
-                    @click="isOpen = false"
-                  >
-                    <component
-                      :is="navigation?.getMenuIcon?.(item.name)"
-                      class="w-5 h-5 mr-3"
-                      aria-hidden="true"
-                    />
-                    {{ item.name }}
-                  </RouterLink>
-                </div>
-              </DialogPanel>
-            </TransitionChild>
-          </div>
+        <div class="fixed inset-0 flex justify-end">
+          <TransitionChild
+            enter="transition ease-in-out duration-300 transform"
+            enter-from="translate-x-full"
+            enter-to="translate-x-0"
+            leave="transition ease-in-out duration-300 transform"
+            leave-from="translate-x-0"
+            leave-to="translate-x-full"
+          >
+            <DialogPanel class="w-72 bg-zinc-900 p-6 overflow-y-auto shadow-xl">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-white text-lg font-semibold">Menu</h2>
+                <button @click="isOpen = false" class="text-gray-400 hover:text-white">
+                  <XMarkIcon class="w-6 h-6" />
+                </button>
+              </div>
+              <nav class="space-y-4">
+                <RouterLink
+                  v-for="item in navigation?.menu || []"
+                  :key="item.name"
+                  :to="item.link"
+                  @click="isOpen = false"
+                  class="flex items-center text-gray-300 hover:text-white transition"
+                >
+                  <component
+                    :is="navigation?.getMenuIcon?.(item.name)"
+                    class="w-5 h-5 mr-3"
+                  />
+                  {{ item.name }}
+                </RouterLink>
+              </nav>
+            </DialogPanel>
+          </TransitionChild>
         </div>
       </Dialog>
     </TransitionRoot>
@@ -236,13 +179,9 @@ import { Bars3Icon, XMarkIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/out
 import { useHeaderState } from '@/composables/useHeaderState'
 import { useNavigation } from '@/composables/useNavigation'
 
-// Menu state
 const isOpen = ref(false)
-const toggleMenu = () => {
-  isOpen.value = !isOpen.value
-}
+const toggleMenu = () => (isOpen.value = !isOpen.value)
 
-// Search state
 const isSearchOpen = ref(false)
 const isSearchFocused = ref(false)
 const searchQuery = ref('')
@@ -250,31 +189,23 @@ const mobileSearchInput = ref(null)
 
 const toggleSearch = () => {
   isSearchOpen.value = !isSearchOpen.value
-  if (isSearchOpen.value) {
-    nextTick(() => {
-      mobileSearchInput.value?.focus()
-    })
-  }
+  if (isSearchOpen.value) nextTick(() => mobileSearchInput.value?.focus())
 }
 
-// Navigation setup
 const route = useRoute()
 const router = useRouter()
 const headerState = useHeaderState()
-
 const navigation = useNavigation(route, headerState) || {
   menu: [],
   isActiveRoute: () => false,
   getMenuIcon: () => 'span',
 }
 
-// Scroll handling
 const isScrolled = ref(false)
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 10
 }
 
-// Mock search data - replace with actual data in production
 const searchData = [
   { id: 1, name: 'Potong Rambut Pria', path: '/layanan/potong-rambut-pria' },
   { id: 2, name: 'Styling Rambut', path: '/layanan/styling-rambut' },
@@ -283,11 +214,11 @@ const searchData = [
   { id: 5, name: 'Kids Haircut', path: '/layanan/kids-haircut' },
 ]
 
-// Search functionality
 const searchResults = computed(() => {
-  if (!searchQuery.value) return []
   const query = searchQuery.value.toLowerCase()
-  return searchData.filter((item) => item.name.toLowerCase().includes(query)).slice(0, 5) // Limit to 5 results
+  return searchQuery.value
+    ? searchData.filter((item) => item.name.toLowerCase().includes(query)).slice(0, 5)
+    : []
 })
 
 const performSearch = () => {
@@ -303,34 +234,19 @@ const selectSearchResult = (result) => {
   isSearchFocused.value = false
 }
 
-// Lifecycle hooks
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll, { passive: true })
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
+onMounted(() => window.addEventListener('scroll', handleScroll, { passive: true }))
+onBeforeUnmount(() => window.removeEventListener('scroll', handleScroll))
 </script>
 
 <style scoped>
-/* Add preconnect for external resources */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-/* Optimize CSS with minimal specificity */
-input[type='search']::-webkit-search-decoration,
-input[type='search']::-webkit-search-cancel-button,
-input[type='search']::-webkit-search-results-button,
-input[type='search']::-webkit-search-results-decoration {
-  display: none;
+/* Optional slide transition */
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
 }
-
-/* Ensure proper text color contrast for accessibility */
-.text-gray-200 {
-  color: #e4e4e7;
-}
-
-.text-gray-400 {
-  color: #a1a1aa;
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>
