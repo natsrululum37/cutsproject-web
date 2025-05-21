@@ -6,6 +6,6 @@
 </template>
 
 <script setup>
-import ImageSlider from '@/components/ImageSlider.vue';
+import ImageSlider from '@/components/HeroSlider.vue';
 import CallToAction from '@/components/CallToAction.vue';
 </script>
