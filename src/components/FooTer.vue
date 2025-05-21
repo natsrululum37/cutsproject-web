@@ -76,7 +76,7 @@ library.add(faInstagram, faWhatsapp, faTiktok)
 const year = new Date().getFullYear()
 
 const gradientStyle = computed(() => ({
-  background: 'linear-gradient(180deg, #000 45%, #F6BF0D 100%)'
+  background: 'linear-gradient(180deg, #000 45%, #F6BF0D 100%)',
 }))
 </script>
 

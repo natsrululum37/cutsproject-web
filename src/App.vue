@@ -1,5 +1,5 @@
 <script setup>
-import Header from './components/NavBar.vue'
+import Header from './components/HeaderComponent.vue.vue'
 import Footer from './components/FooTer.vue'
 </script>
 
