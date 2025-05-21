@@ -44,9 +44,10 @@ export default {
     meta: [
       {
         name: 'description',
-        content: 'CutsProject Barber Shop, simbol keahlian dan gaya dalam dunia grooming sejak 2018. Layanan cukur dan perawatan rambut terbaik oleh tim barber profesional.'
-      }
-    ]
-  }
+        content:
+          'CutsProject Barber Shop, simbol keahlian dan gaya dalam dunia grooming sejak 2018. Layanan cukur dan perawatan rambut terbaik oleh tim barber profesional.',
+      },
+    ],
+  },
 }
 </script>

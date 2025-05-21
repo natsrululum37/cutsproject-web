@@ -8,8 +8,18 @@
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
         <div class="flex-shrink-0">
-          <RouterLink to="/" class="text-white text-xl font-bold" aria-label="CUTSPROJECT home page">
-            CUTSPROJECT
+          <RouterLink
+            to="/"
+            class="text-white text-xl font-bold"
+            aria-label="CUTSPROJECT home page"
+          >
+            <span>CUT</span>
+            <img
+              src="@/assets/images/logo.webp"
+              alt="S"
+              class="w-7 h-7 inline-block -mx-0.5 align-middle"
+            />
+            <span>PROJECT</span>
           </RouterLink>
         </div>
 
@@ -168,9 +178,7 @@
         </TransitionChild>
 
         <div class="fixed inset-0 z-50 overflow-y-auto">
-          <div
-            class="relative flex min-h-full items-start justify-end p-4 text-center sm:p-0"
-          >
+          <div class="relative flex min-h-full items-start justify-end p-4 text-center sm:p-0">
             <TransitionChild
               as="template"
               enter="transition ease-in-out duration-300 transform"
@@ -272,16 +280,14 @@ const searchData = [
   { id: 2, name: 'Styling Rambut', path: '/layanan/styling-rambut' },
   { id: 3, name: 'Perawatan Jenggot', path: '/layanan/perawatan-jenggot' },
   { id: 4, name: 'Hair Coloring', path: '/layanan/hair-coloring' },
-  { id: 5, name: 'Kids Haircut', path: '/layanan/kids-haircut' }
+  { id: 5, name: 'Kids Haircut', path: '/layanan/kids-haircut' },
 ]
 
 // Search functionality
 const searchResults = computed(() => {
   if (!searchQuery.value) return []
   const query = searchQuery.value.toLowerCase()
-  return searchData.filter(item =>
-    item.name.toLowerCase().includes(query)
-  ).slice(0, 5) // Limit to 5 results
+  return searchData.filter((item) => item.name.toLowerCase().includes(query)).slice(0, 5) // Limit to 5 results
 })
 
 const performSearch = () => {
@@ -312,10 +318,10 @@ onBeforeUnmount(() => {
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 /* Optimize CSS with minimal specificity */
-input[type="search"]::-webkit-search-decoration,
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-results-button,
-input[type="search"]::-webkit-search-results-decoration {
+input[type='search']::-webkit-search-decoration,
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-results-button,
+input[type='search']::-webkit-search-results-decoration {
   display: none;
 }
 

@@ -14,6 +14,6 @@ export function useHeaderState() {
   return reactive({
     isOpen,
     scrolled,
-    handleScroll
+    handleScroll,
   })
 }
