@@ -8,7 +8,7 @@ export function useHeaderState() {
 
   // Handle scroll tracking
   const handleScroll = () => {
-    scrolled.value = window.scrollY > 50
+    scrolled.value = window.scrollY > 0
   }
 
   return reactive({
