@@ -23,7 +23,7 @@
               <div
                 v-for="(faq, index) in faqs"
                 :key="index"
-                class="accordion py-8 border-b border-solid border-gray-200"
+                class="accordion py-8 border-b border-solid border-[#B8860B]"
               >
                 <button
                   @click="toggle(index)"
@@ -87,8 +87,9 @@ const faqs = ref([
     kontemporer. Namun, kami bisa memberikan rekomendasi tempat salon terdekat yang cocok untuk wanita jika diperlukan.`
   },
   {
-    title: 'What is the payment process?',
-    content: `Our payment process is secure and straightforward. Choose your plan, enter your billing details, and confirm. You'll receive a confirmation email and an invoice immediately.`
+    title: 'Bagaimana proses pembayarannya?',
+    content: `Di CUTS PROJECT, kami menyediakan berbagai metode pembayaran yang aman dan fleksibel untuk kenyamanan Anda.
+    Anda bisa melakukan pembayaran secara tunai (cash), melalui QRIS, atau menggunakan kartu debit/kredit.`
   }
 ])
 
