@@ -23,7 +23,7 @@
       <!-- About Section Component -->
       <AboutSection />
       <TeamSection />
-      
+
       <!-- FAQ -->
       <div class="max-w-6xl mx-auto pt-12">
         <FaqSection />
