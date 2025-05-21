@@ -31,17 +31,35 @@
       <div class="space-y-4">
         <h3 class="text-lg font-semibold text-white border-b border-yellow-500 pb-2">Hubungi Kami</h3>
         <ul class="space-y-3 text-sm text-gray-400">
-          <li class="flex items-center gap-3 hover:text-yellow-400 transition">
-            <font-awesome-icon :icon="['fab', 'instagram']" class="w-5 h-5" />
-            <span>@cutsproject</span>
+          <li>
+            <a
+              href="https://instagram.com/cutsproject"
+              target="_blank"
+              class="flex items-center gap-3 hover:text-yellow-400 transition"
+            >
+              <font-awesome-icon :icon="['fab', 'instagram']" class="w-5 h-5" />
+              <span>@cutsproject</span>
+            </a>
           </li>
-          <li class="flex items-center gap-3 hover:text-yellow-400 transition">
-            <font-awesome-icon :icon="['fab', 'whatsapp']" class="w-5 h-5" />
-            <span>081567825713</span>
+          <li>
+            <a
+              href="https://wa.me/6281390830955"
+              target="_blank"
+              class="flex items-center gap-3 hover:text-yellow-400 transition"
+            >
+              <font-awesome-icon :icon="['fab', 'whatsapp']" class="w-5 h-5" />
+              <span>0813-9083-0955</span>
+            </a>
           </li>
-          <li class="flex items-center gap-3 hover:text-yellow-400 transition">
-            <font-awesome-icon :icon="['fab', 'tiktok']" class="w-5 h-5" />
-            <span>cutsprojectofficial</span>
+          <li>
+            <a
+              href="https://www.tiktok.com/@cutsproject"
+              target="_blank"
+              class="flex items-center gap-3 hover:text-yellow-400 transition"
+            >
+              <font-awesome-icon :icon="['fab', 'tiktok']" class="w-5 h-5" />
+              <span>cutsprojectofficial</span>
+            </a>
           </li>
         </ul>
       </div>
@@ -80,7 +98,7 @@ library.add(faInstagram, faWhatsapp, faTiktok)
 const year = new Date().getFullYear()
 
 const gradientStyle = computed(() => ({
-  background: 'linear-gradient(180deg, #000000 20%, #1f2937 100%)', // black to dark gray
+  background: 'linear-gradient(180deg, #000000 20%, #1f2937 100%)',
 }))
 </script>
 
