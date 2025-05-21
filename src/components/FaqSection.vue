@@ -6,15 +6,15 @@
       >
         <!-- Image -->
         <div class="w-full lg:w-1/2">
-          <img src="" alt="FAQ tailwind section" class="w-full rounded-xl object-cover" />
+          <img src="@/assets/images/tools.webp" alt="FAQ tailwind section" class="w-full rounded-xl object-cover" />
         </div>
 
         <!-- Accordion Section -->
         <div class="w-full lg:w-1/2">
           <div class="lg:max-w-xl">
-            <div class="mb-6 lg:mb-16">
+            <div class="mb-1 lg:mb-1">
               <h2
-                class="text-5xl text-justify font-bold text-white leading-[3.25rem] mb-5 lg:text-justify"
+                class="text-5xl text-justify font-bold text-white leading-[3.25rem] mb-1 lg:text-justify"
               >
                 FAQ ABOUT CUTS PROJECT
               </h2>
@@ -23,7 +23,7 @@
               <div
                 v-for="(faq, index) in faqs"
                 :key="index"
-                class="accordion py-8 border-b border-solid border-gray-200"
+                class="accordion py-8 border-b border-solid border-[#B8860B]"
               >
                 <button
                   @click="toggle(index)"

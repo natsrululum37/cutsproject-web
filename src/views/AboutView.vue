@@ -1,7 +1,7 @@
 <template>
   <section class="bg-[#121212] text-white">
     <!-- Hero Fullscreen Image -->
-    <div class="relative w-full h-screen max-h-[500px] overflow-hidden">
+    <div class="relative w-full h-[500px] overflow-hidden">
       <img
         src="@/assets/images/CUTS.webp"
         alt="CutsProject Barbershop Hero Image"
