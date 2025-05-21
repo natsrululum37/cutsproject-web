@@ -1,5 +1,5 @@
 <template>
-  <div ref="sliderContainer" class="w-full max-w-full mx-auto py-8 relative">
+  <div ref="sliderContainer" class="w-full max-w-full mx-auto relative" aria-label="Image Slider">
     <!-- Main Slider Container -->
     <div class="relative rounded-lg overflow-hidden shadow-xl">
       <div class="relative">
@@ -9,7 +9,7 @@
           class="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-300"
           aria-label="Previous slide"
         >
-          <ChevronLeftIcon class="h-6 w-6 text-white" />
+          <ChevronLeftIcon class="h-6 w-6 text-white" aria-hidden="true" />
         </button>
 
         <button
@@ -17,53 +17,44 @@
           class="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-300"
           aria-label="Next slide"
         >
-          <ChevronRightIcon class="h-6 w-6 text-white" />
+          <ChevronRightIcon class="h-6 w-6 text-white" aria-hidden="true" />
         </button>
       </div>
 
       <!-- Swiper Component -->
       <swiper
-        :modules="[Autoplay, Pagination, Navigation, EffectFade, A11y]"
+        :modules="swiperModules"
         :slides-per-view="1"
         :loop="true"
         :effect="'fade'"
         :speed="800"
-        :autoplay="{
-          delay: 5000,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true
-        }"
-        :pagination="{
-          clickable: true,
-          el: '.swiper-pagination',
-          dynamicBullets: true,
-          renderBullet: renderPaginationBullet
-        }"
-        :navigation="{
-          prevEl: '.swiper-button-prev',
-          nextEl: '.swiper-button-next',
-        }"
-        :a11y="{
-          prevSlideMessage: 'Previous slide',
-          nextSlideMessage: 'Next slide',
-          firstSlideMessage: 'This is the first slide',
-          lastSlideMessage: 'This is the last slide',
-          paginationBulletMessage: 'Go to slide {{index}}'
-        }"
+        :autoplay="autoplayConfig"
+        :pagination="paginationConfig"
+        :navigation="navigationConfig"
+        :a11y="a11yConfig"
         @swiper="onSwiper"
         class="w-full rounded-lg"
       >
         <swiper-slide v-for="(image, index) in images" :key="index">
           <div class="relative w-full h-[550px] overflow-hidden">
-            <img
-              :src="image.src"
-              :alt="image.alt"
-              class="w-full h-full object-cover"
-              :style="currentSlideIndex === index ? 'transform: scale(1); transition: transform 7s ease;' : ''"
-              :loading="index === 0 ? 'eager' : 'lazy'"
-              :width="1280"
-              :height="720"
-            />
+            <picture>
+              <!-- WebP format for modern browsers -->
+              <source
+                :srcset="convertToWebP(image.src)"
+                type="image/webp"
+              />
+              <!-- Original format as fallback -->
+              <img
+                :src="image.src"
+                :alt="image.alt"
+                class="w-full h-full object-cover"
+                :style="currentSlideIndex === index ? 'transform: scale(1); transition: transform 7s ease;' : ''"
+                :loading="index === 0 ? 'eager' : 'lazy'"
+                width="1280"
+                height="720"
+                fetchpriority="high"
+              />
+            </picture>
             <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/30"></div>
           </div>
         </swiper-slide>
@@ -81,7 +72,7 @@
         class="absolute left-0 bottom-0 bg-yellow-500 text-white py-3 px-8 font-bold tracking-wider z-10 flex items-center shadow-lg translate-y-0 transition-transform duration-500"
         :class="{ 'translate-y-full': isLoading }"
       >
-        <ScissorsIcon class="h-5 w-5 mr-2" />
+        <ScissorsIcon class="h-5 w-5 mr-2" aria-hidden="true" />
         <span>CUTS PROJECT</span>
       </div>
 
@@ -94,6 +85,7 @@
     <!-- Thumbnails Navigation -->
     <div
       class="mt-4 flex justify-center space-x-2 overflow-hidden"
+      aria-label="Thumbnail navigation"
     >
       <button
         v-for="(image, index) in images"
@@ -118,7 +110,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { ref, onMounted, onBeforeUnmount, nextTick} from 'vue';
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Autoplay, Pagination, Navigation, EffectFade, A11y } from "swiper/modules";
 import {
@@ -150,39 +142,85 @@ const images = [
   }
 ];
 
+// Computed properties for Swiper configuration to improve readability and optimization
+const swiperModules = [Autoplay, Pagination, Navigation, EffectFade, A11y];
+
+const autoplayConfig = {
+  delay: 5000,
+  disableOnInteraction: false,
+  pauseOnMouseEnter: true
+};
+
+const paginationConfig = {
+  clickable: true,
+  el: '.swiper-pagination',
+  dynamicBullets: true,
+  renderBullet: (index, className) => {
+    return `<span class="${className}" role="button" aria-label="Go to slide ${index + 1}"></span>`;
+  }
+};
+
+const navigationConfig = {
+  prevEl: '.swiper-button-prev',
+  nextEl: '.swiper-button-next',
+};
+
+const a11yConfig = {
+  prevSlideMessage: 'Previous slide',
+  nextSlideMessage: 'Next slide',
+  firstSlideMessage: 'This is the first slide',
+  lastSlideMessage: 'This is the last slide',
+  paginationBulletMessage: 'Go to slide {{index}}'
+};
+
 const swiperInstance = ref(null);
 const currentSlideIndex = ref(0);
 const sliderContainer = ref(null);
 const isLoading = ref(true);
 const observer = ref(null);
 
-// Render custom pagination bullets for better accessibility
-const renderPaginationBullet = (index, className) => {
-  return `<span class="${className}" role="button" aria-label="Go to slide ${index + 1}"></span>`;
+// WebP conversion helper function
+const convertToWebP = (imagePath) => {
+  // If the image is already webp, return it as is
+  if (imagePath.toLowerCase().endsWith('.webp')) {
+    return imagePath;
+  }
+
+  // This is a mock function - in production you would have actual WebP versions
+  // This assumes you have corresponding WebP files for each image
+  return imagePath.replace(/\.(jpe?g|png)$/i, '.webp');
 };
 
 onMounted(() => {
+  // Use requestIdleCallback for non-critical operations
+  const idleCallback = 'requestIdleCallback' in window ?
+    window.requestIdleCallback :
+    (callback) => setTimeout(callback, 1);
+
   nextTick(() => {
     isLoading.value = false;
 
     // Set up Intersection Observer for performance optimization
-    observer.value = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && swiperInstance.value) {
-          // Resume autoplay when visible
-          swiperInstance.value.autoplay.start();
-        } else if (swiperInstance.value) {
-          // Pause autoplay when not visible
-          swiperInstance.value.autoplay.stop();
-        }
+    idleCallback(() => {
+      observer.value = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && swiperInstance.value) {
+            // Resume autoplay when visible
+            swiperInstance.value.autoplay.start();
+          } else if (swiperInstance.value) {
+            // Pause autoplay when not visible
+            swiperInstance.value.autoplay.stop();
+          }
+        });
+      }, {
+        threshold: 0.25,
+        rootMargin: '0px 0px 200px 0px' // Slightly expanded detection area
       });
-    }, {
-      threshold: 0.25
-    });
 
-    if (sliderContainer.value) {
-      observer.value.observe(sliderContainer.value);
-    }
+      if (sliderContainer.value) {
+        observer.value.observe(sliderContainer.value);
+      }
+    });
 
     // Apply the zoom effect to the first slide
     if (swiperInstance.value) {
@@ -248,8 +286,14 @@ const goToSlide = (index) => {
 };
 </script>
 
-<style scoped>
-.swiper-pagination-bullet {
+<style>
+/* Preload critical resources for better LCP */
+:root {
+  --swiper-theme-color: #FFD700;
+}
+
+/* Use :where pseudo-class for lower specificity */
+:where(.swiper-pagination-bullet) {
   background: white;
   opacity: 0.7;
   width: 10px;
@@ -258,7 +302,7 @@ const goToSlide = (index) => {
   transition: all 0.3s ease;
 }
 
-.swiper-pagination-bullet-active {
+:where(.swiper-pagination-bullet-active) {
   opacity: 1;
   background: #FFD700;
   width: 12px;

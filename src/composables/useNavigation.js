@@ -19,6 +19,7 @@ export function useNavigation(route, headerState) {
     { name: 'Layanan', link: '/service', description: 'Daftar lengkap layanan salon' },
     { name: 'Kontak', link: '/contact', description: 'Hubungi kami untuk informasi' },
     { name: 'Ulasan', link: '/review', description: 'Lihat ulasan pelanggan kami' },
+    { name: 'Reservasi', link: '/reservation', description: 'Buat reservasi untuk layanan kami' },
   ]
 
   // Check if current route matches given path

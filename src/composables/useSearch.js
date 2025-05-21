@@ -1,9 +1,9 @@
 // src/composables/useSearch.js
 import {reactive, nextTick } from 'vue'
-// import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router' // Uncomment if you enable navigation here
 
 export function useSearch(headerState) {
-  // const router = useRouter()
+  // const router = useRouter() // Uncomment if you enable navigation here
   let mobileSearchInputRef = null
 
   // Search state
@@ -34,7 +34,7 @@ export function useSearch(headerState) {
   const handleSelection = (suggestion) => {
     state.query = suggestion
     // Here you would typically navigate to search results page
-    // router.push({ name: 'search-results', query: { q: state.query } })
+    // router.push({ name: 'search-results', query: { q: state.query } }) // Uncomment and use router if needed
     state.isMobileOpen = false
   }
 
