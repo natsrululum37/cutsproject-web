@@ -1,6 +1,6 @@
 <template>
   <section class="bg-black text-white py-20 px-6">
-    <div class="max-w-6xl mx-auto text-center mb-12">
+    <div class="max-w-6xl mx-auto text-center mb-12" data-aos="fade-up">
       <h2 class="text-4xl font-extrabold mb-4 tracking-tight">Galeri</h2>
       <p class="text-gray-400 text-lg">Lihat beberapa karya dan gaya terbaik dari barber kami.</p>
     </div>
@@ -12,6 +12,8 @@
         v-for="(image, index) in images"
         :key="index"
         class="relative group overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500"
+        data-aos="zoom-in"
+        :data-aos-delay="index * 100"
       >
         <div class="aspect-w-1 aspect-h-1 w-full">
           <img
@@ -31,23 +33,31 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+
+onMounted(() => {
+  AOS.init({
+    duration: 800,
+    once: true,
+  })
+})
 
 const images = ref([
   { src: '/gallery1.webp', alt: 'Style 1' },
-  { src: '/gallery2.webp', alt: 'style 2' },
-  { src: '/gallery3.webp', alt: 'style 3' },
-  { src: '/gallery4.webp', alt: 'style 4' },
-  { src: '/gallery5.webp', alt: 'style 5' },
-  { src: '/gallery6.webp', alt: 'style 6' },
-  { src: '/gallery7.webp', alt: 'style 7' },
-  { src: '/gallery8.webp', alt: 'style 8' },
-  { src: '/gallery9.webp', alt: 'style 9' },
+  { src: '/gallery2.webp', alt: 'Style 2' },
+  { src: '/gallery3.webp', alt: 'Style 3' },
+  { src: '/gallery4.webp', alt: 'Style 4' },
+  { src: '/gallery5.webp', alt: 'Style 5' },
+  { src: '/gallery6.webp', alt: 'Style 6' },
+  { src: '/gallery7.webp', alt: 'Style 7' },
+  { src: '/gallery8.webp', alt: 'Style 8' },
+  { src: '/gallery9.webp', alt: 'Style 9' },
 ])
 </script>
 
 <style scoped>
-/* Maintain 1:1 aspect ratio */
 .aspect-w-1 {
   position: relative;
   width: 100%;

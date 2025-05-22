@@ -55,6 +55,28 @@
           menginginkan transformasi gaya yang sempurna.
         </p>
       </div>
+
+     <!-- Profil Owner -->
+<div
+  class="flex flex-col md:flex-row items-center bg-[#1e1e1e] p-6 rounded-lg shadow-lg hover:shadow-yellow-400/40 transition-shadow duration-300 max-w-3xl mx-auto gap-6"
+>
+  <img
+    src="@/assets/images/titis_dk_profil.jpg"
+    alt="Profil Titis D.K"
+    class="w-40 h-40 rounded-full object-cover border-4 border-yellow-400 shadow-lg flex-shrink-0"
+  />
+  <div class="text-center md:text-left">
+    <h3 class="text-yellow-400 text-3xl font-extrabold mb-3 drop-shadow-lg">
+      Titis D.K
+    </h3>
+    <p class="text-gray-300 text-lg max-w-xl leading-relaxed">
+      Owner dan Founder CutsProject Barber Shop. Dengan visi dan dedikasi tinggi,
+      Titis D.K memimpin tim barber profesional untuk memberikan layanan terbaik dan
+      membangun komunitas grooming yang solid.
+    </p>
+  </div>
+</div>
+
     </div>
   </section>
 </template>
