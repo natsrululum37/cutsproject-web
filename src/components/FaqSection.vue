@@ -1,16 +1,22 @@
 <template>
-  <section class="py-24">
+  <section class="py-24 relative">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div
         class="flex flex-col justify-center items-center gap-x-16 gap-y-5 xl:gap-28 lg:flex-row lg:justify-between max-lg:max-w-2xl mx-auto max-w-full"
       >
-        <!-- Image -->
-        <div class="w-full lg:w-1/2">
+        <!-- Gambar dengan overlay saat hover -->
+        <div class="relative w-full lg:w-1/2 group">
           <img
             src="@/assets/images/tools.webp"
             alt="FAQ tailwind section"
-            class="w-full rounded-xl object-cover"
+            class="w-full rounded-xl object-cover transition"
           />
+          <!-- Overlay muncul saat hover -->
+          <div
+            class="absolute inset-0 bg-black bg-opacity-90 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+          >
+            <div class="text-white text-[15rem] font-bold select-none">?</div>
+          </div>
         </div>
 
         <!-- Accordion Section -->
@@ -74,37 +80,27 @@
 <script setup>
 import { ref } from 'vue'
 
-// FAQ data
 const faqs = ref([
   {
     title: 'Bisakah saya meminta gaya potongan rambut sesuai preferensi saya?',
     content: `Tentu saja! Tim barber profesional kami akan dengan senang hati mendengarkan keinginan Anda dan
-    menyesuaikan potongan rambut sesuai gaya yang Anda inginkan. Kami selalu memprioritaskan konsultasi terlebih
-    dahulu untuk memastikan hasil akhir sesuai dengan ekspektasi Anda, sekaligus memberikan saran profesional berdasarkan
-    bentuk wajah dan tekstur rambut Anda.`,
+    menyesuaikan potongan rambut sesuai gaya yang Anda inginkan...`,
   },
   {
     title: 'Haruskah saya reservasi terlebih dahulu atau bisa langsung datang?',
-    content: `Kami sangat merekomendasikan untuk melakukan reservasi terlebih dahulu, terutama di akhir pekan atau
-    hari libur, karena antrean bisa cukup panjang. Dengan reservasi, kami dapat memastikan Anda mendapatkan waktu
-    yang tepat tanpa harus menunggu lama. Namun, jika Anda ingin langsung datang, kami akan berusaha melayani sebaik
-    mungkin sesuai dengan ketersediaan slot yang ada.`,
+    content: `Kami sangat merekomendasikan untuk melakukan reservasi terlebih dahulu...`,
   },
   {
     title: 'Apakah CUTS PROJECT hanya melayani pria atau bisa untuk wanita juga?',
-    content: `Saat ini, CUTS PROJECT adalah barbershop yang secara khusus didedikasikan untuk perawatan rambut dan
-    grooming pria. Layanan kami dirancang untuk memenuhi kebutuhan gaya pria modern, mulai dari potongan klasik hingga
-    kontemporer. Namun, kami bisa memberikan rekomendasi tempat salon terdekat yang cocok untuk wanita jika diperlukan.`,
+    content: `Saat ini, CUTS PROJECT adalah barbershop yang secara khusus didedikasikan untuk perawatan rambut pria...`,
   },
   {
-    title: 'What is the payment process?',
-    content: `Our payment process is secure and straightforward. Choose your plan, enter your billing details, and confirm. You'll receive a confirmation email and an invoice immediately.`,
+    title: 'Bagaimana proses pembayarannya?',
+    content: `Di CUTS PROJECT, kami menyediakan berbagai metode pembayaran...`,
   },
 ])
 
-// Track which accordion is open
 const openIndex = ref(0)
-
 const toggle = (index) => {
   openIndex.value = openIndex.value === index ? null : index
 }
