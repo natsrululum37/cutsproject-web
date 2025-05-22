@@ -5,12 +5,13 @@ import Gallery from '@/views/GalleryView.vue'
 import About from '@/views/AboutView.vue'
 import Contact from '@/views/ContactView.vue'
 import Reservation from '@/views/ReservationView.vue'
-import Service from '@/views/ServiceView.vue'
+import Services from '@/views/ServiceView.vue'
 import ReviewViews from '@/views/ReviewViews.vue'
+
 
 const routes = [
   { path: '/', component: Home },
-  { path: '/services', component: Service },
+  { path: '/services', component: Services },
   { path: '/gallery', component: Gallery },
   { path: '/about', component: About },
   { path: '/contact', component: Contact },

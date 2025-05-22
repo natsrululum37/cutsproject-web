@@ -16,7 +16,7 @@ export function useNavigation(route, headerState) {
     { name: 'Beranda', link: '/', description: 'Halaman utama website' },
     { name: 'Galeri', link: '/gallery', description: 'Koleksi hasil kerja terbaik kami' },
     { name: 'Tentang', link: '/about', description: 'Cerita dan misi kami' },
-    { name: 'Layanan', link: '/service', description: 'Daftar lengkap layanan salon' },
+    { name: 'Layanan', link: '/services', description: 'Daftar lengkap layanan salon' },
     { name: 'Kontak', link: '/contact', description: 'Hubungi kami untuk informasi' },
     { name: 'Ulasan', link: '/review', description: 'Lihat ulasan pelanggan kami' },
     { name: 'Reservasi', link: '/reservation', description: 'Buat reservasi untuk layanan kami' },

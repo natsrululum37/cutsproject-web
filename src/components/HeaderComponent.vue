@@ -303,12 +303,12 @@ const handleScroll = () => {
 
 // Enhanced search data with categories
 const searchData = [
-  { id: 1, name: 'Potong Rambut Pria', path: '/layanan/potong-rambut-pria', category: 'Hair Service' },
-  { id: 2, name: 'Styling Rambut', path: '/layanan/styling-rambut', category: 'Hair Service' },
+  { id: 1, name: 'Potong Rambut Pria', path: '/layanan/potong-rambut-pria', category: 'Hair Services' },
+  { id: 2, name: 'Styling Rambut', path: '/layanan/styling-rambut', category: 'Hair Services' },
   { id: 3, name: 'Perawatan Jenggot', path: '/layanan/perawatan-jenggot', category: 'Grooming' },
-  { id: 4, name: 'Hair Coloring', path: '/layanan/hair-coloring', category: 'Hair Service' },
-  { id: 5, name: 'Kids Haircut', path: '/layanan/kids-haircut', category: 'Hair Service' },
-  { id: 6, name: 'Hair Wash', path: '/layanan/hair-wash', category: 'Hair Service' },
+  { id: 4, name: 'Hair Coloring', path: '/layanan/hair-coloring', category: 'Hair Services' },
+  { id: 5, name: 'Kids Haircut', path: '/layanan/kids-haircut', category: 'Hair Services' },
+  { id: 6, name: 'Hair Wash', path: '/layanan/hair-wash', category: 'Hair Services' },
   { id: 7, name: 'Facial Treatment', path: '/layanan/facial-treatment', category: 'Skincare' },
   { id: 8, name: 'Mustache Trim', path: '/layanan/mustache-trim', category: 'Grooming' },
 ]
