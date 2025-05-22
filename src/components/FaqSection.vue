@@ -83,20 +83,28 @@ import { ref } from 'vue'
 const faqs = ref([
   {
     title: 'Bisakah saya meminta gaya potongan rambut sesuai preferensi saya?',
-    content: `Tentu saja! Tim barber profesional kami akan dengan senang hati mendengarkan keinginan Anda dan
-    menyesuaikan potongan rambut sesuai gaya yang Anda inginkan...`,
+    content: `Tentu saja! Tim barber profesional kami akan dengan senang hati mendengarkan keinginan Anda dan menyesuaikan
+    potongan rambut sesuai gaya yang Anda inginkan. Kami selalu memprioritaskan konsultasi terlebih dahulu untuk memastikan
+    hasil akhir sesuai dengan ekspektasi Anda, sekaligus memberikan saran profesional berdasarkan bentuk wajah dan tekstur
+    rambut Anda.`,
   },
   {
     title: 'Haruskah saya reservasi terlebih dahulu atau bisa langsung datang?',
-    content: `Kami sangat merekomendasikan untuk melakukan reservasi terlebih dahulu...`,
+    content: `Kami sangat merekomendasikan untuk melakukan reservasi terlebih dahulu, terutama di akhir pekan atau hari libur,
+    karena antrean bisa cukup panjang. Dengan reservasi, kami dapat memastikan Anda mendapatkan waktu yang tepat tanpa harus
+    menunggu lama. Namun, jika Anda ingin langsung datang, kami akan berusaha melayani sebaik mungkin sesuai dengan ketersediaan
+    slot yang ada.`,
   },
   {
     title: 'Apakah CUTS PROJECT hanya melayani pria atau bisa untuk wanita juga?',
-    content: `Saat ini, CUTS PROJECT adalah barbershop yang secara khusus didedikasikan untuk perawatan rambut pria...`,
+    content: `Saat ini, CUTS PROJECT adalah barbershop yang secara khusus didedikasikan untuk perawatan rambut dan grooming pria.
+    Layanan kami dirancang untuk memenuhi kebutuhan gaya pria modern, mulai dari potongan klasik hingga kontemporer. Namun, kami
+    bisa memberikan rekomendasi tempat salon terdekat yang cocok untuk wanita jika diperlukan.`,
   },
   {
     title: 'Bagaimana proses pembayarannya?',
-    content: `Di CUTS PROJECT, kami menyediakan berbagai metode pembayaran...`,
+    content: `Di CUTS PROJECT, kami menyediakan berbagai metode pembayaran yang aman dan fleksibel untuk kenyamanan Anda. Anda bisa
+    melakukan pembayaran secara tunai (cash), melalui QRIS, atau menggunakan kartu debit/kredit.`,
   },
 ])
 
