@@ -29,7 +29,7 @@
     </div>
 
     <!-- Tombol Toggle -->
-    <div class="text-center mt-8">
+    <div class="text-center mt-8 mb-12">
       <button
         @click="showAll = !showAll"
         class="text-yellow-400 font-semibold hover:underline transition"
@@ -37,15 +37,52 @@
         {{ showAll ? 'Sembunyikan' : 'Lihat Selengkapnya' }}
       </button>
     </div>
+
+    <!-- Form Tambah Testimoni -->
+    <div class="max-w-3xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
+      <h3 class="text-2xl font-semibold mb-4 text-center">Tulis Review Anda</h3>
+      <form @submit.prevent="submitTestimonial" class="space-y-4">
+        <input
+          v-model.trim="newTestimonial.name"
+          type="text"
+          placeholder="Nama"
+          class="w-full p-2 rounded bg-gray-700 text-white"
+          required
+        />
+        <input
+          v-model.trim="newTestimonial.role"
+          type="text"
+          placeholder="Profesi atau Peran Anda"
+          class="w-full p-2 rounded bg-gray-700 text-white"
+          required
+        />
+        <textarea
+          v-model.trim="newTestimonial.text"
+          placeholder="Tulis testimoni Anda..."
+          class="w-full p-2 rounded bg-gray-700 text-white"
+          rows="4"
+          required
+        ></textarea>
+
+        <div class="text-right">
+          <button
+            type="submit"
+            class="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-300 font-semibold"
+          >
+            Kirim Testimoni
+          </button>
+        </div>
+      </form>
+    </div>
   </section>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 
 const showAll = ref(false)
 
-const testimonials = [
+const testimonials = ref([
   {
     name: 'Rizky Fadillah',
     role: 'Pelanggan Tetap',
@@ -124,7 +161,42 @@ const testimonials = [
     text: 'Nyaman, bersih, dan profesional. Suka banget sama vibe-nya!',
     photo: 'https://randomuser.me/api/portraits/men/22.jpg',
   },
-]
+])
+
+const newTestimonial = ref({
+  name: '',
+  role: '',
+  text: '',
+  photo: 'https://randomuser.me/api/portraits/men/1.jpg',
+})
+
+function submitTestimonial() {
+  const { name, role, text } = newTestimonial.value
+
+  if (!name.trim() || !role.trim() || !text.trim()) {
+    alert('Harap isi semua kolom testimoni.')
+    return
+  }
+
+  // Tambah testimoni baru di awal array
+  testimonials.value.unshift({ ...newTestimonial.value })
+
+  // Reset form
+  newTestimonial.value = {
+    name: '',
+    role: '',
+    text: '',
+    photo: 'https://randomuser.me/api/portraits/men/1.jpg',
+  }
+
+  alert('Testimoni Anda berhasil dikirim!')
+
+  nextTick(() => {
+    // Scroll ke bagian testimoni baru (paling atas)
+    const firstTestimonial = document.querySelector('[data-aos]')
+    if (firstTestimonial) firstTestimonial.scrollIntoView({ behavior: 'smooth' })
+  })
+}
 </script>
 
 <style scoped>
