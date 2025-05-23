@@ -50,7 +50,7 @@
                 id="desktop-search"
                 type="search"
                 v-model="desktopSearchQuery"
-                class="w-full bg-zinc-800/80 hover:bg-zinc-800/90 text-white text-sm rounded-xl py-2.5 pl-10 pr-4 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:bg-zinc-700/90 focus:border-transparent transition-all duration-300 border border-zinc-700/50 focus:border-yellow-400/30"
+                class="w-full bg-zinc-800/80 hover:bg-zinc-800/90 text-white text-sm rounded-xl py-2.5 pl-10 pr-4 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:bg-zinc-700/90 transition-all duration-300 border border-zinc-700/50 focus:border-yellow-400/30"
                 placeholder="Cari layanan/menu…"
                 autocomplete="off"
                 spellcheck="false"
