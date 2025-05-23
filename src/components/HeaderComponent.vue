@@ -1,227 +1,257 @@
 <template>
   <header
     class="sticky top-0 left-0 w-full z-50 transition-all duration-300"
-    :class="{ 'bg-black backdrop-blur-md shadow-lg': isScrolled }"
+    :class="headerStore.headerClasses"
     role="banner"
     aria-label="Main navigation"
   >
     <nav class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8" role="navigation">
       <div class="flex items-center justify-between h-14 sm:h-16">
+        <!-- Logo -->
         <RouterLink
           to="/"
-          class="flex items-center space-x-1.5 sm:space-x-2 text-white text-lg sm:text-xl font-bold flex-shrink-0"
+          class="flex items-center space-x-1.5 sm:space-x-2 text-white text-lg sm:text-xl font-bold flex-shrink-0 group focus-visible:ring-2 focus-visible:ring-yellow-400"
           aria-label="CUT PROJECT - Home"
           @click="trackLogoClick"
         >
-          <span class="text-sm sm:text-base md:text-lg" aria-hidden="true">CUT</span>
-          <img
-            :src="logoSrc"
-            alt="CUT PROJECT Logo"
-            class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7"
-            width="28"
-            height="28"
-            loading="eager"
-            decoding="async"
-            fetchpriority="high"
-            @load="() => (logoLoaded = true)"
-            @error="() => (logoSrc = '/fallback-logo.png')"
-          />
-          <span class="text-sm sm:text-base md:text-lg" aria-hidden="true">PROJECT</span>
+          <span class="text-sm sm:text-base md:text-lg transition-all group-hover:text-yellow-400"
+            >CUT</span
+          >
+          <div class="relative">
+            <img
+              :src="logoSrc"
+              alt="CUT PROJECT Logo"
+              class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12"
+              width="28"
+              height="28"
+              loading="eager"
+              @load="logoLoaded = true"
+              @error="logoSrc = '/fallback-logo.png'"
+              :aria-busy="!logoLoaded"
+              :class="{ 'animate-pulse-soft': !logoLoaded }"
+            />
+            <div
+              class="absolute inset-0 rounded-full bg-yellow-400/20 scale-0 group-hover:scale-150 transition-all duration-300 -z-10"
+              aria-hidden="true"
+            ></div>
+          </div>
+          <span class="text-sm sm:text-base md:text-lg transition-all group-hover:text-yellow-400"
+            >PROJECT</span
+          >
         </RouterLink>
 
         <!-- Desktop navigation & search -->
         <div class="hidden lg:flex space-x-6 items-center flex-1 justify-end">
-          <!-- Search input desktop -->
-          <div class="relative w-48 xl:w-64" role="search">
-            <label for="desktop-search" class="sr-only">Search services</label>
-            <input
-              id="desktop-search"
-              type="search"
-              v-model="searchQuery"
-              class="w-full bg-zinc-800/70 text-white text-sm rounded-md py-2 pl-10 pr-4 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
-              placeholder="Cari layanan/menu..."
-              autocomplete="off"
-              autocapitalize="off"
-              spellcheck="false"
-              :aria-expanded="showSearchResults"
-              :aria-describedby="showSearchResults ? 'search-results' : undefined"
-              @focus="() => { searchStore.setFocused(true); selectedSearchIndex = -1 }"
-              @blur="() => setTimeout(() => searchStore.setFocused(false), 150)"
-              @keydown="handleSearchKeydown"
-              @input="debounceSearch"
-            />
-            <MagnifyingGlassIcon
-              class="absolute top-2.5 left-3 w-4 h-4 text-gray-400 pointer-events-none"
-              aria-hidden="true"
-            />
+          <!-- Desktop Search -->
+          <div class="relative w-48 xl:w-64 group" role="search">
+            <label for="desktop-search" class="sr-only">Cari layanan/menu</label>
+            <div class="relative">
+              <input
+                id="desktop-search"
+                type="search"
+                v-model="desktopSearchQuery"
+                class="w-full bg-zinc-800/80 hover:bg-zinc-800/90 text-white text-sm rounded-xl py-2.5 pl-10 pr-4 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:bg-zinc-700/90 focus:border-transparent transition-all duration-300 border border-zinc-700/50 focus:border-yellow-400/30"
+                placeholder="Cari layanan/menu…"
+                autocomplete="off"
+                spellcheck="false"
+                :aria-autocomplete="'list'"
+                :aria-controls="'desktop-search-listbox'"
+                :aria-activedescendant="activeDesktopSearchResultId"
+                @focus="handleDesktopSearchFocus"
+                @blur="handleDesktopSearchBlur"
+                @keydown="handleDesktopSearchKeydown"
+                @input="handleDesktopSearchInput"
+              />
+              <MagnifyingGlassIcon
+                class="absolute top-1/2 left-3 w-4 h-4 text-gray-400 group-focus-within:text-yellow-400 transition-colors duration-200 transform -translate-y-1/2 pointer-events-none"
+                aria-hidden="true"
+              />
+            </div>
 
+            <!-- Desktop Search Results -->
             <Transition
-              enter-active-class="transition duration-200 ease-out"
-              enter-from-class="opacity-0 scale-95 translate-y-1"
+              enter-active-class="transition duration-300 ease-out"
+              enter-from-class="opacity-0 scale-95 translate-y-2"
               enter-to-class="opacity-100 scale-100 translate-y-0"
-              leave-active-class="transition duration-150 ease-in"
+              leave-active-class="transition duration-200 ease-in"
               leave-from-class="opacity-100 scale-100 translate-y-0"
-              leave-to-class="opacity-0 scale-95 translate-y-1"
+              leave-to-class="opacity-0 scale-95 translate-y-2"
             >
               <ul
-                v-if="showSearchResults"
-                id="search-results"
-                class="absolute top-full mt-2 left-0 w-full bg-zinc-800 rounded-md shadow-lg border border-zinc-700 z-50 max-h-60 overflow-y-auto"
+                v-if="showDesktopSearchResults"
+                :id="'desktop-search-listbox'"
+                class="absolute top-full mt-3 left-0 w-full bg-zinc-900/95 backdrop-blur-xl rounded-xl shadow-2xl border border-zinc-700/50 z-50 max-h-72 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-transparent"
                 role="listbox"
-                :aria-label="`${searchResults.length} search results available`"
+                aria-label="Hasil pencarian menu dan layanan"
               >
                 <li
-                  v-for="(result, index) in searchResults"
+                  v-for="(result, index) in desktopSearchResults"
+                  :id="getDesktopSearchResultId(index)"
                   :key="result.id"
-                  :id="`search-result-${index}`"
-                  class="px-4 py-2.5 text-white hover:bg-zinc-700 cursor-pointer transition-colors border-b border-zinc-700 last:border-b-0"
+                  class="px-4 py-3 text-white hover:bg-zinc-800/60 cursor-pointer transition-all duration-200 border-b border-zinc-700/30 last:border-b-0 group/item"
+                  :class="{
+                    'bg-zinc-800/80 border-yellow-400/20': selectedDesktopSearchIndex === index,
+                  }"
+                  :aria-selected="selectedDesktopSearchIndex === index"
                   role="option"
-                  :aria-selected="selectedSearchIndex === index"
-                  :class="{ 'bg-zinc-700': selectedSearchIndex === index }"
-                  @mousedown="() => selectSearchResult(result)"
-                  @mouseenter="() => (selectedSearchIndex = index)"
+                  @mousedown.prevent="selectDesktopSearchResult(result)"
+                  @mouseenter="selectedDesktopSearchIndex = index"
                 >
                   <div class="font-medium flex items-center">
-                    <component
-                      v-if="result.icon && icons[result.icon]"
-                      :is="icons[result.icon]"
-                      class="w-4 h-4 mr-2 text-yellow-400 flex-shrink-0"
+                    <div
+                      class="p-1.5 rounded-lg bg-yellow-400/10 mr-3 group-hover/item:bg-yellow-400/20 transition-colors"
+                    >
+                      <component
+                        v-if="result.icon && icons[result.icon]"
+                        :is="icons[result.icon]"
+                        class="w-4 h-4 text-yellow-400 flex-shrink-0"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-medium">{{ result.name }}</div>
+                      <div class="text-xs text-gray-400 mt-0.5">
+                        {{ result.category || 'Layanan' }}
+                      </div>
+                    </div>
+                    <ChevronRightIcon
+                      class="w-4 h-4 text-gray-500 opacity-0 group-hover/item:opacity-100 transition-all duration-200"
                       aria-hidden="true"
                     />
-                    {{ result.name }}
                   </div>
-                  <div class="text-xs text-gray-400 mt-0.5">{{ result.category || 'Layanan' }}</div>
                 </li>
                 <li
-                  v-if="searchResults.length === 0 && searchQuery.length > 0"
-                  class="px-4 py-3 text-gray-400 text-center"
+                  v-if="desktopSearchResults.length === 0 && desktopSearchQuery.length > 0"
+                  class="px-4 py-6 text-gray-400 text-center"
                   role="option"
-                  aria-selected="false"
+                  aria-disabled="true"
                 >
-                  Tidak ada hasil ditemukan untuk "{{ searchQuery }}"
+                  <div class="flex flex-col items-center space-y-2">
+                    <MagnifyingGlassIcon class="w-8 h-8 text-gray-500" aria-hidden="true" />
+                    <div>Tidak ada hasil ditemukan untuk "{{ desktopSearchQuery }}"</div>
+                  </div>
                 </li>
               </ul>
             </Transition>
           </div>
 
           <!-- Desktop nav links -->
-          <nav class="flex space-x-4 xl:space-x-6" role="navigation" aria-label="Main menu">
+          <nav class="flex space-x-2 xl:space-x-4" role="navigation" aria-label="Navigasi utama">
             <RouterLink
               v-for="(item, index) in navigationMenu"
               :key="`nav-${item.name}-${index}`"
               :to="item.link"
-              class="relative text-gray-300 hover:text-white font-medium transition-colors group px-2 py-1"
-              :class="{ 'text-yellow-400': isActiveRoute(item.link) }"
+              class="relative text-gray-300 hover:text-white font-medium transition-all duration-300 group px-3 py-2 rounded-lg hover:bg-zinc-800/50 focus-visible:ring-2 focus-visible:ring-yellow-400"
+              :class="{
+                'text-yellow-400': isActiveRoute(item.link),
+              }"
+              @click="trackNavClick(item.name)"
               :aria-current="isActiveRoute(item.link) ? 'page' : undefined"
-              @click="() => trackNavClick(item.name)"
             >
-              {{ item.name }}
+              <span class="relative z-10">{{ item.name }}</span>
               <span
-                class="absolute bottom-0 left-0 h-0.5 bg-yellow-400 w-full scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-200"
-                :class="{ 'scale-x-100': isActiveRoute(item.link) }"
+                class="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-400 transition-all duration-300 transform origin-left scale-x-0"
+                :class="{
+                  'scale-x-100': isActiveRoute(item.link),
+                  'group-hover:scale-x-100': !isActiveRoute(item.link),
+                }"
                 aria-hidden="true"
               ></span>
             </RouterLink>
           </nav>
         </div>
 
-        <!-- Mobile search & menu button -->
+        <!-- Mobile buttons -->
         <div class="flex items-center space-x-2 sm:space-x-3 lg:hidden">
           <button
             type="button"
-            @click="toggleMobileSearch"
-            class="text-gray-300 hover:text-white p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-colors"
-            :aria-label="isMobileSearchOpen ? 'Close search' : 'Open search'"
-            :aria-expanded="isMobileSearchOpen"
+            @click="handleMobileSearchToggle"
+            class="text-gray-300 hover:text-white p-2.5 rounded-xl hover:bg-zinc-800/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all duration-200"
+            :class="{ 'bg-zinc-800/50 text-yellow-400': isMobileSearchOpen }"
+            aria-label="Buka pencarian"
           >
-            <MagnifyingGlassIcon class="h-5 w-5" aria-hidden="true" />
+            <MagnifyingGlassIcon class="h-5 w-5" />
           </button>
 
-          <div class="relative">
-            <button
-              type="button"
-              @click="toggleMobileMenu"
-              class="text-gray-300 hover:text-white p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-colors"
-              :aria-label="isMobileMenuOpen ? 'Close menu' : 'Open menu'"
-              :aria-expanded="isMobileMenuOpen"
-              aria-controls="mobile-menu"
-              aria-haspopup="true"
-            >
-              <Transition
-                mode="out-in"
-                enter-active-class="transition duration-150"
-                enter-from-class="opacity-0 rotate-90"
-                enter-to-class="opacity-100 rotate-0"
-                leave-active-class="transition duration-150"
-                leave-from-class="opacity-100 rotate-0"
-                leave-to-class="opacity-0 -rotate-90"
-              >
-                <XMarkIcon v-if="isMobileMenuOpen" class="h-6 w-6" aria-hidden="true" />
-                <Bars3Icon v-else class="h-6 w-6" aria-hidden="true" />
-              </Transition>
-            </button>
+          <button
+            type="button"
+            @click="handleMobileMenuToggle"
+            class="text-gray-300 hover:text-white p-2.5 rounded-xl hover:bg-zinc-800/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all duration-200"
+            :class="{ 'bg-zinc-800/50 text-yellow-400': isMobileMenuOpen }"
+            aria-label="Buka menu navigasi"
+          >
+            <Transition mode="out-in">
+              <XMarkIcon v-if="isMobileMenuOpen" class="h-6 w-6" />
+              <Bars3Icon v-else class="h-6 w-6" />
+            </Transition>
+          </button>
 
-            <!-- Mobile menu -->
-            <Transition
-              enter-active-class="transition duration-200 ease-out"
-              enter-from-class="opacity-0 scale-95 translate-y-1"
-              enter-to-class="opacity-100 scale-100 translate-y-0"
-              leave-active-class="transition duration-150 ease-in"
-              leave-from-class="opacity-100 scale-100 translate-y-0"
-              leave-to-class="opacity-0 scale-95 translate-y-1"
+          <!-- Mobile menu -->
+          <Transition
+            enter-active-class="transition duration-300 ease-out"
+            enter-from-class="opacity-0 scale-95 translate-y-2"
+            enter-to-class="opacity-100 scale-100 translate-y-0"
+            leave-active-class="transition duration-200 ease-in"
+            leave-from-class="opacity-100 scale-100 translate-y-0"
+            leave-to-class="opacity-0 scale-95 translate-y-2"
+          >
+            <div
+              v-if="isMobileMenuOpen"
+              class="fixed top-20 left-1/2 transform -translate-x-1/2 w-80 sm:w-96 bg-zinc-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-zinc-700/50 z-50 mx-4 overflow-hidden"
+              @click.stop
+              aria-modal="true"
+              role="dialog"
             >
-              <div
-                v-if="isMobileMenuOpen"
-                id="mobile-menu"
-                class="fixed top-20 left-1/2 transform -translate-x-1/2 w-80 sm:w-96 bg-zinc-900 rounded-lg shadow-xl border border-zinc-700 z-50 mx-4"
-                role="menu"
-                aria-labelledby="mobile-menu-button"
-                @click.stop
-                @keydown="handleMobileMenuKeydown"
-              >
-                <div class="py-2">
-                  <div class="px-4 py-2 border-b border-zinc-700">
-                    <h3 class="text-white text-sm font-semibold">Menu Navigasi</h3>
-                  </div>
-                  <nav class="py-1" role="navigation">
-                    <RouterLink
-                      v-for="(item, index) in navigationMenu"
-                      :key="`mobile-nav-${item.name}-${index}`"
-                      :to="item.link"
-                      class="flex items-center px-4 py-3 text-gray-300 hover:text-white hover:bg-zinc-800 transition-all duration-150"
-                      :class="{
-                        'text-yellow-400 bg-zinc-800/50': isActiveRoute(item.link),
-                      }"
-                      role="menuitem"
-                      :aria-current="isActiveRoute(item.link) ? 'page' : undefined"
-                      :tabindex="isMobileMenuOpen ? 0 : -1"
-                      @click="() => handleMobileNavClick(item.name)"
+              <div class="py-2">
+                <div
+                  class="px-6 py-4 border-b border-zinc-700/50 bg-gradient-to-r from-zinc-800/30 to-zinc-900/30"
+                >
+                  <h3 class="text-white text-sm font-semibold flex items-center">
+                    <Bars3Icon class="w-4 h-4 mr-2 text-yellow-400" />
+                    Menu Navigasi
+                  </h3>
+                </div>
+                <nav class="py-2" aria-label="Navigasi mobile">
+                  <RouterLink
+                    v-for="(item, index) in navigationMenu"
+                    :key="`mobile-nav-${item.name}-${index}`"
+                    :to="item.link"
+                    class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50 transition-all duration-200 group focus-visible:ring-2 focus-visible:ring-yellow-400"
+                    :class="{
+                      'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute(item.link),
+                    }"
+                    @click="handleMobileNavClick(item.name)"
+                    :aria-current="isActiveRoute(item.link) ? 'page' : undefined"
+                  >
+                    <div
+                      class="p-2 rounded-lg bg-zinc-800/30 mr-4 group-hover:bg-zinc-700/50 transition-colors"
                     >
                       <component
                         v-if="item.icon && icons[item.icon]"
                         :is="icons[item.icon]"
-                        class="w-5 h-5 mr-3 flex-shrink-0"
+                        class="w-5 h-5 flex-shrink-0"
+                        :class="{
+                          'text-yellow-400': isActiveRoute(item.link),
+                          'text-gray-400 group-hover:text-white': !isActiveRoute(item.link),
+                        }"
                         aria-hidden="true"
                       />
-                      <span class="font-medium">{{ item.name }}</span>
-                      <ChevronRightIcon
-                        v-if="isActiveRoute(item.link)"
-                        class="w-4 h-4 ml-auto text-yellow-400"
-                        aria-hidden="true"
-                      />
-                    </RouterLink>
-                  </nav>
-                </div>
+                    </div>
+                    <span class="font-medium flex-1">{{ item.name }}</span>
+                    <ChevronRightIcon class="w-4 h-4 transition-all duration-200" aria-hidden="true" />
+                  </RouterLink>
+                </nav>
               </div>
-            </Transition>
+            </div>
+          </Transition>
 
-            <div
-              v-if="isMobileMenuOpen"
-              class="fixed inset-0 bg-black/20 backdrop-blur-sm -z-10"
-              @click="closeMobileMenu"
-              aria-hidden="true"
-            ></div>
-          </div>
+          <!-- Mobile menu backdrop -->
+          <div
+            v-if="isMobileMenuOpen"
+            class="fixed inset-0 bg-black/40 backdrop-blur-sm -z-10"
+            @click="closeMobileMenu"
+            aria-hidden="true"
+          ></div>
         </div>
       </div>
 
@@ -234,11 +264,11 @@
         leave-from-class="opacity-100 translate-y-0"
         leave-to-class="opacity-0 -translate-y-4"
       >
-        <div v-if="isMobileSearchOpen" class="lg:hidden pb-3 px-1" role="search">
-          <div class="relative">
-            <label for="mobile-search" class="sr-only">Search services</label>
+        <div v-if="isMobileSearchOpen" class="lg:hidden pb-4 px-1">
+          <div class="relative group">
+            <label for="mobile-search" class="sr-only">Cari layanan/menu</label>
             <MagnifyingGlassIcon
-              class="absolute top-1/2 left-3 w-4 h-4 text-gray-400 transform -translate-y-1/2 z-10 pointer-events-none"
+              class="absolute top-1/2 left-4 w-5 h-5 text-gray-400 transform -translate-y-1/2 z-10 pointer-events-none"
               aria-hidden="true"
             />
             <input
@@ -246,71 +276,83 @@
               v-model="mobileSearchQuery"
               ref="mobileSearchInput"
               type="search"
-              class="w-full py-3 pl-10 pr-12 bg-zinc-800/90 text-white text-sm rounded-lg border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all placeholder-gray-400"
-              placeholder="Cari layanan/menu..."
+              class="w-full py-4 pl-12 pr-12 bg-zinc-800/90 hover:bg-zinc-800 text-white text-sm rounded-xl border border-zinc-700/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all duration-300 placeholder-gray-400"
+              placeholder="Cari layanan/menu…"
               autocomplete="off"
-              autocapitalize="off"
               spellcheck="false"
-              :aria-expanded="showMobileSearchResults"
-              :aria-describedby="showMobileSearchResults ? 'mobile-search-results' : undefined"
+              :aria-autocomplete="'list'"
+              :aria-controls="'mobile-search-listbox'"
+              :aria-activedescendant="activeMobileSearchResultId"
+              @focus="handleMobileSearchFocus"
+              @blur="handleMobileSearchBlur"
               @keydown="handleMobileSearchKeydown"
-              @focus="() => { searchStore.setFocused(true); selectedMobileSearchIndex = -1 }"
-              @blur="() => setTimeout(() => searchStore.setFocused(false), 150)"
-              @input="debounceMobileSearch"
+              @input="handleMobileSearchInput"
             />
             <button
               type="button"
               @click="closeMobileSearch"
-              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-              aria-label="Close search"
+              class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white p-1 rounded-full hover:bg-zinc-700/50 transition-all duration-200"
+              aria-label="Tutup pencarian"
             >
-              <XMarkIcon class="w-5 h-5" aria-hidden="true" />
+              <XMarkIcon class="w-5 h-5" />
             </button>
           </div>
 
+          <!-- Mobile Search Results -->
           <Transition
-            enter-active-class="transition duration-200 ease-out"
-            enter-from-class="opacity-0 scale-95"
-            enter-to-class="opacity-100 scale-100"
-            leave-active-class="transition duration-150 ease-in"
-            leave-from-class="opacity-100 scale-100"
-            leave-to-class="opacity-0 scale-95"
+            enter-active-class="transition ease-out duration-200"
+            enter-from-class="opacity-0 translate-y-1"
+            enter-to-class="opacity-100 translate-y-0"
+            leave-active-class="transition ease-in duration-150"
+            leave-from-class="opacity-100 translate-y-0"
+            leave-to-class="opacity-0 translate-y-1"
           >
             <ul
               v-if="showMobileSearchResults"
-              id="mobile-search-results"
-              class="mt-2 bg-zinc-800/95 rounded-lg shadow-lg border border-zinc-700 max-h-64 overflow-y-auto"
+              :id="'mobile-search-listbox'"
+              class="mt-3 bg-zinc-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-zinc-700/50 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-transparent"
               role="listbox"
-              :aria-label="`${mobileSearchResults.length} mobile search results available`"
+              aria-label="Hasil pencarian menu dan layanan"
             >
               <li
                 v-for="(result, index) in mobileSearchResults"
+                :id="getMobileSearchResultId(index)"
                 :key="result.id"
-                class="px-4 py-3 text-white hover:bg-zinc-700 cursor-pointer transition-colors border-b border-zinc-700 last:border-b-0"
-                role="option"
+                class="px-4 py-4 text-white hover:bg-zinc-700/60 cursor-pointer transition-all duration-200 border-b border-zinc-700/30 last:border-b-0"
+                :class="{
+                  'bg-zinc-700/80': selectedMobileSearchIndex === index,
+                }"
                 :aria-selected="selectedMobileSearchIndex === index"
-                :class="{ 'bg-zinc-700': selectedMobileSearchIndex === index }"
-                @mousedown="() => selectMobileSearchResult(result)"
-                @mouseenter="() => (selectedMobileSearchIndex = index)"
+                role="option"
+                @mousedown.prevent="selectMobileSearchResult(result)"
+                @mouseenter="selectedMobileSearchIndex = index"
               >
                 <div class="font-medium flex items-center">
-                  <component
-                    v-if="result.icon && icons[result.icon]"
-                    :is="icons[result.icon]"
-                    class="w-4 h-4 mr-2 text-yellow-400 flex-shrink-0"
-                    aria-hidden="true"
-                  />
-                  {{ result.name }}
+                  <div class="p-2 rounded-lg bg-yellow-400/10 mr-3 transition-colors">
+                    <component
+                      v-if="result.icon && icons[result.icon]"
+                      :is="icons[result.icon]"
+                      class="w-5 h-5 text-yellow-400 flex-shrink-0"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div class="flex-1">
+                    <div class="font-medium">{{ result.name }}</div>
+                    <div class="text-xs text-gray-400 mt-1">{{ result.category || 'Layanan' }}</div>
+                  </div>
+                  <ChevronRightIcon class="w-5 h-5 text-gray-500" aria-hidden="true" />
                 </div>
-                <div class="text-xs text-gray-400 mt-1">{{ result.category || 'Layanan' }}</div>
               </li>
               <li
                 v-if="mobileSearchResults.length === 0 && mobileSearchQuery.length > 0"
-                class="px-4 py-4 text-gray-400 text-center"
+                class="px-4 py-8 text-gray-400 text-center"
                 role="option"
-                aria-selected="false"
+                aria-disabled="true"
               >
-                Tidak ada hasil ditemukan untuk "{{ mobileSearchQuery }}"
+                <div class="flex flex-col items-center space-y-3">
+                  <MagnifyingGlassIcon class="w-10 h-10 text-gray-500" aria-hidden="true" />
+                  <div>Tidak ada hasil ditemukan untuk "{{ mobileSearchQuery }}"</div>
+                </div>
               </li>
             </ul>
           </Transition>
@@ -340,6 +382,7 @@ import {
   PhoneIcon,
 } from '@heroicons/vue/24/outline'
 
+// ICONS MAP
 const icons = {
   HomeIcon,
   ScissorsIcon,
@@ -350,34 +393,71 @@ const icons = {
   PhoneIcon,
 }
 
+// STORES
 const router = useRouter()
 const route = useRoute()
 const headerStore = useHeaderStore()
 const navigationStore = useNavigationStore()
 const searchStore = useSearchStore()
 
-const isScrolled = computed(() => headerStore.isScrolled)
-const isMobileMenuOpen = computed(() => headerStore.isMobileMenuOpen)
-const isMobileSearchOpen = computed(() => headerStore.isMobileSearchOpen)
-const searchQuery = computed({
-  get: () => searchStore.query,
-  set: (val) => searchStore.setQuery(val),
-})
-const navigationMenu = computed(() => navigationStore.menu)
-
-let selectedSearchIndex = ref(-1)
-let selectedMobileSearchIndex = ref(-1)
-const mobileSearchQuery = ref('')
-let logoSrc = ref('/src/assets/images/logo.webp')
-let logoLoaded = ref(false)
+// STATE
+const logoSrc = ref('/src/assets/images/logo.webp')
+const logoLoaded = ref(false)
 const mobileSearchInput = ref(null)
 
+const desktopSearchQuery = ref('')
+const mobileSearchQuery = ref('')
+const desktopSearchFocused = ref(false)
+const mobileSearchFocused = ref(false)
+const selectedDesktopSearchIndex = ref(-1)
+const selectedMobileSearchIndex = ref(-1)
+
+const isMobileMenuOpen = computed(() => headerStore.isMobileMenuOpen)
+const isMobileSearchOpen = computed(() => headerStore.isMobileSearchOpen)
+const navigationMenu = computed(() => navigationStore.menu)
+
+// SEARCH DATA
 const searchData = computed(() => [
-  { id: 1, name: 'Haircut Classic', category: 'Layanan', path: '/services', keywords: ['potong', 'rambut'], icon: 'ScissorsIcon' },
-  { id: 2, name: 'Beard Styling', category: 'Layanan', path: '/services', keywords: ['jenggot', 'styling'], icon: 'ScissorsIcon' },
-  { id: 3, name: 'Hair Wash', category: 'Layanan', path: '/services', keywords: ['cuci', 'keramas'], icon: 'ScissorsIcon' },
-  { id: 4, name: 'Hair Coloring', category: 'Layanan', path: '/services', keywords: ['warna', 'cat'], icon: 'ScissorsIcon' },
-  { id: 5, name: 'Hair Treatment', category: 'Layanan', path: '/services', keywords: ['perawatan', 'treatment'], icon: 'ScissorsIcon' },
+  {
+    id: 1,
+    name: 'Haircut Classic',
+    category: 'Layanan',
+    path: '/services',
+    keywords: ['potong', 'rambut'],
+    icon: 'ScissorsIcon',
+  },
+  {
+    id: 2,
+    name: 'Beard Styling',
+    category: 'Layanan',
+    path: '/services',
+    keywords: ['jenggot', 'styling'],
+    icon: 'ScissorsIcon',
+  },
+  {
+    id: 3,
+    name: 'Hair Wash',
+    category: 'Layanan',
+    path: '/services',
+    keywords: ['cuci', 'keramas'],
+    icon: 'ScissorsIcon',
+  },
+  {
+    id: 4,
+    name: 'Hair Coloring',
+    category: 'Layanan',
+    path: '/services',
+    keywords: ['warna', 'cat'],
+    icon: 'ScissorsIcon',
+  },
+  {
+    id: 5,
+    name: 'Hair Treatment',
+    category: 'Layanan',
+    path: '/services',
+    keywords: ['perawatan', 'treatment'],
+    icon: 'ScissorsIcon',
+  },
   ...navigationMenu.value.map((item, idx) => ({
     id: `menu-${idx}`,
     name: item.name,
@@ -388,174 +468,252 @@ const searchData = computed(() => [
   })),
 ])
 
-const performSearch = (query) => {
-  const term = query.toLowerCase().trim()
-  if (!term) return []
-  return searchData.value
-    .filter((item) => {
-      const nameMatch = item.name.toLowerCase().includes(term)
-      const categoryMatch = item.category?.toLowerCase().includes(term)
-      const keywordMatch = item.keywords?.some((k) => k.includes(term))
-      return nameMatch || categoryMatch || keywordMatch
-    })
-    .sort((a, b) => {
-      const aExact = a.name.toLowerCase().startsWith(term)
-      const bExact = b.name.toLowerCase().startsWith(term)
-      if (aExact && !bExact) return -1
-      if (!aExact && bExact) return 1
-      return 0
-    })
-    .slice(0, 6)
-}
-
-const searchResults = computed(() => performSearch(searchStore.query))
-const mobileSearchResults = computed(() => performSearch(mobileSearchQuery.value))
-
-const showSearchResults = computed(
-  () => searchStore.isFocused && searchStore.query.length > 0 && searchResults.value.length >= 0,
+// SEARCH RESULTS
+const desktopSearchResults = computed(() =>
+  searchStore.performSearch(searchData.value, desktopSearchQuery.value)
+)
+const mobileSearchResults = computed(() =>
+  searchStore.performSearch(searchData.value, mobileSearchQuery.value)
+)
+const showDesktopSearchResults = computed(
+  () => desktopSearchFocused.value && desktopSearchQuery.value.length > 0
 )
 const showMobileSearchResults = computed(
-  () => searchStore.isFocused && mobileSearchQuery.value.length > 0 && mobileSearchResults.value.length >= 0,
+  () => mobileSearchFocused.value && mobileSearchQuery.value.length > 0
 )
 
-let searchTimeout = null
-const debounceSearch = () => {
-  clearTimeout(searchTimeout)
-  searchTimeout = setTimeout(() => {}, 300)
-}
-const debounceMobileSearch = () => {
-  clearTimeout(searchTimeout)
-  searchTimeout = setTimeout(() => {}, 300)
-}
-
-const isActiveRoute = (path) => route.path === path || navigationStore.isActiveRoute(path)
-
-watch(
-  () => route.path,
-  (newPath) => {
-    navigationStore.setActiveRoute(newPath)
-  },
+// ACCESSIBILITY: id and aria
+const getDesktopSearchResultId = (idx) => `desktop-search-result-${idx}`
+const getMobileSearchResultId = (idx) => `mobile-search-result-${idx}`
+const activeDesktopSearchResultId = computed(() =>
+  selectedDesktopSearchIndex.value >= 0
+    ? getDesktopSearchResultId(selectedDesktopSearchIndex.value)
+    : null
+)
+const activeMobileSearchResultId = computed(() =>
+  selectedMobileSearchIndex.value >= 0
+    ? getMobileSearchResultId(selectedMobileSearchIndex.value)
+    : null
 )
 
-const handleSearchKeydown = (e) => {
-  const results = searchResults.value
+// ROUTE CHECK
+const isActiveRoute = (path) => navigationStore.isActiveRoute(path)
+
+// === SEARCH HANDLERS ===
+const handleDesktopSearchFocus = () => {
+  desktopSearchFocused.value = true
+  selectedDesktopSearchIndex.value = -1
+}
+const handleDesktopSearchBlur = () => {
+  setTimeout(() => (desktopSearchFocused.value = false), 150)
+}
+const handleDesktopSearchInput = () => {
+  selectedDesktopSearchIndex.value = -1
+}
+const handleDesktopSearchKeydown = (e) => {
+  const results = desktopSearchResults.value
   if (!results.length) return
+
   switch (e.key) {
     case 'ArrowDown':
       e.preventDefault()
-      selectedSearchIndex.value = Math.min(selectedSearchIndex.value + 1, results.length - 1)
+      selectedDesktopSearchIndex.value = Math.min(
+        selectedDesktopSearchIndex.value + 1,
+        results.length - 1
+      )
+      scrollSearchOptionIntoView('desktop', selectedDesktopSearchIndex.value)
       break
     case 'ArrowUp':
       e.preventDefault()
-      selectedSearchIndex.value = Math.max(selectedSearchIndex.value - 1, -1)
+      selectedDesktopSearchIndex.value = Math.max(
+        selectedDesktopSearchIndex.value - 1,
+        -1
+      )
+      scrollSearchOptionIntoView('desktop', selectedDesktopSearchIndex.value)
       break
     case 'Enter':
       e.preventDefault()
-      if (selectedSearchIndex.value >= 0) selectSearchResult(results[selectedSearchIndex.value])
-      else if (results.length > 0) selectSearchResult(results[0])
+      if (selectedDesktopSearchIndex.value >= 0) {
+        selectDesktopSearchResult(results[selectedDesktopSearchIndex.value])
+      } else if (results.length > 0) {
+        selectDesktopSearchResult(results[0])
+      }
       break
     case 'Escape':
-      searchStore.setFocused(false)
-      selectedSearchIndex.value = -1
+      desktopSearchFocused.value = false
+      selectedDesktopSearchIndex.value = -1
       break
   }
+}
+const selectDesktopSearchResult = (result) => {
+  router.push(result.path)
+  searchStore.addToRecentSearches(result.name)
+  desktopSearchQuery.value = ''
+  desktopSearchFocused.value = false
+  selectedDesktopSearchIndex.value = -1
+  headerStore.closeAllMobileOverlays()
+  trackSearchClick(result.name)
+}
+
+// === MOBILE SEARCH HANDLERS ===
+const handleMobileSearchFocus = () => {
+  mobileSearchFocused.value = true
+  selectedMobileSearchIndex.value = -1
+}
+const handleMobileSearchBlur = () => {
+  setTimeout(() => (mobileSearchFocused.value = false), 150)
+}
+const handleMobileSearchInput = () => {
+  selectedMobileSearchIndex.value = -1
 }
 const handleMobileSearchKeydown = (e) => {
   const results = mobileSearchResults.value
   if (!results.length) return
+
   switch (e.key) {
     case 'ArrowDown':
       e.preventDefault()
-      selectedMobileSearchIndex.value = Math.min(selectedMobileSearchIndex.value + 1, results.length - 1)
+      selectedMobileSearchIndex.value = Math.min(
+        selectedMobileSearchIndex.value + 1,
+        results.length - 1
+      )
+      scrollSearchOptionIntoView('mobile', selectedMobileSearchIndex.value)
       break
     case 'ArrowUp':
       e.preventDefault()
-      selectedMobileSearchIndex.value = Math.max(selectedMobileSearchIndex.value - 1, -1)
+      selectedMobileSearchIndex.value = Math.max(
+        selectedMobileSearchIndex.value - 1,
+        -1
+      )
+      scrollSearchOptionIntoView('mobile', selectedMobileSearchIndex.value)
       break
     case 'Enter':
       e.preventDefault()
-      if (selectedMobileSearchIndex.value >= 0) selectMobileSearchResult(results[selectedMobileSearchIndex.value])
-      else if (results.length > 0) selectMobileSearchResult(results[0])
+      if (selectedMobileSearchIndex.value >= 0) {
+        selectMobileSearchResult(results[selectedMobileSearchIndex.value])
+      } else if (results.length > 0) {
+        selectMobileSearchResult(results[0])
+      }
       break
     case 'Escape':
       closeMobileSearch()
       break
   }
 }
-const handleMobileMenuKeydown = (e) => { if (e.key === 'Escape') closeMobileMenu() }
-const selectSearchResult = (result) => {
-  router.push(result.path)
-  searchStore.setQuery('')
-  searchStore.setFocused(false)
-  selectedSearchIndex.value = -1
-  trackSearchClick(result.name)
-}
 const selectMobileSearchResult = (result) => {
   router.push(result.path)
+  searchStore.addToRecentSearches(result.name)
   closeMobileSearch()
   trackSearchClick(result.name)
 }
-const handleMobileNavClick = (name) => {
-  closeMobileMenu()
-  trackNavClick(name)
-}
 
-const toggleMobileMenu = () => headerStore.toggleMobileMenu()
-const toggleMobileSearch = async () => {
-  headerStore.toggleMobileSearch()
-  if (headerStore.isMobileSearchOpen) {
-    await nextTick()
-    mobileSearchInput.value?.focus()
+// === OVERLAY & TOGGLE HANDLERS ===
+const handleMobileMenuToggle = () => {
+  headerStore.toggleMobileMenu()
+  if (headerStore.isMobileMenuOpen) {
+    headerStore.setMobileSearchOpen(false)
+    mobileSearchFocused.value = false
+    mobileSearchQuery.value = ''
   }
 }
-const closeMobileMenu = () => headerStore.setMobileMenuOpen(false)
+const handleMobileSearchToggle = async () => {
+  headerStore.toggleMobileSearch()
+  if (headerStore.isMobileSearchOpen) {
+    headerStore.setMobileMenuOpen(false)
+    await nextTick()
+    mobileSearchInput.value?.focus()
+  } else {
+    mobileSearchFocused.value = false
+    mobileSearchQuery.value = ''
+  }
+}
+const handleMobileNavClick = (name) => {
+  headerStore.setMobileMenuOpen(false)
+  trackNavClick(name)
+}
+const closeMobileMenu = () => {
+  headerStore.setMobileMenuOpen(false)
+}
 const closeMobileSearch = () => {
   headerStore.setMobileSearchOpen(false)
-  searchStore.setFocused(false)
+  mobileSearchFocused.value = false
   mobileSearchQuery.value = ''
 }
 
-const trackLogoClick = () => {}
-const trackNavClick = () => {}
-const trackSearchClick = () => {}
+// === UTILS ===
+// Scroll selected search option into view for accessibility
+function scrollSearchOptionIntoView(mode, idx) {
+  if (idx < 0) return
+  const id =
+    mode === 'desktop'
+      ? getDesktopSearchResultId(idx)
+      : getMobileSearchResultId(idx)
+  const el = document.getElementById(id)
+  if (el) el.scrollIntoView({ block: 'nearest' })
+}
 
+// === ANALYTICS ===
+const trackLogoClick = () => {
+  // Example: send GA event
+  // window.gtag && window.gtag('event', 'logo_click')
+}
+const trackNavClick = (name) => {
+  // Example: send GA event
+  // window.gtag && window.gtag('event', 'nav_click', { label: name })
+  // Untuk menghindari warning, gunakan param:
+  void name
+}
+const trackSearchClick = (term) => {
+  // Example: send GA event
+  // window.gtag && window.gtag('event', 'search_click', { term })
+  // Untuk menghindari warning, gunakan param:
+  void term
+}
+
+// === LIFECYCLE ===
 onMounted(() => {
-  window.addEventListener('scroll', () => headerStore.setScrolled(window.scrollY > 10), { passive: true })
+  const handleScroll = () => {
+    headerStore.setScrolled(window.scrollY > 10)
+  }
+  window.addEventListener('scroll', handleScroll, { passive: true })
   navigationStore.setActiveRoute(route.path)
+
+  // Preload logo
   if (logoSrc.value) {
     const img = new window.Image()
     img.src = logoSrc.value
-    img.onload = () => { logoLoaded.value = true }
-    img.onerror = () => { logoSrc.value = '/fallback-logo.png' }
+    img.onload = () => (logoLoaded.value = true)
+    img.onerror = () => (logoSrc.value = '/fallback-logo.png')
   }
 })
+
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', () => headerStore.setScrolled(window.scrollY > 10))
-  clearTimeout(searchTimeout)
+  window.removeEventListener('scroll', () => {})
 })
+
+// Route change handler: always close overlays & clear search
 watch(
   () => route.path,
   () => {
-    closeMobileMenu()
-    closeMobileSearch()
-  },
+    navigationStore.setActiveRoute(route.path)
+    headerStore.closeAllMobileOverlays()
+    desktopSearchQuery.value = ''
+    mobileSearchQuery.value = ''
+    desktopSearchFocused.value = false
+    mobileSearchFocused.value = false
+  }
 )
 </script>
 
 <style scoped>
-/* ... (style sama seperti sebelumnya, jika ingin lebih ringkas bisa dipangkas) ... */
-.transition-all {transition-property:all;transition-timing-function:cubic-bezier(0.4,0,0.2,1);transition-duration:150ms;will-change:auto;}
-.max-h-60::-webkit-scrollbar,.max-h-64::-webkit-scrollbar{width:6px;}
-.max-h-60::-webkit-scrollbar-track,.max-h-64::-webkit-scrollbar-track{background:#3f3f46;border-radius:3px;}
-.max-h-60::-webkit-scrollbar-thumb,.max-h-64::-webkit-scrollbar-thumb{background:#71717a;border-radius:3px;}
-.max-h-60::-webkit-scrollbar-thumb:hover,.max-h-64::-webkit-scrollbar-thumb:hover{background:#a1a1aa;}
-button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid #facc15;outline-offset:2px;}
-.flex-shrink-0 img{transition:transform .2s ease-in-out;transform:translateZ(0);}
-.flex-shrink-0:hover img{transform:scale(1.05) translateZ(0);}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
-.sticky{contain:layout style paint;}
-.backdrop-blur-md{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
-.transform{transform:translateZ(0);}
-.bg-zinc-800\/70,.bg-zinc-800\/90,.bg-zinc-800\/95{will-change:auto;}
-.fixed.inset-0{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+/* Tambahkan/ubah style sesuai kebutuhan proyekmu.
+   Jika kamu pakai Tailwind, boleh kosongkan style ini.
+   Contoh untuk animasi pulse logo: */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .6; }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 1.2s cubic-bezier(0.4,0,0.6,1) infinite;
+}
 </style>
