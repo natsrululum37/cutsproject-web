@@ -37,19 +37,3 @@ import FaqSection from '@/components/FaqSection.vue'
 import AboutSection from '@/components/AboutSection.vue'
 import TeamSection from '@/components/TeamSection.vue'
 </script>
-
-<script>
-export default {
-  name: 'AboutView',
-  metaInfo: {
-    title: 'Tentang Kami - CutsProject Barber Shop',
-    meta: [
-      {
-        name: 'description',
-        content:
-          'CutsProject Barber Shop, simbol keahlian dan gaya dalam dunia grooming sejak 2018. Layanan cukur dan perawatan rambut terbaik oleh tim barber profesional.',
-      },
-    ],
-  },
-}
-</script>

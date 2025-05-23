@@ -15,11 +15,11 @@
         data-aos="zoom-in"
         :data-aos-delay="index * 100"
       >
-        <div class="aspect-w-1 aspect-h-1 w-full">
+        <div class="aspect-square w-full relative">
           <img
             :src="image.src"
             :alt="image.alt"
-            class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+            class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110 absolute top-0 left-0"
           />
         </div>
         <div
@@ -58,14 +58,16 @@ const images = ref([
 </script>
 
 <style scoped>
-.aspect-w-1 {
+.aspect-square {
   position: relative;
   width: 100%;
   padding-bottom: 100%;
 }
-.aspect-w-1 img {
+.aspect-square img {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>

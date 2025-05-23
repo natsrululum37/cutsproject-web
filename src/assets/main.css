@@ -1,1 +1,103 @@
+/* Main.css - Optimized for Lighthouse Performance */
 @import 'tailwindcss';
+
+/* Critical CSS - Inline these styles */
+html {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  font-display: swap; /* Improve font loading performance */
+  background-color: #000;
+  color: #fff;
+  overflow-x: hidden;
+  line-height: 1.5; /* Better readability */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout utama - Optimized */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* Use transform3d to enable hardware acceleration */
+  transform: translate3d(0, 0, 0);
+}
+
+/* Konten utama - Improved performance */
+.main-content {
+  flex: 1;
+  padding: 1.25rem; /* 20px */
+  max-width: 75rem; /* 1200px */
+  margin: 0 auto;
+  width: 100%;
+  /* Remove box-sizing as it's inherited */
+  contain: layout; /* CSS containment for better performance */
+}
+
+/* Responsive design - Mobile first approach */
+@media (max-width: 47.9375em) {
+  /* 767px */
+  .main-content {
+    padding: 0.625rem; /* 10px */
+  }
+}
+
+/* Preload critical resources hint */
+.preload-hint {
+  content: '';
+}
+
+/* Performance optimizations */
+img,
+video {
+  height: auto;
+  max-width: 100%;
+}
+
+/* Reduce layout thrashing */
+.layout-stable {
+  will-change: auto;
+}
+
+/* Improve scroll performance */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Focus management for accessibility */
+:focus {
+  outline: 2px solid #facc15;
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid #facc15;
+  outline-offset: 2px;
+}

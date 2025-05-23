@@ -9,7 +9,10 @@
     </div>
 
     <!-- List Testimoni -->
-    <div class="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto px-1 pb-4">
+    <div
+      class="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto px-1 pb-4"
+      style="scrollbar-width: none;"
+    >
       <div
         v-for="(testimonial, index) in showAll ? testimonials : testimonials.slice(0, 3)"
         :key="index"
@@ -19,7 +22,12 @@
       >
         <p class="text-gray-300 mb-4 italic">"{{ testimonial.text }}"</p>
         <div class="flex items-center gap-3">
-          <img :src="testimonial.photo" alt="Foto" class="w-10 h-10 rounded-full object-cover" />
+          <img
+            :src="testimonial.photo"
+            alt="Foto"
+            class="w-10 h-10 rounded-full object-cover"
+            loading="lazy"
+          />
           <div>
             <h4 class="font-semibold">{{ testimonial.name }}</h4>
             <p class="text-sm text-gray-400">{{ testimonial.role }}</p>
@@ -41,7 +49,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 const showAll = ref(false)
 
@@ -125,11 +135,21 @@ const testimonials = [
     photo: 'https://randomuser.me/api/portraits/men/22.jpg',
   },
 ]
+
+onMounted(() => {
+  AOS.init({
+    duration: 800,
+    once: true,
+  })
+})
 </script>
 
 <style scoped>
-/* Sembunyikan scrollbar horizontal di mobile */
-::-webkit-scrollbar {
+/* Sembunyikan scrollbar horizontal di mobile dan Firefox */
+.flex::-webkit-scrollbar {
   display: none;
+}
+.flex {
+  scrollbar-width: none;
 }
 </style>

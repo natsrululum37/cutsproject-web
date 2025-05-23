@@ -4,7 +4,9 @@
       <!-- Judul -->
       <div class="text-center mb-12" data-aos="fade-down">
         <h2 class="text-4xl font-bold mb-4">Reservasi Online</h2>
-        <p class="text-gray-400 text-lg">Pesan jadwal potong rambut Anda dengan mudah dan cepat.</p>
+        <p class="text-gray-400 text-lg">
+          Pesan jadwal potong rambut Anda dengan mudah dan cepat.
+        </p>
       </div>
 
       <!-- Form Reservasi -->
@@ -16,42 +18,53 @@
         <div class="col-span-1">
           <label class="block mb-2 font-semibold text-gray-200">Nama Lengkap</label>
           <input
+            v-model="nama"
             type="text"
             placeholder="Masukkan nama Anda"
             class="w-full p-3 rounded-lg bg-black text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            required
           />
         </div>
 
         <div class="col-span-1">
           <label class="block mb-2 font-semibold text-gray-200">Nomor Telepon</label>
           <input
+            v-model="telepon"
             type="tel"
             placeholder="+62..."
             class="w-full p-3 rounded-lg bg-black text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            required
           />
         </div>
 
         <div class="col-span-1">
           <label class="block mb-2 font-semibold text-gray-200">Tanggal</label>
           <input
+            v-model="tanggal"
             type="date"
             class="w-full p-3 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            required
           />
         </div>
 
         <div class="col-span-1">
           <label class="block mb-2 font-semibold text-gray-200">Waktu</label>
           <input
+            v-model="waktu"
             type="time"
             class="w-full p-3 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            required
           />
         </div>
 
         <div class="col-span-2">
           <label class="block mb-2 font-semibold text-gray-200">Pilih Layanan</label>
           <select
+            v-model="layanan"
             class="w-full p-3 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            required
           >
+            <option value="" disabled>Pilih layanan...</option>
             <option>Haircut</option>
             <option>Shaving</option>
             <option>Hair Coloring</option>
@@ -63,6 +76,7 @@
         <div class="col-span-2">
           <label class="block mb-2 font-semibold text-gray-200">Catatan Tambahan</label>
           <textarea
+            v-model="catatan"
             rows="3"
             placeholder="Tuliskan permintaan khusus jika ada..."
             class="w-full p-3 rounded-lg bg-black text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400"
@@ -78,14 +92,27 @@
           </button>
         </div>
       </form>
+
+      <!-- Notifikasi submit -->
+      <div v-if="showSuccess" class="mt-8 text-center">
+        <p class="text-green-400 font-semibold">Reservasi berhasil dikirim!</p>
+      </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+
+const nama = ref('')
+const telepon = ref('')
+const tanggal = ref('')
+const waktu = ref('')
+const layanan = ref('')
+const catatan = ref('')
+const showSuccess = ref(false)
 
 onMounted(() => {
   AOS.init({
@@ -95,8 +122,16 @@ onMounted(() => {
 })
 
 function handleSubmit() {
-  alert('Reservasi berhasil dikirim!')
+  showSuccess.value = true
+  // Reset form (opsional, jika ingin reset otomatis setelah submit)
+  nama.value = ''
+  telepon.value = ''
+  tanggal.value = ''
+  waktu.value = ''
+  layanan.value = ''
+  catatan.value = ''
+  setTimeout(() => {
+    showSuccess.value = false
+  }, 3000)
 }
 </script>
-
-<style scoped></style>

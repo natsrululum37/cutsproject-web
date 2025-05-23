@@ -1,11 +1,13 @@
 <template>
-  <section class="bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white py-28 px-6" id="layanan">
+  <section
+    class="bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white py-28 px-6"
+    id="layanan"
+  >
     <div class="max-w-7xl mx-auto text-center mb-24 px-4">
-      <h2 class="text-5xl font-extrabold tracking-tight mb-4 drop-shadow-lg">
-        Layanan Kami
-      </h2>
+      <h2 class="text-5xl font-extrabold tracking-tight mb-4 drop-shadow-lg">Layanan Kami</h2>
       <p class="text-gray-400 text-xl max-w-3xl mx-auto leading-relaxed">
-        Dapatkan layanan grooming premium dengan barber berpengalaman, suasana nyaman, dan produk berkualitas tinggi yang membuat Anda tampil maksimal setiap hari.
+        Dapatkan layanan grooming premium dengan barber berpengalaman, suasana nyaman, dan produk
+        berkualitas tinggi yang membuat Anda tampil maksimal setiap hari.
       </p>
     </div>
 
@@ -21,7 +23,9 @@
         data-aos="fade-up"
         data-aos-delay="100"
       >
-        <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center">
+        <div
+          class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
+        >
           <img
             src="/images/haircut.png"
             alt="Haircut Icon"
@@ -41,7 +45,9 @@
         data-aos="fade-up"
         data-aos-delay="200"
       >
-        <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center">
+        <div
+          class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
+        >
           <img
             src="/images/shaving.png"
             alt="Shaving Icon"
@@ -61,7 +67,9 @@
         data-aos="fade-up"
         data-aos-delay="300"
       >
-        <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center">
+        <div
+          class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
+        >
           <img
             src="/images/haircoloring.png"
             alt="Hair Coloring Icon"
@@ -81,7 +89,9 @@
         data-aos="fade-up"
         data-aos-delay="400"
       >
-        <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center">
+        <div
+          class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
+        >
           <img
             src="/images/facial.png"
             alt="Facial Icon"
@@ -109,3 +119,16 @@
     </div>
   </section>
 </template>
+
+<script setup>
+import { onMounted } from 'vue'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+
+onMounted(() => {
+  AOS.init({
+    duration: 800,
+    once: true,
+  })
+})
+</script>
