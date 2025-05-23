@@ -10,14 +10,13 @@
 
     <!-- List Testimoni -->
     <div
-      class="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto px-1 pb-4"
-      style="scrollbar-width: none;"
+      class="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto px-1 pb-4 no-scrollbar"
+      data-aos="fade-up"
     >
       <div
         v-for="(testimonial, index) in showAll ? testimonials : testimonials.slice(0, 3)"
         :key="index"
         class="bg-gray-700 p-6 rounded-lg shadow-lg min-w-[280px]"
-        data-aos="fade-up"
         :data-aos-delay="index * 100"
       >
         <p class="text-gray-300 mb-4 italic">"{{ testimonial.text }}"</p>
@@ -169,15 +168,34 @@ const testimonials = ref([
     text: 'Nyaman, bersih, dan profesional. Suka banget sama vibe-nya!',
     photo: 'https://randomuser.me/api/portraits/men/22.jpg',
   },
-]
+])
+
+const newTestimonial = ref({
+  name: '',
+  role: '',
+  text: '',
+  photo: 'https://randomuser.me/api/portraits/men/1.jpg', // default photo, can be randomized or replaced
+})
+
+function submitTestimonial() {
+  testimonials.value.unshift({ ...newTestimonial.value })
+  // reset form
+  newTestimonial.value = {
+    name: '',
+    role: '',
+    text: '',
+    photo: 'https://randomuser.me/api/portraits/men/1.jpg',
+  }
+}
 </script>
 
 <style scoped>
-/* Sembunyikan scrollbar horizontal di mobile dan Firefox */
-.flex::-webkit-scrollbar {
+/* Sembunyikan scrollbar horizontal di berbagai browser */
+.no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-.flex {
+.no-scrollbar {
+  -ms-overflow-style: none;
   scrollbar-width: none;
 }
 </style>
