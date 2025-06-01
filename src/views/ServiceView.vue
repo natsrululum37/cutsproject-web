@@ -106,6 +106,8 @@
       </div>
     </div>
 
+    <LayananComponent class="max-w-7xl mx-auto mt-20" />
+
     <!-- CTA Button -->
     <div class="text-center mt-20">
       <a
@@ -124,6 +126,7 @@
 import { onMounted } from 'vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import LayananComponent from '@/components/LayananComponent.vue'
 
 onMounted(() => {
   AOS.init({
