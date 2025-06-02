@@ -1,8 +1,6 @@
 <template>
   <div>
-    <!-- Service & Price Title (with slot for logo) -->
     <div class="flex items-center mb-6 justify-center gap-4">
-      <!-- Slot for logo/icon -->
       <slot name="service-logo"></slot>
       <div>
         <div class="flex items-center gap-2">
@@ -14,7 +12,6 @@
 
     <!-- SERVICE GRID -->
     <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch mb-8">
-      <!-- LEFT: General Service -->
       <div class="flex flex-col justify-between bg-black border border-gray-700 rounded-lg p-4">
         <div>
           <h3 class="text-yellow-400 text-base font-bold mb-4">General Service</h3>
@@ -59,7 +56,7 @@
       <!-- CENTER: Service Image -->
       <div class="flex flex-col justify-center items-center gap-6">
         <img
-          :src="img('haircut.webp')"
+          src="/images/home-page/haircut.webp"
           alt="Haircut"
           class="w-full h-48 object-cover rounded-lg shadow-md border-4 border-black"
         />
@@ -112,7 +109,7 @@
       <!-- LEFT: Hair Care Image -->
       <div class="flex flex-col justify-center items-center">
         <img
-          :src="img('hair-wash.webp')"
+          src="/images/home-page/hair-wash.webp"
           alt="Hair Wash"
           class="w-full h-40 object-cover rounded-lg shadow-md border-4 border-black"
         />
@@ -194,7 +191,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-const img = (file) => new URL(`../assets/images/home-pict/${file}`, import.meta.url).href
-</script>

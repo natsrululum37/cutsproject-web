@@ -15,8 +15,8 @@ const routes = [
     component: Home,
     meta: {
       title: 'Home',
-      description: 'Selamat datang di CUT PROJECT - barbershop terbaik untuk gaya Anda.'
-    }
+      description: 'Selamat datang di CUT PROJECT - barbershop terbaik untuk gaya Anda.',
+    },
   },
   {
     path: '/services',
@@ -24,8 +24,8 @@ const routes = [
     component: Services,
     meta: {
       title: 'Services',
-      description: 'Layanan potong rambut, shaving, dan styling eksklusif di CUT PROJECT.'
-    }
+      description: 'Layanan potong rambut, shaving, dan styling eksklusif di CUT PROJECT.',
+    },
   },
   {
     path: '/gallery',
@@ -33,8 +33,8 @@ const routes = [
     component: Gallery,
     meta: {
       title: 'Gallery',
-      description: 'Lihat hasil potongan terbaik dari tim barber profesional kami.'
-    }
+      description: 'Lihat hasil potongan terbaik dari tim barber profesional kami.',
+    },
   },
   {
     path: '/about',
@@ -42,8 +42,8 @@ const routes = [
     component: About,
     meta: {
       title: 'About',
-      description: 'Kenali tim dan filosofi di balik CUT PROJECT.'
-    }
+      description: 'Kenali tim dan filosofi di balik CUT PROJECT.',
+    },
   },
   {
     path: '/contact',
@@ -51,8 +51,8 @@ const routes = [
     component: Contact,
     meta: {
       title: 'Contact',
-      description: 'Hubungi CUT PROJECT untuk pertanyaan dan kerja sama.'
-    }
+      description: 'Hubungi CUT PROJECT untuk pertanyaan dan kerja sama.',
+    },
   },
   {
     path: '/review',
@@ -60,8 +60,8 @@ const routes = [
     component: Review,
     meta: {
       title: 'Review',
-      description: 'Lihat ulasan dan pengalaman pelanggan CUT PROJECT.'
-    }
+      description: 'Lihat ulasan dan pengalaman pelanggan CUT PROJECT.',
+    },
   },
   {
     path: '/reservation',
@@ -69,14 +69,34 @@ const routes = [
     component: Reservation,
     meta: {
       title: 'Reservation',
-      description: 'Pesan jadwal potong rambut Anda sekarang juga.'
-    }
-  }
+      description: 'Pesan jadwal potong rambut Anda sekarang juga.',
+    },
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    }
+    return {
+      top: 0,
+      left: 0,
+      behavior: 'auto',
+      immediate: true,
+    }
+  },
+})
+
+// Tambahan untuk memastikan scroll reset
+router.beforeEach((to, from, next) => {
+  if (to.path !== from.path) {
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+  }
+  next()
 })
 
 export default router

@@ -11,42 +11,70 @@
       Skip to main content
     </a>
 
-    <!-- Lazy load Header -->
-    <Header />
+    <!-- Slot for content above header (optional) -->
+    <slot name="above-main"></slot>
+
+    <!-- Header loaded synchronously -->
+    <Header v-if="showHeaderFooter" />
 
     <main
       id="main-content"
-      class="flex-grow"
+      class="flex-grow w-full max-w-5xl mx-auto px-4 sm:px-8 py-6 min-h-screen"
       role="main"
       :aria-live="isRouteChanging ? 'polite' : 'off'"
+      tabindex="-1"
       @focus="handleMainFocus"
     >
-      <!-- Best practice: router-view slot with transition -->
+      <!-- RouterView with error boundary -->
       <RouterView v-slot="{ Component }">
-        <Transition name="fade" mode="out-in">
+        <ErrorBoundary>
           <component :is="Component" />
-        </Transition>
+        </ErrorBoundary>
       </RouterView>
     </main>
 
-    <!-- Lazy load Footer -->
-    <Footer />
+    <!-- Slot for content below main (optional) -->
+    <slot name="below-main"></slot>
+
+    <!-- Footer loaded synchronously -->
+    <Footer v-if="showHeaderFooter" />
   </div>
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted } from 'vue'
+import { ref, nextTick, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { defineAsyncComponent } from 'vue'
-
-// Lazy load Header and Footer
-const Header = defineAsyncComponent(() => import('./components/HeaderComponent.vue'))
-const Footer = defineAsyncComponent(() => import('./components/FooterComponent.vue'))
+import Header from './components/HeaderComponent.vue'
+import Footer from './components/FooterComponent.vue'
+import ErrorBoundary from './components/ErrorBoundary.vue'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 // State
 const isLayoutStable = ref(false)
 const isRouteChanging = ref(false)
 const route = useRoute()
+
+// Improvisasi: Layout dinamis berdasarkan meta route
+const showHeaderFooter = ref(true)
+watch(
+  () => route.meta,
+  (meta) => {
+    showHeaderFooter.value = meta?.layout !== 'minimal'
+  },
+  { immediate: true },
+)
+
+// Watch hanya untuk keperluan accessibility
+watch(
+  () => route.path,
+  () => {
+    isRouteChanging.value = true
+    nextTick(() => {
+      isRouteChanging.value = false
+    })
+  },
+)
 
 // Accessibility: Skip to main content
 const skipToMain = () => {
@@ -78,10 +106,17 @@ const announceToScreenReader = (message) => {
   }, 1000)
 }
 
-// Transition event handlers for layout stability (optional)
+// Initialize AOS
 onMounted(() => {
   nextTick(() => {
     isLayoutStable.value = true
+  })
+  AOS.init({
+    duration: 800,
+    once: true,
+    mirror: false,
+    easing: 'ease-in-out',
+    offset: 60,
   })
 })
 </script>

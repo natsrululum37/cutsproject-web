@@ -11,7 +11,7 @@ export const useHeaderStore = defineStore('header', () => {
   // Getters
   const headerClasses = computed(() => ({
     'bg-black/95 backdrop-blur-lg shadow-xl border-b border-zinc-800': isScrolled.value,
-    'bg-gradient-to-r from-zinc-900/50 to-black/50': !isScrolled.value
+    'bg-gradient-to-r from-zinc-900/50 to-black/50': !isScrolled.value,
   }))
 
   // Actions
@@ -61,6 +61,6 @@ export const useHeaderStore = defineStore('header', () => {
     toggleMobileSearch,
     setMobileMenuOpen,
     setMobileSearchOpen,
-    closeAllMobileOverlays
+    closeAllMobileOverlays,
   }
 })

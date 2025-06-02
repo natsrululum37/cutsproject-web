@@ -23,9 +23,7 @@
         data-aos="fade-up"
         data-aos-delay="100"
       >
-        <div
-          class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
-        >
+        <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center">
           <img
             src="/images/haircut.png"
             alt="Haircut Icon"
@@ -35,7 +33,8 @@
         </div>
         <h3 class="text-3xl font-semibold mb-3 drop-shadow-md">Haircut</h3>
         <p class="text-gray-400 text-base leading-relaxed">
-          Potongan rambut presisi, klasik dan modern, disesuaikan bentuk wajah dan gaya pribadi Anda.
+          Potongan rambut presisi, klasik dan modern, disesuaikan bentuk wajah dan gaya pribadi
+          Anda.
         </p>
       </div>
 
@@ -45,9 +44,7 @@
         data-aos="fade-up"
         data-aos-delay="200"
       >
-        <div
-          class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
-        >
+        <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center">
           <img
             src="/images/shaving.png"
             alt="Shaving Icon"
@@ -67,9 +64,7 @@
         data-aos="fade-up"
         data-aos-delay="300"
       >
-        <div
-          class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
-        >
+        <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center">
           <img
             src="/images/haircoloring.png"
             alt="Hair Coloring Icon"
@@ -89,9 +84,7 @@
         data-aos="fade-up"
         data-aos-delay="400"
       >
-        <div
-          class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
-        >
+        <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center">
           <img
             src="/images/facial.png"
             alt="Facial Icon"

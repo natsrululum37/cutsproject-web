@@ -1,6 +1,6 @@
 <template>
   <section
-    class="py-16 px-4 md:px-0 bg-yellow-400 text-black flex flex-col items-center text-center rounded-xl shadow-xl max-w-2xl mx-auto my-12"
+    class="py-16 px-4 md:px-0 bg-yellow-400 text-black flex flex-col items-center text-center rounded-xl shadow-xl max-w-2xl mx-auto my-12 mb-4 md:mb-8"
   >
     <div>
       <h2 class="text-3xl md:text-4xl font-bold mb-3 tracking-wide">Siap Tampil Lebih Ganteng?</h2>
@@ -18,7 +18,3 @@
     </div>
   </section>
 </template>
-
-<script setup>
-// Tidak perlu script khusus di sini
-</script>

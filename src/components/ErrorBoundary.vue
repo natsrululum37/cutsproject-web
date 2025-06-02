@@ -4,14 +4,18 @@
     <div
       v-if="hasError"
       class="error-container bg-red-900/20 border border-red-500/30 rounded-lg p-6 m-4"
+      role="alert"
+      aria-live="assertive"
     >
       <div class="flex items-center mb-4">
         <ExclamationTriangleIcon class="h-8 w-8 text-red-400 mr-3" />
-        <h2 class="text-xl font-semibold text-red-400">Something went wrong</h2>
+        <h2 class="text-xl font-semibold text-red-400">Oops, something went wrong</h2>
       </div>
 
       <p class="text-gray-300 mb-4">
-        We're sorry, but there was an error loading this component. Please try refreshing the page.
+        Maaf, terjadi kesalahan saat memuat halaman ini.<br />
+        Silakan klik <b>Try Again</b> untuk memuat ulang bagian ini, atau <b>Go Home</b> untuk
+        kembali ke halaman utama.
       </p>
 
       <details v-if="errorInfo && isDevelopment" class="mb-4">
@@ -26,7 +30,7 @@
         </div>
       </details>
 
-      <div class="flex gap-3">
+      <div class="flex gap-3 mt-4">
         <button
           @click="retry"
           class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-400"
@@ -69,12 +73,6 @@ onErrorCaptured((error, instance, info) => {
 
   // Emit error for parent components or analytics
   emit('error', { error, instance, info })
-
-  // Log error in development
-  if (isDevelopment.value) {
-    console.error('ErrorBoundary caught an error:', error)
-    console.error('Component stack:', info)
-  }
 
   // Prevent error from propagating
   return false

@@ -16,12 +16,10 @@
       <swiper-slide
         v-for="(slide, index) in slides"
         :key="index"
-        class="relative w-full h-[350px] sm:h-[400px] md:h-[450px] lg:h-[550px] overflow-hidden"
+        class="relative w-full aspect-[16/9] max-h-[80vh] overflow-hidden"
       >
         <picture>
           <source :srcset="slide.imageWebp" type="image/webp" />
-          <source :srcset="slide.imageSm" media="(max-width: 640px)" />
-          <source :srcset="slide.imageMd" media="(max-width: 1024px)" />
           <img
             :src="slide.image"
             :alt="slide.alt"
@@ -37,14 +35,16 @@
         <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/50"></div>
 
         <div
-          class="absolute inset-0 flex flex-col items-start justify-center px-4 sm:px-6 md:px-8 lg:px-16 text-white z-10"
+          class="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-16 text-white z-10 text-center sm:items-start sm:text-left"
         >
           <h2
-            class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 drop-shadow-md"
+            class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-4 drop-shadow-md"
           >
             {{ slide.title }}
           </h2>
-          <p class="mb-4 sm:mb-6 max-w-lg drop-shadow-sm text-sm sm:text-base md:text-lg">
+          <p
+            class="mb-4 sm:mb-6 max-w-lg drop-shadow-sm text-xs sm:text-sm md:text-base lg:text-lg"
+          >
             {{ slide.subtitle }}
           </p>
           <button
@@ -58,13 +58,13 @@
       </swiper-slide>
 
       <div
-        class="swiper-button-prev !hidden sm:!flex"
+        class="swiper-button-prev !flex w-8 h-8 sm:w-12 sm:h-12 items-center justify-center"
         aria-label="Previous slide"
         :tabindex="0"
         role="button"
       ></div>
       <div
-        class="swiper-button-next !hidden sm:!flex"
+        class="swiper-button-next !flex w-8 h-8 sm:w-12 sm:h-12 items-center justify-center"
         aria-label="Next slide"
         :tabindex="0"
         role="button"
@@ -99,10 +99,8 @@ const observer = ref(null)
 
 const slides = [
   {
-    image: new URL('@/assets/images/hero1.webp', import.meta.url).href,
-    imageWebp: new URL('@/assets/images/hero1.webp', import.meta.url).href,
-    imageSm: new URL('@/assets/images/hero1-sm.webp', import.meta.url).href,
-    imageMd: new URL('@/assets/images/hero1-md.webp', import.meta.url).href,
+    image: '/images/home-page/slider/hero1.webp',
+    imageWebp: '/images/home-page/slider/hero1.webp',
     alt: 'Featured hairstyle showcase - professional haircut and styling',
     title: 'Transform Your Look',
     subtitle: 'Experience the best barber services in town.',
@@ -110,10 +108,8 @@ const slides = [
     ctaLink: '/reservation',
   },
   {
-    image: new URL('@/assets/images/hero2.webp', import.meta.url).href,
-    imageWebp: new URL('@/assets/images/hero2.webp', import.meta.url).href,
-    imageSm: new URL('@/assets/images/hero2-sm.webp', import.meta.url).href,
-    imageMd: new URL('@/assets/images/hero2-md.webp', import.meta.url).href,
+    image: '/images/home-page/slider/hero2.webp',
+    imageWebp: '/images/home-page/slider/hero2.webp',
     alt: 'Professional barber services - experienced stylist working with client',
     title: 'Expert Stylists',
     subtitle: 'Our team is ready to give you the perfect cut.',
@@ -121,10 +117,8 @@ const slides = [
     ctaLink: '/about',
   },
   {
-    image: new URL('@/assets/images/hero3.webp', import.meta.url).href,
-    imageWebp: new URL('@/assets/images/hero3.webp', import.meta.url).href,
-    imageSm: new URL('@/assets/images/hero3-sm.webp', import.meta.url).href,
-    imageMd: new URL('@/assets/images/hero3-md.webp', import.meta.url).href,
+    image: '/images/home-page/slider/hero3.webp',
+    imageWebp: '/images/home-page/slider/hero3.webp',
     alt: 'Salon interior and equipment - modern barber shop facilities',
     title: 'Modern Facilities',
     subtitle: 'Enjoy our state-of-the-art salon environment.',
@@ -175,7 +169,6 @@ const onSwiper = (swiper) => {
   swiperInstance.value = swiper
 }
 
-// Pause autoplay when slider is not in viewport (for better performance)
 onMounted(() => {
   if ('IntersectionObserver' in window) {
     observer.value = new IntersectionObserver(
@@ -198,7 +191,6 @@ onMounted(() => {
     }
   }
 
-  // Add keyboard navigation
   document.addEventListener('keydown', handleKeyboard)
 })
 
@@ -227,8 +219,8 @@ const handleKeyboard = (e) => {
   top: 50%;
   transform: translateY(-50%);
   background-color: rgba(0, 0, 0, 0.3);
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 9999px;
   display: flex;
   align-items: center;
@@ -238,6 +230,14 @@ const handleKeyboard = (e) => {
   z-index: 10;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+@media (min-width: 640px) {
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 3rem;
+    height: 3rem;
+  }
 }
 
 .swiper-button-prev:hover,

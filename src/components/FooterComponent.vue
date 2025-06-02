@@ -1,5 +1,10 @@
 <template>
-  <footer class="overflow-hidden text-white" :style="gradientStyle">
+  <footer
+    class="overflow-hidden text-white bg-gradient-to-b from-black via-gray-900 to-gray-800"
+    :style="gradientStyle"
+    role="contentinfo"
+    aria-label="Footer"
+  >
     <div
       class="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-8 px-6 py-16"
     >
@@ -9,8 +14,12 @@
           <span>CUT</span>
           <img
             src="@/assets/images/logo.webp"
-            alt="S"
+            alt="Logo CUT PROJECT Barbershop"
             class="w-10 h-10 inline-block -mx-0.5 align-middle"
+            width="40"
+            height="40"
+            loading="lazy"
+            decoding="async"
           />
           <span>PROJECT</span>
         </h2>
@@ -39,7 +48,9 @@
             <a
               href="https://instagram.com/cutsproject"
               target="_blank"
+              rel="noopener noreferrer"
               class="flex items-center gap-3 hover:text-yellow-400 transition"
+              aria-label="Instagram Cutsproject"
             >
               <font-awesome-icon :icon="['fab', 'instagram']" class="w-5 h-5" />
               <span>@cutsproject</span>
@@ -49,7 +60,9 @@
             <a
               href="https://wa.me/6281390830955"
               target="_blank"
+              rel="noopener noreferrer"
               class="flex items-center gap-3 hover:text-yellow-400 transition"
+              aria-label="WhatsApp Cutsproject"
             >
               <font-awesome-icon :icon="['fab', 'whatsapp']" class="w-5 h-5" />
               <span>0813-9083-0955</span>
@@ -59,7 +72,9 @@
             <a
               href="https://www.tiktok.com/@cutsproject"
               target="_blank"
+              rel="noopener noreferrer"
               class="flex items-center gap-3 hover:text-yellow-400 transition"
+              aria-label="Tiktok Cutsproject"
             >
               <font-awesome-icon :icon="['fab', 'tiktok']" class="w-5 h-5" />
               <span>cutsprojectofficial</span>
@@ -76,18 +91,14 @@
           <li class="mt-2">Sabtu – Minggu<br />09.00 – 22.30</li>
         </ul>
       </div>
-
-      <!-- Copyright -->
-      <div
-        class="col-span-full pt-10 text-center text-xs text-gray-500 border-t border-gray-700 mt-12"
-      >
-        <div class="flex flex-wrap justify-center items-center gap-2">
-          <span>© {{ year }} Cutsproject.com</span>
-          <span>·</span>
-          <a href="#" class="underline hover:text-yellow-300">Terms of Use</a>
-          <span>·</span>
-          <a href="#" class="underline hover:text-yellow-300">Privacy Policy</a>
-        </div>
+    </div>
+    <div class="border-t border-gray-700 pt-8 pb-4 text-center text-xs text-gray-500 bg-black/30">
+      <div class="flex flex-wrap justify-center items-center gap-2">
+        <span>© {{ year }} Cutsproject.com</span>
+        <span>·</span>
+        <a href="#" class="underline hover:text-yellow-300">Terms of Use</a>
+        <span>·</span>
+        <a href="#" class="underline hover:text-yellow-300">Privacy Policy</a>
       </div>
     </div>
   </footer>
@@ -111,5 +122,12 @@ const gradientStyle = computed(() => ({
 <style scoped>
 footer {
   box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.5);
+}
+@media (max-width: 640px) {
+  footer {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    font-size: 0.95rem;
+  }
 }
 </style>

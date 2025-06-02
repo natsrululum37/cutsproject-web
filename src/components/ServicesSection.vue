@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <!-- Service & Price Title (with slot for logo) -->
+  <div data-aos="fade-up" data-aos-delay="0">
     <div class="flex items-center mb-6 justify-center gap-4">
-      <!-- Slot for logo/icon -->
       <slot name="service-logo"></slot>
       <div>
         <div class="flex items-center gap-2">

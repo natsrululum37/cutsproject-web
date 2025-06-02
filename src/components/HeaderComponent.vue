@@ -1,6 +1,6 @@
 <template>
   <header
-    class="sticky top-0 left-0 w-full z-50 transition-all duration-300"
+    class="sticky top-0 left-0 w-full z-50 transition-all duration-300 bg-black/80 backdrop-blur-md shadow-md"
     :class="headerStore.headerClasses"
     role="banner"
     aria-label="Main navigation"
@@ -21,9 +21,9 @@
             <img
               :src="logoSrc"
               alt="CUT PROJECT Logo"
-              class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12"
-              width="28"
-              height="28"
+              class="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12"
+              width="40"
+              height="40"
               loading="eager"
               @load="logoLoaded = true"
               @error="logoSrc = '/fallback-logo.png'"
@@ -218,7 +218,9 @@
                     :to="item.link"
                     class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50 transition-all duration-200 group focus-visible:ring-2 focus-visible:ring-yellow-400"
                     :class="{
-                      'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute(item.link),
+                      'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute(
+                        item.link,
+                      ),
                     }"
                     @click="handleMobileNavClick(item.name)"
                     :aria-current="isActiveRoute(item.link) ? 'page' : undefined"
@@ -238,7 +240,10 @@
                       />
                     </div>
                     <span class="font-medium flex-1">{{ item.name }}</span>
-                    <ChevronRightIcon class="w-4 h-4 transition-all duration-200" aria-hidden="true" />
+                    <ChevronRightIcon
+                      class="w-4 h-4 transition-all duration-200"
+                      aria-hidden="true"
+                    />
                   </RouterLink>
                 </nav>
               </div>
@@ -470,16 +475,16 @@ const searchData = computed(() => [
 
 // SEARCH RESULTS
 const desktopSearchResults = computed(() =>
-  searchStore.performSearch(searchData.value, desktopSearchQuery.value)
+  searchStore.performSearch(searchData.value, desktopSearchQuery.value),
 )
 const mobileSearchResults = computed(() =>
-  searchStore.performSearch(searchData.value, mobileSearchQuery.value)
+  searchStore.performSearch(searchData.value, mobileSearchQuery.value),
 )
 const showDesktopSearchResults = computed(
-  () => desktopSearchFocused.value && desktopSearchQuery.value.length > 0
+  () => desktopSearchFocused.value && desktopSearchQuery.value.length > 0,
 )
 const showMobileSearchResults = computed(
-  () => mobileSearchFocused.value && mobileSearchQuery.value.length > 0
+  () => mobileSearchFocused.value && mobileSearchQuery.value.length > 0,
 )
 
 // ACCESSIBILITY: id and aria
@@ -488,12 +493,12 @@ const getMobileSearchResultId = (idx) => `mobile-search-result-${idx}`
 const activeDesktopSearchResultId = computed(() =>
   selectedDesktopSearchIndex.value >= 0
     ? getDesktopSearchResultId(selectedDesktopSearchIndex.value)
-    : null
+    : null,
 )
 const activeMobileSearchResultId = computed(() =>
   selectedMobileSearchIndex.value >= 0
     ? getMobileSearchResultId(selectedMobileSearchIndex.value)
-    : null
+    : null,
 )
 
 // ROUTE CHECK
@@ -519,16 +524,13 @@ const handleDesktopSearchKeydown = (e) => {
       e.preventDefault()
       selectedDesktopSearchIndex.value = Math.min(
         selectedDesktopSearchIndex.value + 1,
-        results.length - 1
+        results.length - 1,
       )
       scrollSearchOptionIntoView('desktop', selectedDesktopSearchIndex.value)
       break
     case 'ArrowUp':
       e.preventDefault()
-      selectedDesktopSearchIndex.value = Math.max(
-        selectedDesktopSearchIndex.value - 1,
-        -1
-      )
+      selectedDesktopSearchIndex.value = Math.max(selectedDesktopSearchIndex.value - 1, -1)
       scrollSearchOptionIntoView('desktop', selectedDesktopSearchIndex.value)
       break
     case 'Enter':
@@ -575,16 +577,13 @@ const handleMobileSearchKeydown = (e) => {
       e.preventDefault()
       selectedMobileSearchIndex.value = Math.min(
         selectedMobileSearchIndex.value + 1,
-        results.length - 1
+        results.length - 1,
       )
       scrollSearchOptionIntoView('mobile', selectedMobileSearchIndex.value)
       break
     case 'ArrowUp':
       e.preventDefault()
-      selectedMobileSearchIndex.value = Math.max(
-        selectedMobileSearchIndex.value - 1,
-        -1
-      )
+      selectedMobileSearchIndex.value = Math.max(selectedMobileSearchIndex.value - 1, -1)
       scrollSearchOptionIntoView('mobile', selectedMobileSearchIndex.value)
       break
     case 'Enter':
@@ -644,10 +643,7 @@ const closeMobileSearch = () => {
 // Scroll selected search option into view for accessibility
 function scrollSearchOptionIntoView(mode, idx) {
   if (idx < 0) return
-  const id =
-    mode === 'desktop'
-      ? getDesktopSearchResultId(idx)
-      : getMobileSearchResultId(idx)
+  const id = mode === 'desktop' ? getDesktopSearchResultId(idx) : getMobileSearchResultId(idx)
   const el = document.getElementById(id)
   if (el) el.scrollIntoView({ block: 'nearest' })
 }
@@ -701,19 +697,26 @@ watch(
     mobileSearchQuery.value = ''
     desktopSearchFocused.value = false
     mobileSearchFocused.value = false
-  }
+  },
 )
 </script>
 
 <style scoped>
-/* Tambahkan/ubah style sesuai kebutuhan proyekmu.
-   Jika kamu pakai Tailwind, boleh kosongkan style ini.
-   Contoh untuk animasi pulse logo: */
 @keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: .6; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 .animate-pulse-soft {
-  animation: pulse-soft 1.2s cubic-bezier(0.4,0,0.6,1) infinite;
+  animation: pulse-soft 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+header {
+  /* Responsive shadow and blur for sticky header */
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(8px);
 }
 </style>

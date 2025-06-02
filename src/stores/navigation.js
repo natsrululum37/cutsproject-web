@@ -18,7 +18,7 @@ export const useNavigationStore = defineStore('navigation', {
   getters: {
     // Get menu item by path
     getMenuItemByPath: (state) => (path) => {
-      return state.menu.find(item => item.link === path)
+      return state.menu.find((item) => item.link === path)
     },
 
     // Get menu items for search/filtering
@@ -36,7 +36,7 @@ export const useNavigationStore = defineStore('navigation', {
     // Check if any path matches current route
     hasActiveRoute: (state) => {
       return state.activeRoute !== null && state.activeRoute !== ''
-    }
+    },
   },
 
   actions: {
@@ -68,7 +68,7 @@ export const useNavigationStore = defineStore('navigation', {
       if (item && item.name && item.link) {
         this.menu.push({
           icon: 'HomeIcon',
-          ...item
+          ...item,
         })
       }
     },
@@ -78,6 +78,6 @@ export const useNavigationStore = defineStore('navigation', {
       if (index >= 0 && index < this.menu.length) {
         this.menu.splice(index, 1)
       }
-    }
-  }
+    },
+  },
 })

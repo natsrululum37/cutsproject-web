@@ -18,16 +18,15 @@
       <span>CUTS 4 - Jl. Majapahit, Tlogosari</span>
     </div>
     <div class="flex justify-center mb-8">
-    <img
-      :src="img('barbershop.webp')"
-      alt="Foto Toko"
-      class="rounded-lg shadow-lg w-full max-w-md object-cover"
-    />
-  </div>
+      <img
+        src="/images/home-page/barbershop.webp"
+        alt="Foto Toko"
+        class="rounded-lg shadow-lg w-full max-w-md object-cover"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
-const img = (file) => new URL(`../assets/images/home-pict/${file}`, import.meta.url).href
-
+// Tidak perlu helper img(), gunakan path absolut dari public/images/
 </script>

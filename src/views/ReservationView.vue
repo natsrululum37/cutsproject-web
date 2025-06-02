@@ -4,9 +4,7 @@
       <!-- Judul -->
       <div class="text-center mb-12" data-aos="fade-down">
         <h2 class="text-4xl font-bold mb-4">Reservasi Online</h2>
-        <p class="text-gray-400 text-lg">
-          Pesan jadwal potong rambut Anda dengan mudah dan cepat.
-        </p>
+        <p class="text-gray-400 text-lg">Pesan jadwal potong rambut Anda dengan mudah dan cepat.</p>
       </div>
 
       <!-- Form Reservasi -->

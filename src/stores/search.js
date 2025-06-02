@@ -29,7 +29,7 @@ export const useSearchStore = defineStore('search', {
     // Get recent unique searches
     uniqueRecentSearches: (state) => {
       return [...new Set(state.recentSearches)].slice(0, 5)
-    }
+    },
   },
 
   actions: {
@@ -54,7 +54,7 @@ export const useSearchStore = defineStore('search', {
       const trimmedTerm = term.trim()
 
       // Remove if already exists
-      this.searchHistory = this.searchHistory.filter(item => item !== trimmedTerm)
+      this.searchHistory = this.searchHistory.filter((item) => item !== trimmedTerm)
 
       // Add to beginning
       this.searchHistory.unshift(trimmedTerm)
@@ -72,7 +72,7 @@ export const useSearchStore = defineStore('search', {
       const trimmedTerm = term.trim()
 
       // Remove if already exists
-      this.recentSearches = this.recentSearches.filter(item => item !== trimmedTerm)
+      this.recentSearches = this.recentSearches.filter((item) => item !== trimmedTerm)
 
       // Add to beginning
       this.recentSearches.unshift(trimmedTerm)
@@ -124,6 +124,6 @@ export const useSearchStore = defineStore('search', {
         this.addToRecentSearches(result.name)
       }
       this.clearSearch()
-    }
-  }
+    },
+  },
 })
