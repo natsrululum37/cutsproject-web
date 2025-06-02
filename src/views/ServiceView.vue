@@ -126,7 +126,7 @@
 import { onMounted } from 'vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import LayananComponent from '@/components/LayananComponent.vue'
+import LayananComponent from '@/components/ServicesSection.vue'
 
 onMounted(() => {
   AOS.init({
