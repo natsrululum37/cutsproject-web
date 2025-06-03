@@ -105,8 +105,8 @@ const observer = ref(null)
 
 const slides = [
   {
-    image: '/images/home-page/slider/slide1.webp', // Pastikan path ini benar relatif terhadap folder `public`
-    imageWebp: '/images/home-page/slider/slide1.webp',
+    image: import.meta.env.BASE_URL + 'images/home-page/slider/slide1.webp',
+    imageWebp: import.meta.env.BASE_URL + 'images/home-page/slider/slide1.webp',
     alt: 'Featured hairstyle showcase - professional haircut and styling',
     title: 'Transform Your Look',
     subtitle: 'Experience the best barber services in town.',
@@ -114,8 +114,8 @@ const slides = [
     ctaLink: '/reservation',
   },
   {
-    image: '/images/home-page/slider/slide2.webp',
-    imageWebp: '/images/home-page/slider/slide2.webp',
+    image: import.meta.env.BASE_URL + 'images/home-page/slider/slide2.webp',
+    imageWebp: import.meta.env.BASE_URL + 'images/home-page/slider/slide2.webp',
     alt: 'Professional barber services - experienced stylist working with client',
     title: 'Expert Stylists',
     subtitle: 'Our team is ready to give you the perfect cut.',
@@ -123,8 +123,8 @@ const slides = [
     ctaLink: '/about',
   },
   {
-    image: '/images/home-page/slider/slide3.webp',
-    imageWebp: '/images/home-page/slider/slide3.webp',
+    image: import.meta.env.BASE_URL + 'images/home-page/slider/slide3.webp',
+    imageWebp: import.meta.env.BASE_URL + 'images/home-page/slider/slide3.webp',
     alt: 'Salon interior and equipment - modern barber shop facilities',
     title: 'Modern Facilities',
     subtitle: 'Enjoy our state-of-the-art salon environment.',
