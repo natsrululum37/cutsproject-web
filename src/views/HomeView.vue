@@ -12,9 +12,9 @@
 </template>
 
 <script setup>
-import HeroSection from '@/components/HeroSection.vue'
-import VisionMission from '@/components/VisionMissionSection.vue'
-import Location from '@/components/LocationSection.vue'
-import Services from '@/components/ServicesPriceSection.vue'
-import Cta from '@/components/CtaSection.vue'
+import HeroSection from '@/components/home/HeroSection.vue'
+import VisionMission from '@/components/home/VisionMissionSection.vue'
+import Location from '@/components/home/LocationSection.vue'
+import Services from '@/components/home/ServicesPriceSection.vue'
+import Cta from '@/components/home/CtaSection.vue'
 </script>
