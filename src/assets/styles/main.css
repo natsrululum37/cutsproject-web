@@ -1,0 +1,219 @@
+@import 'tailwindcss';
+
+:root {
+  /* Colors */
+  --color-primary: #facc15;
+  --color-background: #000;
+  --color-text: #fff;
+  --color-text-muted: #9ca3af;
+  --color-border: rgba(75, 85, 99, 0.5);
+
+  /* Typography */
+  --font-stack: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Spacing */
+  --spacing-base: 1rem;
+  --spacing-large: 2rem;
+  --spacing-xl: 4rem;
+  --spacing-2xl: 6rem;
+
+  /* Layout */
+  --container-max: 1280px;
+  --header-height: 4rem;
+  --section-spacing: var(--spacing-2xl) 0;
+}
+
+html {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: var(--font-stack);
+  font-display: swap;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* App Layout */
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-wrapper main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* View Layouts */
+.view-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-background);
+}
+
+.view-section {
+  padding: var(--spacing-xl) var(--spacing-base);
+  max-width: var(--container-max);
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.view-section-fluid {
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* Section Variants */
+.section-dark {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.section-gradient {
+  background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
+}
+
+.section-border {
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Section Spacing */
+.section-spacing {
+  padding-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-xl);
+}
+
+@media (min-width: 768px) {
+  .section-spacing {
+    padding-top: var(--spacing-2xl);
+    padding-bottom: var(--spacing-2xl);
+  }
+}
+
+/* Container Utilities */
+.container-narrow {
+  max-width: 768px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-base);
+}
+
+.container-wide {
+  max-width: 1536px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-base);
+}
+
+/* Spacing Utilities */
+.section-spacing {
+  padding: var(--section-spacing);
+}
+
+.section-spacing-y {
+  padding-top: var(--spacing-2xl);
+  padding-bottom: var(--spacing-2xl);
+}
+
+/* Page Transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.preload-hint {
+  content: '';
+}
+
+img,
+video {
+  height: auto;
+  max-width: 100%;
+}
+
+.layout-stable {
+  will-change: auto;
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smooth-scroll {
+    scroll-behavior: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+:focus {
+  outline: 2px solid #facc15;
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid #facc15;
+  outline-offset: 2px;
+}
+
+@media print {
+  body {
+    background: none;
+    color: #000;
+  }
+
+  .no-print {
+    display: none;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.prevent-scroll {
+  overflow: hidden;
+}

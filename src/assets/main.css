@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 
+/* Base styles */
 html {
   box-sizing: border-box;
   -webkit-text-size-adjust: 100%;
@@ -35,6 +36,38 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Layout utility classes */
+.view-section {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: 100%;
+}
+
+.view-section-fluid {
+  width: 100%;
+}
+
+.section-spacing {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 768px) {
+  .section-spacing {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+.section-border {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Other existing styles */
 .preload-hint {
   content: '';
 }

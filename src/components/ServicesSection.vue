@@ -1,5 +1,5 @@
 <template>
-  <div data-aos="fade-up" data-aos-delay="0">
+  <div class="view-section" data-aos="fade-up" data-aos-delay="0">
     <div class="flex items-center mb-6 justify-center gap-4">
       <slot name="service-logo"></slot>
       <div>
@@ -11,7 +11,7 @@
     </div>
 
     <!-- SERVICE GRID -->
-    <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch mb-8">
       <!-- LEFT: General Service -->
       <div class="flex flex-col justify-between bg-black border border-gray-700 rounded-lg p-4">
         <div>

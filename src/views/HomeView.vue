@@ -1,14 +1,14 @@
 <template>
-  <section class="bg-black text-white">
-    <h1 class="sr-only">Welcome to Our Website</h1>
-    <div data-aos="fade-in">
+  <div class="bg-black text-white">
+    <h1 class="sr-only">Welcome to CutsProject</h1>
+    <main>
       <HeroSection />
       <VisionMission />
       <Location />
       <Services />
       <Cta />
-    </div>
-  </section>
+    </main>
+  </div>
 </template>
 
 <script setup>

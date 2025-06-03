@@ -1,135 +1,122 @@
 <template>
-  <section class="bg-black text-white py-20 px-6">
-    <div class="max-w-4xl mx-auto">
-      <!-- Judul -->
-      <div class="text-center mb-12" data-aos="fade-down">
-        <h2 class="text-4xl font-bold mb-4">Reservasi Online</h2>
-        <p class="text-gray-400 text-lg">Pesan jadwal potong rambut Anda dengan mudah dan cepat.</p>
-      </div>
+  <div class="min-h-screen section-dark">
+    <div class="view-section section-spacing-y">
+      <div class="container-narrow">
+        <h1 class="text-4xl font-bold text-center mb-8" data-aos="fade-up">Reservasi</h1>
 
-      <!-- Form Reservasi -->
-      <form
-        class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-800 p-8 rounded-2xl shadow-xl"
-        data-aos="fade-up"
-        @submit.prevent="handleSubmit"
-      >
-        <div class="col-span-1">
-          <label class="block mb-2 font-semibold text-gray-200">Nama Lengkap</label>
-          <input
-            v-model="nama"
-            type="text"
-            placeholder="Masukkan nama Anda"
-            class="w-full p-3 rounded-lg bg-black text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            required
-          />
+        <div class="bg-zinc-900 rounded-xl p-6 md:p-8 shadow-xl border border-zinc-800">
+          <form @submit.prevent="handleSubmit" class="space-y-6">
+            <div class="space-y-4">
+              <label class="block">
+                <span class="text-white">Nama Lengkap</span>
+                <input
+                  type="text"
+                  v-model="form.name"
+                  class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
+                  required
+                />
+              </label>
+
+              <label class="block">
+                <span class="text-white">WhatsApp</span>
+                <input
+                  type="tel"
+                  v-model="form.whatsapp"
+                  class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
+                  required
+                />
+              </label>
+
+              <label class="block">
+                <span class="text-white">Tanggal</span>
+                <input
+                  type="date"
+                  v-model="form.date"
+                  class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
+                  required
+                />
+              </label>
+
+              <label class="block">
+                <span class="text-white">Waktu</span>
+                <select
+                  v-model="form.time"
+                  class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
+                  required
+                >
+                  <option value="">Pilih Waktu</option>
+                  <option v-for="time in availableTimes" :key="time" :value="time">
+                    {{ time }}
+                  </option>
+                </select>
+              </label>
+
+              <label class="block">
+                <span class="text-white">Layanan</span>
+                <select
+                  v-model="form.service"
+                  class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
+                  required
+                >
+                  <option value="">Pilih Layanan</option>
+                  <option v-for="service in services" :key="service" :value="service">
+                    {{ service }}
+                  </option>
+                </select>
+              </label>
+
+              <label class="block">
+                <span class="text-white">Catatan (opsional)</span>
+                <textarea
+                  v-model="form.notes"
+                  rows="3"
+                  class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
+                ></textarea>
+              </label>
+            </div>
+
+            <div class="text-center">
+              <button
+                type="submit"
+                class="bg-yellow-500 text-black px-8 py-3 rounded-lg font-semibold hover:bg-yellow-400 transition-colors"
+              >
+                Buat Reservasi
+              </button>
+            </div>
+          </form>
         </div>
-
-        <div class="col-span-1">
-          <label class="block mb-2 font-semibold text-gray-200">Nomor Telepon</label>
-          <input
-            v-model="telepon"
-            type="tel"
-            placeholder="+62..."
-            class="w-full p-3 rounded-lg bg-black text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            required
-          />
-        </div>
-
-        <div class="col-span-1">
-          <label class="block mb-2 font-semibold text-gray-200">Tanggal</label>
-          <input
-            v-model="tanggal"
-            type="date"
-            class="w-full p-3 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            required
-          />
-        </div>
-
-        <div class="col-span-1">
-          <label class="block mb-2 font-semibold text-gray-200">Waktu</label>
-          <input
-            v-model="waktu"
-            type="time"
-            class="w-full p-3 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            required
-          />
-        </div>
-
-        <div class="col-span-2">
-          <label class="block mb-2 font-semibold text-gray-200">Pilih Layanan</label>
-          <select
-            v-model="layanan"
-            class="w-full p-3 rounded-lg bg-black text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            required
-          >
-            <option value="" disabled>Pilih layanan...</option>
-            <option>Haircut</option>
-            <option>Shaving</option>
-            <option>Hair Coloring</option>
-            <option>Facial</option>
-            <option>Package (Cut + Shave)</option>
-          </select>
-        </div>
-
-        <div class="col-span-2">
-          <label class="block mb-2 font-semibold text-gray-200">Catatan Tambahan</label>
-          <textarea
-            v-model="catatan"
-            rows="3"
-            placeholder="Tuliskan permintaan khusus jika ada..."
-            class="w-full p-3 rounded-lg bg-black text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          ></textarea>
-        </div>
-
-        <div class="col-span-2 text-center">
-          <button
-            type="submit"
-            class="bg-yellow-400 text-black px-8 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition duration-300"
-          >
-            Kirim Reservasi
-          </button>
-        </div>
-      </form>
-
-      <!-- Notifikasi submit -->
-      <div v-if="showSuccess" class="mt-8 text-center">
-        <p class="text-green-400 font-semibold">Reservasi berhasil dikirim!</p>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import AOS from 'aos'
-import 'aos/dist/aos.css'
+import { ref } from 'vue'
 
-const nama = ref('')
-const telepon = ref('')
-const tanggal = ref('')
-const waktu = ref('')
-const layanan = ref('')
-const catatan = ref('')
-const showSuccess = ref(false)
-
-onMounted(() => {
-  AOS.init({
-    duration: 800,
-    once: true,
-  })
+const form = ref({
+  name: '',
+  whatsapp: '',
+  date: '',
+  time: '',
+  service: '',
+  notes: ''
 })
 
-function handleSubmit() {
-  showSuccess.value = true
-  // Reset form (opsional, jika ingin reset otomatis setelah submit)
-  nama.value = ''
-  telepon.value = ''
-  tanggal.value = ''
-  waktu.value = ''
-  layanan.value = ''
-  catatan.value = ''
-  setTimeout(() => {
-    showSuccess.value = false
-  }, 3000)
+const availableTimes = [
+  '10:00', '11:00', '12:00', '13:00', '14:00',
+  '15:00', '16:00', '17:00', '18:00', '19:00'
+]
+
+const services = [
+  'Haircut Classic',
+  'Haircut + Wash',
+  'Hair Coloring',
+  'Beard Trim',
+  'Full Package (Haircut + Wash + Styling)'
+]
+
+const handleSubmit = () => {
+  // Handle form submission
+  console.log('Form submitted:', form.value)
 }
 </script>

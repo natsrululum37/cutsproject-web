@@ -1,88 +1,71 @@
 <template>
-  <div ref="sliderContainer" class="w-full max-w-full mx-auto relative" aria-label="Image Slider">
-    <swiper
-      :modules="swiperModules"
-      :slides-per-view="1"
-      :loop="true"
-      effect="fade"
-      :speed="800"
-      :autoplay="autoplayConfig"
-      :pagination="paginationConfig"
-      :navigation="navigationConfig"
-      :a11y="a11yConfig"
-      @swiper="onSwiper"
-      class="w-full rounded-lg"
-    >
-      <swiper-slide
-        v-for="(slide, index) in slides"
-        :key="index"
-        class="relative w-full aspect-[16/9] max-h-[80vh] overflow-hidden bg-black"
+  <section class="view-section section-spacing" aria-label="Image Slider">
+    <div ref="sliderContainer" class="relative w-full max-w-full mx-auto">
+      <swiper
+        :modules="swiperModules"
+        :slides-per-view="1"
+        :loop="true"
+        effect="fade"
+        :speed="800"
+        :autoplay="autoplayConfig"
+        :pagination="paginationConfig"
+        :navigation="navigationConfig"
+        :a11y="a11yConfig"
+        @swiper="onSwiper"
+        class="w-full rounded-lg"
       >
-        <picture>
-          <source :srcset="slide.imageWebp" type="image/webp" />
-          <img
-            :src="slide.image"
-            :alt="slide.alt"
-            class="w-full h-full object-contain"
-            :loading="index === 0 ? 'eager' : 'lazy'"
-            width="1280"
-            height="720"
-            :fetchpriority="index === 0 ? 'high' : 'auto'"
-            decoding="async"
-          />
-        </picture>
-
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/50"></div>
-
-        <div
-          class="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-16 text-white z-10 text-center sm:items-start sm:text-left"
+        <swiper-slide
+          v-for="(slide, index) in slides"
+          :key="index"
+          class="relative w-full aspect-[16/9] overflow-hidden bg-black"
         >
-          <!-- Konten teks di dalam slide -->
-          <div class="max-w-xl"> <!-- Opsional: Bungkus konten teks untuk membatasi lebar jika diperlukan pada layar sangat besar -->
-            <h2
-              class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-4 drop-shadow-md"
-            >
-              {{ slide.title }}
-            </h2>
-            <p
-              class="mb-4 sm:mb-6 max-w-lg drop-shadow-sm text-xs sm:text-sm md:text-base lg:text-lg"
-            >
-              {{ slide.subtitle }}
-            </p>
-            <button
-              class="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 sm:px-5 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2"
-              @click="navigateTo(slide.ctaLink)"
-              :aria-label="`${slide.ctaText} - ${slide.title}`"
-            >
-              {{ slide.ctaText }}
-            </button>
+          <picture>
+            <source :srcset="slide.imageWebp" type="image/webp" />
+            <img
+              :src="slide.image"
+              :alt="slide.alt"
+              class="w-full h-full object-cover brightness-75"
+              :loading="index === 0 ? 'eager' : 'lazy'"
+              style="aspect-ratio: 16/9; max-width: 100vw; max-height: 100vh;"
+            />
+          </picture>
+
+          <!-- Overlay Gradient -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-10 transition-all duration-700"></div>
+
+          <!-- Slide Content -->
+          <div class="absolute inset-0 flex items-center justify-center z-20">
+            <div class="max-w-4xl w-full mx-auto px-4 text-center text-white py-8 sm:py-12 md:py-20">
+              <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 drop-shadow-xl transition-all duration-500">
+                {{ slide.title }}
+              </h2>
+              <p class="mb-8 max-w-xl mx-auto text-base sm:text-lg md:text-xl drop-shadow-lg transition-all duration-500">
+                {{ slide.subtitle }}
+              </p>
+              <button
+                class="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-4 rounded-xl font-bold shadow-lg hover:scale-105 focus:scale-105 active:scale-95 transition-all duration-300 outline-none ring-2 ring-yellow-400/0 focus:ring-yellow-400/60"
+                @click="navigateTo(slide.ctaLink)"
+                :aria-label="`${slide.ctaText} - ${slide.title}`"
+              >
+                {{ slide.ctaText }}
+              </button>
+            </div>
           </div>
-        </div>
-      </swiper-slide>
+        </swiper-slide>
 
-      <!-- Custom Navigation Buttons -->
-      <div
-        class="swiper-button-prev !flex w-8 h-8 sm:w-12 sm:h-12 items-center justify-center"
-        aria-label="Previous slide"
-        :tabindex="0"
-        role="button"
-      ></div>
-      <div
-        class="swiper-button-next !flex w-8 h-8 sm:w-12 sm:h-12 items-center justify-center"
-        aria-label="Next slide"
-        :tabindex="0"
-        role="button"
-      ></div>
-      <!-- Custom Pagination Container -->
-      <div class="swiper-pagination absolute bottom-4 w-full z-10"></div>
-    </swiper>
-
-    <noscript>
-      <div class="p-4 bg-yellow-100 text-yellow-800 rounded">
-        Please enable JavaScript to view the image slider.
-      </div>
-    </noscript>
-  </div>
+        <!-- Navigation -->
+        <div
+          class="swiper-button-prev !hidden md:!flex w-12 h-12 items-center justify-center"
+          aria-label="Previous slide"
+        />
+        <div
+          class="swiper-button-next !hidden md:!flex w-12 h-12 items-center justify-center"
+          aria-label="Next slide"
+        />
+        <div class="swiper-pagination absolute bottom-4 w-full" />
+      </swiper>
+    </div>
+  </section>
 </template>
 
 <script setup>
@@ -226,106 +209,29 @@ const handleKeyboard = (e) => {
 </script>
 
 <style scoped>
-/* Styling untuk Tombol Navigasi Kustom */
-.swiper-button-prev,
-.swiper-button-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.3); /* Latar belakang semi-transparan */
-  width: 2rem; /* sm: 3rem */
-  height: 2rem; /* sm: 3rem */
-  border-radius: 9999px; /* Bulat penuh */
-  display: flex; /* Untuk memusatkan ikon (jika ada) */
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
-  color: #fff; /* Warna ikon default (putih) */
-  z-index: 10;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Bayangan halus */
+.swiper :deep(.swiper-button-prev),
+.swiper :deep(.swiper-button-next) {
+  color: var(--color-primary);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
 }
 
-/* Ukuran lebih besar pada layar sm ke atas */
-@media (min-width: 640px) {
-  .swiper-button-prev,
-  .swiper-button-next {
-    width: 3rem;
-    height: 3rem;
-  }
+.swiper :deep(.swiper-pagination-bullet) {
+  background: var(--color-primary);
+  opacity: 0.5;
 }
 
-/* Efek hover pada tombol navigasi */
-.swiper-button-prev:hover,
-.swiper-button-next:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-/* Indikator fokus untuk aksesibilitas */
-.swiper-button-prev:focus,
-.swiper-button-next:focus {
-  outline: 2px solid #ffd700; /* Warna kuning khas */
-  outline-offset: 2px;
-}
-
-/* Styling untuk Pagination Bullets Kustom */
-:deep(.swiper-pagination-bullet) {
-  background: white; /* Warna default bullet */
-  opacity: 0.7;
-  width: 8px;
-  height: 8px;
-  margin: 0 4px !important; /* Paksa margin */
-  transition: all 0.3s ease;
-  border-radius: 50%; /* Pastikan bulat */
-}
-
-:deep(.swiper-pagination-bullet-active) {
+.swiper :deep(.swiper-pagination-bullet-active) {
   opacity: 1;
-  background: #ffd700; /* Warna bullet aktif (kuning) */
-  width: 10px; /* Sedikit lebih besar saat aktif */
-  height: 10px;
 }
 
-/* Ukuran pagination lebih besar pada layar sm ke atas */
-@media (min-width: 640px) {
-  :deep(.swiper-pagination-bullet) {
-    width: 10px;
-    height: 10px;
-    margin: 0 5px !important;
-  }
-
-  :deep(.swiper-pagination-bullet-active) {
-    width: 12px;
-    height: 12px;
-  }
-}
-
-/* Style untuk fokus visible pada tombol (jika ada tombol lain) */
-button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.5); /* Efek glow kuning saat fokus */
-}
-
-/* Sembunyikan elemen slider saat mencetak */
-@media print {
-  .swiper-button-prev,
-  .swiper-button-next,
-  .swiper-pagination {
-    display: none;
-  }
-}
-
-/* Kurangi gerakan untuk pengguna yang memintanya */
-@media (prefers-reduced-motion: reduce) {
-  .swiper-slide img, /* Targetkan gambar jika ada animasi pada gambar */
-  .swiper-button-prev,
-  .swiper-button-next {
-    transition: none !important;
-    transform: none !important; /* Nonaktifkan transisi transform jika ada */
-  }
-
-  .swiper {
-    --swiper-speed: 0ms !important; /* Nonaktifkan kecepatan transisi swiper */
+/* Responsive padding for slide content */
+@media (max-width: 640px) {
+  .swiper-slide .text-center {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 }
 </style>

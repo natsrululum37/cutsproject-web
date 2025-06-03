@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 import Home from '@/views/HomeView.vue'
 import Gallery from '@/views/GalleryView.vue'
@@ -6,7 +6,7 @@ import About from '@/views/AboutView.vue'
 import Contact from '@/views/ContactView.vue'
 import Reservation from '@/views/ReservationView.vue'
 import Services from '@/views/ServiceView.vue'
-import Review from '@/views/ReviewViews.vue' // Pastikan nama file dan import sama persis!
+import Review from '@/views/ReviewViews.vue'
 
 const routes = [
   {
@@ -75,7 +75,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
@@ -100,4 +100,3 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router
-

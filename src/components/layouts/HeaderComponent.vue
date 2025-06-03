@@ -1,45 +1,34 @@
 <template>
   <header
-    class="sticky top-0 left-0 w-full z-50 transition-all duration-300 bg-black/80 backdrop-blur-md shadow-md"
+    class="sticky top-0 left-0 w-full z-50 transition-all duration-300"
     :class="headerStore.headerClasses"
     role="banner"
     aria-label="Main navigation"
   >
-    <nav class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8" role="navigation">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" role="navigation">
       <div class="flex flex-wrap items-center justify-between h-auto py-2 gap-y-2">
         <!-- Logo -->
         <RouterLink
           to="/"
-          class="flex items-center space-x-2 text-white text-xl font-bold flex-shrink-0 group focus-visible:ring-2 focus-visible:ring-yellow-400"
-          aria-label="CUT PROJECT - Home"
+          class="flex items-center gap-1.5 group"
+          aria-label="CUT PROJECT - Beranda"
           @click="trackLogoClick"
         >
-          <span class="text-base md:text-lg transition-all group-hover:text-yellow-400">CUT</span>
-          <div class="relative">
-            <img
-              :src="logoSrc"
-              alt="CUT PROJECT Logo"
-              class="h-8 w-auto md:h-10 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12"
-              width="40"
-              height="40"
-              loading="eager"
-              @load="logoLoaded = true"
-              @error="logoSrc = '/fallback-logo.png'"
-              :aria-busy="!logoLoaded"
-              :class="{ 'animate-pulse-soft': !logoLoaded }"
-            />
-            <div
-              class="absolute inset-0 rounded-full bg-yellow-400/20 scale-0 group-hover:scale-150 transition-all duration-300 -z-10"
-              aria-hidden="true"
-            ></div>
-          </div>
-          <span class="text-base md:text-lg transition-all group-hover:text-yellow-400">PROJECT</span>
+          <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">CUT</span>
+          <img
+            :src="logoSrc"
+            alt="Logo"
+            class="h-6 w-6 object-contain group-hover:scale-105 transition-transform duration-300"
+            @error="handleLogoError"
+            loading="eager"
+          />
+          <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">PROJECT</span>
         </RouterLink>
 
         <!-- Search Bar (desktop only) -->
         <div class="hidden lg:flex flex-1 justify-center mx-4">
           <div class="relative w-64 group" role="search">
-            <label for="desktop-search" class="sr-only">Cari layanan/menu</label>
+            <label for="desktop-search" class="sr-only">Cari layanan atau menu</label>
             <input
               id="desktop-search"
               type="search"
@@ -48,8 +37,9 @@
               placeholder="Cari layanan/menu…"
               autocomplete="off"
               spellcheck="false"
-              :aria-autocomplete="'list'"
-              :aria-controls="'desktop-search-listbox'"
+              :aria-expanded="showDesktopSearchResults"
+              :aria-haspopup="'listbox'"
+              :aria-controls="showDesktopSearchResults ? 'desktop-search-listbox' : undefined"
               :aria-activedescendant="activeDesktopSearchResultId"
               @focus="handleDesktopSearchFocus"
               @blur="handleDesktopSearchBlur"
@@ -60,6 +50,64 @@
               class="absolute top-1/2 left-3 w-4 h-4 text-gray-400 group-focus-within:text-yellow-400 transition-colors duration-200 transform -translate-y-1/2 pointer-events-none"
               aria-hidden="true"
             />
+
+            <!-- Desktop Search Results -->
+            <Transition
+              enter-active-class="transition ease-out duration-200"
+              enter-from-class="opacity-0 translate-y-1"
+              enter-to-class="opacity-100 translate-y-0"
+              leave-active-class="transition ease-in duration-150"
+              leave-from-class="opacity-100 translate-y-0"
+              leave-to-class="opacity-0 translate-y-1"
+            >
+              <ul
+                v-if="showDesktopSearchResults"
+                id="desktop-search-listbox"
+                class="absolute top-full left-0 right-0 mt-2 bg-zinc-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-zinc-700/50 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-transparent z-50"
+                role="listbox"
+                aria-label="Hasil pencarian menu dan layanan"
+              >
+                <li
+                  v-for="(result, index) in desktopSearchResults"
+                  :id="getDesktopSearchResultId(index)"
+                  :key="result.id"
+                  class="px-4 py-3 text-white hover:bg-zinc-700/60 cursor-pointer transition-all duration-200 border-b border-zinc-700/30 last:border-b-0"
+                  :class="{
+                    'bg-zinc-700/80': selectedDesktopSearchIndex === index,
+                  }"
+                  :aria-selected="selectedDesktopSearchIndex === index"
+                  role="option"
+                  @mousedown.prevent="selectDesktopSearchResult(result)"
+                  @mouseenter="selectedDesktopSearchIndex = index"
+                >
+                  <div class="flex items-center">
+                    <div class="p-2 rounded-lg bg-yellow-400/10 mr-3">
+                      <component
+                        v-if="result.icon && icons[result.icon]"
+                        :is="icons[result.icon]"
+                        class="w-4 h-4 text-yellow-400 flex-shrink-0"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-medium text-sm">{{ result.name }}</div>
+                      <div class="text-xs text-gray-400 mt-1">{{ result.category || 'Layanan' }}</div>
+                    </div>
+                  </div>
+                </li>
+                <li
+                  v-if="desktopSearchResults.length === 0 && desktopSearchQuery.length > 0"
+                  class="px-4 py-6 text-gray-400 text-center text-sm"
+                  role="option"
+                  aria-disabled="true"
+                >
+                  <div class="flex flex-col items-center space-y-2">
+                    <MagnifyingGlassIcon class="w-8 h-8 text-gray-500" aria-hidden="true" />
+                    <div>Tidak ada hasil untuk "{{ desktopSearchQuery }}"</div>
+                  </div>
+                </li>
+              </ul>
+            </Transition>
           </div>
         </div>
 
@@ -69,7 +117,7 @@
             v-for="(item, index) in navigationMenu"
             :key="`nav-${item.name}-${index}`"
             :to="item.link"
-            class="relative text-gray-300 hover:text-white font-medium transition-all duration-300 group px-3 py-2 rounded-lg hover:bg-zinc-800/50 focus-visible:ring-2 focus-visible:ring-yellow-400"
+            class="relative text-base font-medium text-gray-300 hover:text-white transition-all duration-300 group px-3 py-2 rounded-lg hover:bg-zinc-800/50 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             :class="{
               'text-yellow-400': isActiveRoute(item.link),
             }"
@@ -93,8 +141,9 @@
           <button
             type="button"
             @click="handleMobileSearchToggle"
-            class="text-gray-300 hover:text-white p-2.5 rounded-xl hover:bg-zinc-800/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all duration-200"
+            class="text-gray-300 hover:text-white p-2.5 rounded-xl hover:bg-zinc-800/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:ring-offset-2 focus:ring-offset-black transition-all duration-200"
             :class="{ 'bg-zinc-800/50 text-yellow-400': isMobileSearchOpen }"
+            :aria-expanded="isMobileSearchOpen"
             aria-label="Buka pencarian"
           >
             <MagnifyingGlassIcon class="h-5 w-5" />
@@ -102,8 +151,9 @@
           <button
             type="button"
             @click="handleMobileMenuToggle"
-            class="text-gray-300 hover:text-white p-2.5 rounded-xl hover:bg-zinc-800/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all duration-200"
+            class="text-gray-300 hover:text-white p-2.5 rounded-xl hover:bg-zinc-800/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:ring-offset-2 focus:ring-offset-black transition-all duration-200"
             :class="{ 'bg-zinc-800/50 text-yellow-400': isMobileMenuOpen }"
+            :aria-expanded="isMobileMenuOpen"
             aria-label="Buka menu navigasi"
           >
             <Transition mode="out-in">
@@ -127,14 +177,18 @@
           v-if="isMobileMenuOpen"
           class="fixed top-20 left-1/2 transform -translate-x-1/2 w-80 sm:w-96 bg-zinc-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-zinc-700/50 z-50 mx-4 overflow-hidden"
           @click.stop
+          @keydown="handleMobileMenuKeydown"
           aria-modal="true"
           role="dialog"
+          aria-labelledby="mobile-menu-title"
+          tabindex="-1"
+          ref="mobileMenuRef"
         >
           <div class="py-2">
             <div
               class="px-6 py-4 border-b border-zinc-700/50 bg-gradient-to-r from-zinc-800/30 to-zinc-900/30"
             >
-              <h3 class="text-white text-sm font-semibold flex items-center">
+              <h3 id="mobile-menu-title" class="text-white text-sm font-semibold flex items-center">
                 <Bars3Icon class="w-4 h-4 mr-2 text-yellow-400" />
                 Menu Navigasi
               </h3>
@@ -144,7 +198,7 @@
                 v-for="(item, index) in navigationMenu"
                 :key="`mobile-nav-${item.name}-${index}`"
                 :to="item.link"
-                class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50 transition-all duration-200 group focus-visible:ring-2 focus-visible:ring-yellow-400"
+                class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50 transition-all duration-200 group focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-inset"
                 :class="{
                   'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute(
                     item.link,
@@ -197,7 +251,7 @@
       >
         <div v-if="isMobileSearchOpen" class="lg:hidden pb-4 px-1">
           <div class="relative group">
-            <label for="mobile-search" class="sr-only">Cari layanan/menu</label>
+            <label for="mobile-search" class="sr-only">Cari layanan atau menu</label>
             <MagnifyingGlassIcon
               class="absolute top-1/2 left-4 w-5 h-5 text-gray-400 transform -translate-y-1/2 z-10 pointer-events-none"
               aria-hidden="true"
@@ -211,8 +265,9 @@
               placeholder="Cari layanan/menu…"
               autocomplete="off"
               spellcheck="false"
-              :aria-autocomplete="'list'"
-              :aria-controls="'mobile-search-listbox'"
+              :aria-expanded="showMobileSearchResults"
+              :aria-haspopup="'listbox'"
+              :aria-controls="showMobileSearchResults ? 'mobile-search-listbox' : undefined"
               :aria-activedescendant="activeMobileSearchResultId"
               @focus="handleMobileSearchFocus"
               @blur="handleMobileSearchBlur"
@@ -222,7 +277,7 @@
             <button
               type="button"
               @click="closeMobileSearch"
-              class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white p-1 rounded-full hover:bg-zinc-700/50 transition-all duration-200"
+              class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white p-1 rounded-full hover:bg-zinc-700/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400/50"
               aria-label="Tutup pencarian"
             >
               <XMarkIcon class="w-5 h-5" />
@@ -240,7 +295,7 @@
           >
             <ul
               v-if="showMobileSearchResults"
-              :id="'mobile-search-listbox'"
+              id="mobile-search-listbox"
               class="mt-3 bg-zinc-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-zinc-700/50 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-transparent"
               role="listbox"
               aria-label="Hasil pencarian menu dan layanan"
@@ -332,9 +387,11 @@ const navigationStore = useNavigationStore()
 const searchStore = useSearchStore()
 
 // STATE
-const logoSrc = ref(new URL('@/assets/images/logo.webp', import.meta.url).href)
+const logoSrc = ref(new URL('/images/logo/logo.webp', import.meta.url).href)
 const logoLoaded = ref(false)
 const mobileSearchInput = ref(null)
+const mobileMenuRef = ref(null)
+const scrollHandler = ref(null)
 
 const desktopSearchQuery = ref('')
 const mobileSearchQuery = ref('')
@@ -354,7 +411,7 @@ const searchData = computed(() => [
     name: 'Haircut Classic',
     category: 'Layanan',
     path: '/services',
-    keywords: ['potong', 'rambut'],
+    keywords: ['potong', 'rambut', 'haircut', 'classic'],
     icon: 'ScissorsIcon',
   },
   {
@@ -362,7 +419,7 @@ const searchData = computed(() => [
     name: 'Beard Styling',
     category: 'Layanan',
     path: '/services',
-    keywords: ['jenggot', 'styling'],
+    keywords: ['jenggot', 'styling', 'beard'],
     icon: 'ScissorsIcon',
   },
   {
@@ -370,7 +427,7 @@ const searchData = computed(() => [
     name: 'Hair Wash',
     category: 'Layanan',
     path: '/services',
-    keywords: ['cuci', 'keramas'],
+    keywords: ['cuci', 'keramas', 'wash', 'shampoo'],
     icon: 'ScissorsIcon',
   },
   {
@@ -378,7 +435,7 @@ const searchData = computed(() => [
     name: 'Hair Coloring',
     category: 'Layanan',
     path: '/services',
-    keywords: ['warna', 'cat'],
+    keywords: ['warna', 'cat', 'coloring', 'pewarna'],
     icon: 'ScissorsIcon',
   },
   {
@@ -386,7 +443,7 @@ const searchData = computed(() => [
     name: 'Hair Treatment',
     category: 'Layanan',
     path: '/services',
-    keywords: ['perawatan', 'treatment'],
+    keywords: ['perawatan', 'treatment', 'vitamin'],
     icon: 'ScissorsIcon',
   },
   ...navigationMenu.value.map((item, idx) => ({
@@ -405,6 +462,9 @@ const desktopSearchResults = computed(() =>
 )
 const mobileSearchResults = computed(() =>
   searchStore.performSearch(searchData.value, mobileSearchQuery.value),
+)
+const showDesktopSearchResults = computed(
+  () => desktopSearchFocused.value && desktopSearchQuery.value.length > 0,
 )
 const showMobileSearchResults = computed(
   () => mobileSearchFocused.value && mobileSearchQuery.value.length > 0,
@@ -432,12 +492,15 @@ const handleDesktopSearchFocus = () => {
   desktopSearchFocused.value = true
   selectedDesktopSearchIndex.value = -1
 }
+
 const handleDesktopSearchBlur = () => {
   setTimeout(() => (desktopSearchFocused.value = false), 150)
 }
+
 const handleDesktopSearchInput = () => {
   selectedDesktopSearchIndex.value = -1
 }
+
 const handleDesktopSearchKeydown = (e) => {
   const results = desktopSearchResults.value
   if (!results.length) return
@@ -454,7 +517,9 @@ const handleDesktopSearchKeydown = (e) => {
     case 'ArrowUp':
       e.preventDefault()
       selectedDesktopSearchIndex.value = Math.max(selectedDesktopSearchIndex.value - 1, -1)
-      scrollSearchOptionIntoView('desktop', selectedDesktopSearchIndex.value)
+      if (selectedDesktopSearchIndex.value >= 0) {
+        scrollSearchOptionIntoView('desktop', selectedDesktopSearchIndex.value)
+      }
       break
     case 'Enter':
       e.preventDefault()
@@ -467,9 +532,11 @@ const handleDesktopSearchKeydown = (e) => {
     case 'Escape':
       desktopSearchFocused.value = false
       selectedDesktopSearchIndex.value = -1
+      e.target.blur()
       break
   }
 }
+
 const selectDesktopSearchResult = (result) => {
   router.push(result.path)
   searchStore.addToRecentSearches(result.name)
@@ -485,12 +552,15 @@ const handleMobileSearchFocus = () => {
   mobileSearchFocused.value = true
   selectedMobileSearchIndex.value = -1
 }
+
 const handleMobileSearchBlur = () => {
   setTimeout(() => (mobileSearchFocused.value = false), 150)
 }
+
 const handleMobileSearchInput = () => {
   selectedMobileSearchIndex.value = -1
 }
+
 const handleMobileSearchKeydown = (e) => {
   const results = mobileSearchResults.value
   if (!results.length) return
@@ -507,7 +577,9 @@ const handleMobileSearchKeydown = (e) => {
     case 'ArrowUp':
       e.preventDefault()
       selectedMobileSearchIndex.value = Math.max(selectedMobileSearchIndex.value - 1, -1)
-      scrollSearchOptionIntoView('mobile', selectedMobileSearchIndex.value)
+      if (selectedMobileSearchIndex.value >= 0) {
+        scrollSearchOptionIntoView('mobile', selectedMobileSearchIndex.value)
+      }
       break
     case 'Enter':
       e.preventDefault()
@@ -522,6 +594,7 @@ const handleMobileSearchKeydown = (e) => {
       break
   }
 }
+
 const selectMobileSearchResult = (result) => {
   router.push(result.path)
   searchStore.addToRecentSearches(result.name)
@@ -529,15 +602,25 @@ const selectMobileSearchResult = (result) => {
   trackSearchClick(result.name)
 }
 
+// === MOBILE MENU HANDLERS ===
+const handleMobileMenuKeydown = (e) => {
+  if (e.key === 'Escape') {
+    closeMobileMenu()
+  }
+}
+
 // === OVERLAY & TOGGLE HANDLERS ===
-const handleMobileMenuToggle = () => {
+const handleMobileMenuToggle = async () => {
   headerStore.toggleMobileMenu()
   if (headerStore.isMobileMenuOpen) {
     headerStore.setMobileSearchOpen(false)
     mobileSearchFocused.value = false
     mobileSearchQuery.value = ''
+    await nextTick()
+    mobileMenuRef.value?.focus()
   }
 }
+
 const handleMobileSearchToggle = async () => {
   headerStore.toggleMobileSearch()
   if (headerStore.isMobileSearchOpen) {
@@ -549,13 +632,16 @@ const handleMobileSearchToggle = async () => {
     mobileSearchQuery.value = ''
   }
 }
+
 const handleMobileNavClick = (name) => {
   headerStore.setMobileMenuOpen(false)
   trackNavClick(name)
 }
+
 const closeMobileMenu = () => {
   headerStore.setMobileMenuOpen(false)
 }
+
 const closeMobileSearch = () => {
   headerStore.setMobileSearchOpen(false)
   mobileSearchFocused.value = false
@@ -563,83 +649,290 @@ const closeMobileSearch = () => {
 }
 
 // === UTILS ===
-// Scroll selected search option into view for accessibility
-function scrollSearchOptionIntoView(mode, idx) {
+const scrollSearchOptionIntoView = (mode, idx) => {
   if (idx < 0) return
   const id = mode === 'desktop' ? getDesktopSearchResultId(idx) : getMobileSearchResultId(idx)
   const el = document.getElementById(id)
-  if (el) el.scrollIntoView({ block: 'nearest' })
+  if (el) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+}
+
+const handleLogoError = () => {
+  logoSrc.value = '/fallback-logo.png'
+  logoLoaded.value = true
 }
 
 // === ANALYTICS ===
 const trackLogoClick = () => {
-  // Example: send GA event
-  // window.gtag && window.gtag('event', 'logo_click')
+  // Analytics tracking untuk logo click
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'logo_click', {
+      event_category: 'navigation',
+      event_label: 'header_logo'
+    })
+  }
 }
+
 const trackNavClick = (name) => {
-  // Example: send GA event
-  // window.gtag && window.gtag('event', 'nav_click', { label: name })
-  // Untuk menghindari warning, gunakan param:
-  void name
+  // Analytics tracking untuk navigation click
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'nav_click', {
+      event_category: 'navigation',
+      event_label: name.toLowerCase()
+    })
+  }
 }
+
 const trackSearchClick = (term) => {
-  // Example: send GA event
-  // window.gtag && window.gtag('event', 'search_click', { term })
-  // Untuk menghindari warning, gunakan param:
-  void term
+  // Analytics tracking untuk search click
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'search_click', {
+      event_category: 'search',
+      search_term: term
+    })
+  }
+}
+
+// === EVENT HANDLERS ===
+const handleScroll = () => {
+  headerStore.setScrolled(window.scrollY > 10)
+}
+
+const handleClickOutside = (event) => {
+  // Close mobile overlays when clicking outside
+  if (isMobileMenuOpen.value || isMobileSearchOpen.value) {
+    const target = event.target
+    const header = document.querySelector('header')
+
+    if (header && !header.contains(target)) {
+      headerStore.closeAllMobileOverlays()
+      mobileSearchFocused.value = false
+      mobileSearchQuery.value = ''
+    }
+  }
+}
+
+const handleKeydown = (event) => {
+  // Global keyboard shortcuts
+  if (event.key === 'Escape') {
+    headerStore.closeAllMobileOverlays()
+    desktopSearchFocused.value = false
+    mobileSearchFocused.value = false
+  }
+
+  // Search shortcut (Ctrl/Cmd + K)
+  if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+    event.preventDefault()
+    if (window.innerWidth >= 1024) {
+      document.getElementById('desktop-search')?.focus()
+    } else {
+      handleMobileSearchToggle()
+    }
+  }
 }
 
 // === LIFECYCLE ===
 onMounted(() => {
-  const handleScroll = () => {
-    headerStore.setScrolled(window.scrollY > 10)
+  // Scroll handler dengan throttling
+  let ticking = false
+  scrollHandler.value = () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        handleScroll()
+        ticking = false
+      })
+      ticking = true
+    }
   }
-  window.addEventListener('scroll', handleScroll, { passive: true })
+
+  window.addEventListener('scroll', scrollHandler.value, { passive: true })
+  window.addEventListener('click', handleClickOutside)
+  window.addEventListener('keydown', handleKeydown)
+
   navigationStore.setActiveRoute(route.path)
 
-  // Preload logo
+  // Preload logo dengan error handling
   if (logoSrc.value) {
-    const img = new window.Image()
+    const img = new Image()
     img.src = logoSrc.value
     img.onload = () => (logoLoaded.value = true)
-    img.onerror = () => (logoSrc.value = '/fallback-logo.png')
+    img.onerror = handleLogoError
   }
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', () => {})
+  if (scrollHandler.value) {
+    window.removeEventListener('scroll', scrollHandler.value)
+  }
+  window.removeEventListener('click', handleClickOutside)
+  window.removeEventListener('keydown', handleKeydown)
 })
 
-// Route change handler: always close overlays & clear search
+// Route change handler: cleanup state
 watch(
   () => route.path,
   () => {
     navigationStore.setActiveRoute(route.path)
     headerStore.closeAllMobileOverlays()
+
+    // Reset search states
     desktopSearchQuery.value = ''
     mobileSearchQuery.value = ''
     desktopSearchFocused.value = false
     mobileSearchFocused.value = false
+    selectedDesktopSearchIndex.value = -1
+    selectedMobileSearchIndex.value = -1
   },
 )
+
+// Watch for mobile menu changes to manage focus
+watch(isMobileMenuOpen, (isOpen) => {
+  if (isOpen) {
+    nextTick(() => {
+      mobileMenuRef.value?.focus()
+    })
+  }
+})
+
+// Watch for mobile search changes to manage focus
+watch(isMobileSearchOpen, (isOpen) => {
+  if (isOpen) {
+    nextTick(() => {
+      mobileSearchInput.value?.focus()
+    })
+  }
+})
 </script>
 
 <style scoped>
-@keyframes pulse-soft {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-.animate-pulse-soft {
-  animation: pulse-soft 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
 header {
-  /* Responsive shadow and blur for sticky header */
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Custom scrollbar for search results */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thumb-zinc-600::-webkit-scrollbar-thumb {
+  background-color: rgb(82 82 91);
+  border-radius: 0.25rem;
+}
+
+.scrollbar-track-transparent::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Focus ring improvements */
+.focus-visible\:ring-2:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.5);
+}
+
+/* Smooth transitions for better UX */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Performance optimizations */
+.group:hover .group-hover\:scale-110 {
+  transform: scale(1.1);
+}
+
+.group:hover .group-hover\:rotate-12 {
+  transform: rotate(12deg);
+}
+
+/* Mobile menu improvements */
+@media (max-width: 1023px) {
+  .mobile-menu-backdrop {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+}
+
+/* Search results hover effects */
+.search-result-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.search-result-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.search-result-item:hover::before {
+  left: 100%;
+}
+
+/* Logo loading state */
+.logo-container {
+  position: relative;
+}
+
+.logo-loading {
+  background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 640px) {
+  .mobile-search-input {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .text-gray-300 {
+    color: #ffffff;
+  }
+
+  .text-gray-400 {
+    color: #cccccc;
+  }
+
+  .border-zinc-700\/50 {
+    border-color: #ffffff;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  header {
+    color-scheme: dark;
+  }
 }
 </style>
