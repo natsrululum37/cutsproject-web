@@ -332,7 +332,7 @@ const navigationStore = useNavigationStore()
 const searchStore = useSearchStore()
 
 // STATE
-const logoSrc = ref('/src/assets/images/logo.webp')
+const logoSrc = ref(new URL('@/assets/images/logo.webp', import.meta.url).href)
 const logoLoaded = ref(false)
 const mobileSearchInput = ref(null)
 
