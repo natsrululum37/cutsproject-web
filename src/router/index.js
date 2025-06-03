@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 import Home from '@/views/HomeView.vue'
 import Gallery from '@/views/GalleryView.vue'
@@ -75,7 +75,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
@@ -100,3 +100,4 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router
+
