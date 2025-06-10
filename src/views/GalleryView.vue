@@ -38,16 +38,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import AOS from 'aos'
-import 'aos/dist/aos.css'
-
-onMounted(() => {
-  AOS.init({
-    duration: 800,
-    once: true,
-  })
-})
+import { ref } from 'vue'
 
 const baseUrl = import.meta.env.BASE_URL
 

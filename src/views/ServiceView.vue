@@ -97,7 +97,7 @@
         </div>
       </div>
 
-      <LayananComponent class="max-w-7xl mx-auto mt-20" />
+      <ServicesSection class="max-w-7xl mx-auto mt-20" />
 
       <!-- CTA Button -->
       <div class="text-center mt-20">
@@ -115,15 +115,5 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
-import AOS from 'aos'
-import 'aos/dist/aos.css'
-import LayananComponent from '@/components/ServicesSection.vue'
-
-onMounted(() => {
-  AOS.init({
-    duration: 800,
-    once: true,
-  })
-})
+import ServicesSection from '@/components/home/ServicesPriceSection.vue'
 </script>

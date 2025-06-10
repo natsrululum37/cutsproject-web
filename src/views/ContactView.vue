@@ -21,34 +21,14 @@
             Hubungi kami
           </h4>
           <ul class="mt-4 space-y-3 text-gray-300">
-            <li>
+            <li v-for="(social, platform) in socials" :key="platform">
               <a
-                href="https://www.instagram.com/cutsproject"
+                :href="social.url"
                 target="_blank"
                 class="group flex items-center space-x-3 hover:text-yellow-400 transition"
               >
-                <font-awesome-icon :icon="['fab', 'instagram']" class="text-xl" />
-                <span>@cutsproject</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://wa.me/6281567825713"
-                target="_blank"
-                class="group flex items-center space-x-3 hover:text-yellow-400 transition"
-              >
-                <font-awesome-icon :icon="['fab', 'whatsapp']" class="text-xl" />
-                <span>081567825713</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.tiktok.com/@cutsproject"
-                target="_blank"
-                class="group flex items-center space-x-3 hover:text-yellow-400 transition"
-              >
-                <font-awesome-icon :icon="['fab', 'tiktok']" class="text-xl" />
-                <span>cutsprojectofficial</span>
+                <font-awesome-icon :icon="social.icon" class="text-xl" />
+                <span>{{ social.name }}</span>
               </a>
             </li>
           </ul>
@@ -160,9 +140,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, helpers } from '@vuelidate/validators'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { useSocialStore } from '@/stores/social'
 
 const name = ref('')
 const emailAddress = ref('')
@@ -171,6 +153,9 @@ const message = ref('')
 const submitted = ref(false)
 const formSuccess = ref(false)
 const formError = ref('')
+
+const socialStore = useSocialStore()
+const socials = computed(() => socialStore.getAllSocials)
 
 const rules = {
   name: { required, minLength: minLength(3) },

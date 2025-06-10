@@ -1,16 +1,17 @@
 <template>
   <header
-    class="sticky top-0 left-0 w-full z-50 transition-all duration-300"
-    :class="headerStore.headerClasses"
+    class="sticky top-0 left-0 w-full z-50 transition-all duration-300 shadow-header"
+    :class="[headerStore.headerClasses, { 'gradient-header': isScrolled }]"
     role="banner"
     aria-label="Main navigation"
   >
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" role="navigation">
+      <!-- Logo and Navigation Section -->
       <div class="flex flex-wrap items-center justify-between h-auto py-2 gap-y-2">
         <!-- Logo -->
         <RouterLink
           to="/"
-          class="flex items-center gap-1.5 group"
+          class="flex items-center gap-1.5 group hover-link"
           aria-label="CUT PROJECT - Beranda"
           @click="trackLogoClick"
         >
@@ -25,7 +26,7 @@
           <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">PROJECT</span>
         </RouterLink>
 
-        <!-- Search Bar (desktop only) -->
+        <!-- Desktop Search -->
         <div class="hidden lg:flex flex-1 justify-center mx-4">
           <div class="relative w-64 group" role="search">
             <label for="desktop-search" class="sr-only">Cari layanan atau menu</label>
@@ -33,7 +34,7 @@
               id="desktop-search"
               type="search"
               v-model="desktopSearchQuery"
-              class="w-full bg-zinc-800/80 hover:bg-zinc-800/90 text-white text-sm rounded-xl py-2.5 pl-10 pr-4 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:bg-zinc-700/90 transition-all duration-300 border border-zinc-700/50 focus:border-yellow-400/30"
+              class="search-input"
               placeholder="Cari layanan/menu…"
               autocomplete="off"
               spellcheck="false"
@@ -63,7 +64,7 @@
               <ul
                 v-if="showDesktopSearchResults"
                 id="desktop-search-listbox"
-                class="absolute top-full left-0 right-0 mt-2 bg-zinc-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-zinc-700/50 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-transparent z-50"
+                class="absolute top-full left-0 right-0 mt-2 bg-zinc-800/95 backdrop-blur rounded-xl shadow-lg border border-zinc-700/50 max-h-80 overflow-y-auto scrollbar-custom z-50"
                 role="listbox"
                 aria-label="Hasil pencarian menu dan layanan"
               >
@@ -122,7 +123,6 @@
               'text-yellow-400': isActiveRoute(item.link),
             }"
             @click="trackNavClick(item.name)"
-            :aria-current="isActiveRoute(item.link) ? 'page' : undefined"
           >
             <span class="relative z-10">{{ item.name }}</span>
             <span
@@ -136,7 +136,7 @@
           </RouterLink>
         </nav>
 
-        <!-- Mobile menu & search button -->
+        <!-- Mobile menu & search buttons -->
         <div class="flex items-center space-x-2 lg:hidden ml-auto">
           <button
             type="button"
@@ -175,7 +175,7 @@
       >
         <div
           v-if="isMobileMenuOpen"
-          class="fixed top-20 left-1/2 transform -translate-x-1/2 w-80 sm:w-96 bg-zinc-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-zinc-700/50 z-50 mx-4 overflow-hidden"
+          class="fixed top-20 left-1/2 transform -translate-x-1/2 w-80 sm:w-96 bg-zinc-900/95 backdrop-blur rounded-2xl shadow-lg border border-zinc-700/50 z-50 mx-4 overflow-hidden"
           @click.stop
           @keydown="handleMobileMenuKeydown"
           aria-modal="true"
@@ -235,7 +235,7 @@
       <!-- Mobile menu backdrop -->
       <div
         v-if="isMobileMenuOpen"
-        class="fixed inset-0 bg-black/40 backdrop-blur-sm -z-10"
+        class="fixed inset-0 bg-black/40 mobile-menu-backdrop -z-10"
         @click="closeMobileMenu"
         aria-hidden="true"
       ></div>
@@ -261,7 +261,7 @@
               v-model="mobileSearchQuery"
               ref="mobileSearchInput"
               type="search"
-              class="w-full py-4 pl-12 pr-12 bg-zinc-800/90 hover:bg-zinc-800 text-white text-sm rounded-xl border border-zinc-700/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all duration-300 placeholder-gray-400"
+              class="search-input mobile-search-input"
               placeholder="Cari layanan/menu…"
               autocomplete="off"
               spellcheck="false"
@@ -296,7 +296,7 @@
             <ul
               v-if="showMobileSearchResults"
               id="mobile-search-listbox"
-              class="mt-3 bg-zinc-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-zinc-700/50 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-transparent"
+              class="mt-3 bg-zinc-800/95 backdrop-blur rounded-xl shadow-2xl border border-zinc-700/50 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-transparent"
               role="listbox"
               aria-label="Hasil pencarian menu dan layanan"
             >
@@ -403,6 +403,9 @@ const selectedMobileSearchIndex = ref(-1)
 const isMobileMenuOpen = computed(() => headerStore.isMobileMenuOpen)
 const isMobileSearchOpen = computed(() => headerStore.isMobileSearchOpen)
 const navigationMenu = computed(() => navigationStore.menu)
+
+//ref untuk isScrolled
+const isScrolled = ref(false)
 
 // SEARCH DATA
 const searchData = computed(() => [
@@ -694,7 +697,8 @@ const trackSearchClick = (term) => {
 
 // === EVENT HANDLERS ===
 const handleScroll = () => {
-  headerStore.setScrolled(window.scrollY > 10)
+  isScrolled.value = window.scrollY > 10
+  headerStore.setScrolled(isScrolled.value)
 }
 
 const handleClickOutside = (event) => {
@@ -804,60 +808,25 @@ watch(isMobileSearchOpen, (isOpen) => {
 </script>
 
 <style scoped>
-header {
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-primary);
+  transform: scaleX(0);
+  transition: transform var(--transition-base) var(--transition-timing);
+  transform-origin: right;
 }
 
-/* Custom scrollbar for search results */
-.scrollbar-thin {
-  scrollbar-width: thin;
+.hover-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
-.scrollbar-thumb-zinc-600::-webkit-scrollbar-thumb {
-  background-color: rgb(82 82 91);
-  border-radius: 0.25rem;
-}
-
-.scrollbar-track-transparent::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-
-.scrollbar-thin::-webkit-scrollbar {
-  width: 6px;
-}
-
-/* Focus ring improvements */
-.focus-visible\:ring-2:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.5);
-}
-
-/* Smooth transitions for better UX */
-* {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Performance optimizations */
-.group:hover .group-hover\:scale-110 {
-  transform: scale(1.1);
-}
-
-.group:hover .group-hover\:rotate-12 {
-  transform: rotate(12deg);
-}
-
-/* Mobile menu improvements */
-@media (max-width: 1023px) {
-  .mobile-menu-backdrop {
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-  }
-}
-
-/* Search results hover effects */
+/* Search result hover effect */
 .search-result-item {
   position: relative;
   overflow: hidden;
@@ -871,7 +840,7 @@ header {
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 0.1), transparent);
-  transition: left 0.5s;
+  transition: left var(--transition-slow) var(--transition-timing);
 }
 
 .search-result-item:hover::before {
@@ -890,49 +859,7 @@ header {
 }
 
 @keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-/* Enhanced mobile responsiveness */
-@media (max-width: 640px) {
-  .mobile-search-input {
-    font-size: 16px; /* Prevents zoom on iOS */
-  }
-}
-
-/* Accessibility improvements */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .text-gray-300 {
-    color: #ffffff;
-  }
-
-  .text-gray-400 {
-    color: #cccccc;
-  }
-
-  .border-zinc-700\/50 {
-    border-color: #ffffff;
-  }
-}
-
-/* Dark mode enhancements */
-@media (prefers-color-scheme: dark) {
-  header {
-    color-scheme: dark;
-  }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 </style>

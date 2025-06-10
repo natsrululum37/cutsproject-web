@@ -1,5 +1,5 @@
 <template>
-  <section class="view-section section-spacing section-border">
+  <section class="view-section section-content" aria-label="Vision & Mission">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
       <!-- Vision -->
       <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6 md:p-8">

@@ -1,5 +1,5 @@
 <template>
-  <section class="view-section section-spacing" aria-label="Image Slider">
+  <section class="view-section hero-spacing" aria-label="Image Slider">
     <div ref="sliderContainer" class="relative w-full max-w-full mx-auto">
       <swiper
         :modules="swiperModules"
@@ -26,6 +26,8 @@
               :alt="slide.alt"
               class="w-full h-full object-cover brightness-75"
               :loading="index === 0 ? 'eager' : 'lazy'"
+              width="600"
+              height="338"
               style="aspect-ratio: 16/9; max-width: 100vw; max-height: 100vh;"
             />
           </picture>
@@ -53,17 +55,25 @@
           </div>
         </swiper-slide>
 
-        <!-- Navigation -->
-        <div
-          class="swiper-button-prev !hidden md:!flex w-12 h-12 items-center justify-center"
-          aria-label="Previous slide"
-        />
-        <div
-          class="swiper-button-next !hidden md:!flex w-12 h-12 items-center justify-center"
-          aria-label="Next slide"
-        />
+        <!-- Pagination -->
         <div class="swiper-pagination absolute bottom-4 w-full" />
       </swiper>
+
+      <!-- Custom Navigation Buttons - positioned outside image area -->
+      <button
+        class="absolute -left-16 top-1/2 -translate-y-1/2 z-30 bg-black/60 hover:bg-black/80 p-3 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 hidden lg:block"
+        @click="() => swiperInstance?.slidePrev()"
+        aria-label="Previous slide"
+      >
+        <ArrowLeftIcon class="w-8 h-8 text-yellow-400" />
+      </button>
+      <button
+        class="absolute -right-16 top-1/2 -translate-y-1/2 z-30 bg-black/60 hover:bg-black/80 p-3 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 hidden lg:block"
+        @click="() => swiperInstance?.slideNext()"
+        aria-label="Next slide"
+      >
+        <ArrowRightIcon class="w-8 h-8 text-yellow-400" />
+      </button>
     </div>
   </section>
 </template>
@@ -73,6 +83,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, Pagination, Navigation, EffectFade, A11y } from 'swiper/modules'
+import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/vue/24/solid'
 
 // Import Swiper styles
 import 'swiper/css'
@@ -88,8 +99,8 @@ const observer = ref(null)
 
 const slides = [
   {
-    image: new URL('/images/home-page/slider/slide1.webp', import.meta.url).href,
-    imageWebp: new URL('/images/home-page/slider/slide1.webp', import.meta.url).href,
+    image: new URL('/images/slider/dekstop/slide1-desktop.webp', import.meta.url).href,
+    imageWebp: new URL('/images/slider/dekstop/slide1-desktop.webp', import.meta.url).href,
     alt: 'Featured hairstyle showcase - professional haircut and styling',
     title: 'Transform Your Look',
     subtitle: 'Experience the best barber services in town.',
@@ -97,8 +108,8 @@ const slides = [
     ctaLink: '/reservation',
   },
   {
-    image: new URL('/images/home-page/slider/slide2.webp', import.meta.url).href,
-    imageWebp: new URL('/images/home-page/slider/slide2.webp', import.meta.url).href,
+    image: new URL('/images/slider/dekstop/slide2-desktop.webp', import.meta.url).href,
+    imageWebp: new URL('/images/slider/dekstop/slide2-desktop.webp', import.meta.url).href,
     alt: 'Professional barber services - experienced stylist working with client',
     title: 'Expert Stylists',
     subtitle: 'Our team is ready to give you the perfect cut.',
@@ -106,8 +117,8 @@ const slides = [
     ctaLink: '/about',
   },
   {
-    image: new URL('/images/home-page/slider/slide3.webp', import.meta.url).href,
-    imageWebp: new URL('/images/home-page/slider/slide3.webp', import.meta.url).href,
+    image: new URL('/images/slider/dekstop/slide1-desktop.webp', import.meta.url).href,
+    imageWebp: new URL('/images/slider/dekstop/slide1-desktop.webp', import.meta.url).href,
     alt: 'Salon interior and equipment - modern barber shop facilities',
     title: 'Modern Facilities',
     subtitle: 'Enjoy our state-of-the-art salon environment.',
@@ -195,8 +206,6 @@ onBeforeUnmount(() => {
 // Handle keyboard navigation
 const handleKeyboard = (e) => {
   if (!swiperInstance.value || !swiperInstance.value.el.contains(document.activeElement)) {
-    // Hanya navigasi jika slider atau elemen di dalamnya fokus (atau pertimbangkan jika ini diperlukan)
-    // Untuk hero, mungkin Anda ingin selalu aktif. Jika begitu, hapus kondisi `!swiperInstance.value.el.contains(document.activeElement)`
     // return;
   }
 

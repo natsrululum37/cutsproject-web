@@ -1,5 +1,5 @@
 <template>
-  <section class="view-section section-spacing">
+  <section class="view-section section-content" aria-label="Call to Action">
     <div class="bg-yellow-400 text-black rounded-xl shadow-xl p-8 md:p-12 max-w-3xl mx-auto">
       <div class="text-center">
         <h2 class="text-3xl md:text-4xl font-bold mb-4 tracking-wide">
@@ -20,3 +20,16 @@
     </div>
   </section>
 </template>
+
+<script setup>
+// ...existing code...
+</script>
+
+<style scoped>
+/* Hanya style khusus untuk CTA content */
+@media (max-width: 640px) {
+  .bg-yellow-400 {
+    padding: 1.5rem 1rem;
+  }
+}
+</style>

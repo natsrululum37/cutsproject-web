@@ -1,7 +1,7 @@
 <template>
   <div class="app-wrapper">
     <Header v-if="showHeaderFooter" />
-    <main>
+    <main class="flex-1 flex flex-col">
       <RouterView v-slot="{ Component }">
         <Transition name="fade" mode="out-in">
           <component :is="Component" />
@@ -13,12 +13,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Header from './components/layouts/HeaderComponent.vue'
 import Footer from './components/layouts/FooterComponent.vue'
-import AOS from 'aos'
-import 'aos/dist/aos.css'
 
 const route = useRoute()
 
@@ -30,15 +28,18 @@ watch(
   },
   { immediate: true },
 )
-
-// Initialize AOS
-onMounted(() => {
-  AOS.init({
-    duration: 800,
-    once: true,
-    mirror: false,
-    easing: 'ease-in-out',
-    offset: 60,
-  })
-})
 </script>
+
+<style>
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-wrapper main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+</style>
