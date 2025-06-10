@@ -21,9 +21,11 @@
           data-aos="fade-up"
           data-aos-delay="100"
         >
-          <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center">
+          <div
+            class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
+          >
             <img
-              src="/images/haircut.png"
+              src="@/assets/images/icons/haircut.webp"
               alt="Haircut Icon"
               class="w-10 h-10 object-contain"
               loading="lazy"
@@ -42,9 +44,11 @@
           data-aos="fade-up"
           data-aos-delay="200"
         >
-          <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center">
+          <div
+            class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
+          >
             <img
-              src="/images/shaving.png"
+              src="@/assets/images/icons/shaving.webp"
               alt="Shaving Icon"
               class="w-10 h-10 object-contain"
               loading="lazy"
@@ -62,9 +66,11 @@
           data-aos="fade-up"
           data-aos-delay="300"
         >
-          <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center">
+          <div
+            class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
+          >
             <img
-              src="/images/haircoloring.png"
+              src="@/assets/images/icons/haircoloring.webp"
               alt="Hair Coloring Icon"
               class="w-10 h-10 object-contain"
               loading="lazy"
@@ -82,9 +88,11 @@
           data-aos="fade-up"
           data-aos-delay="400"
         >
-          <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center">
+          <div
+            class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
+          >
             <img
-              src="/images/facial.png"
+              src="@/assets/images/icons/facial.webp"
               alt="Facial Icon"
               class="w-10 h-10 object-contain"
               loading="lazy"

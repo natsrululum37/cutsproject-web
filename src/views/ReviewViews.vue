@@ -67,7 +67,7 @@ const reviews = ref([
     rating: 5,
     date: '2 hari yang lalu',
     comment: 'Pelayanan sangat bagus, hasil potongan rambut sesuai dengan keinginan. Recommended!',
-    service: 'Haircut Classic'
+    service: 'Haircut Classic',
   },
   {
     name: 'Rizky Fadillah',
@@ -75,7 +75,7 @@ const reviews = ref([
     rating: 5,
     date: '3 hari yang lalu',
     comment: 'Potongannya selalu rapi dan sesuai request. Tempatnya nyaman, pelayanannya top!',
-    service: 'Haircut & Beard'
+    service: 'Haircut & Beard',
   },
   {
     name: 'Andi Saputra',
@@ -83,7 +83,7 @@ const reviews = ref([
     rating: 4,
     date: '1 minggu yang lalu',
     comment: 'Barbernya ramah dan tahu gaya kekinian. Recommended banget!',
-    service: 'Haircut'
+    service: 'Haircut',
   },
   {
     name: 'Fajar Hidayat',
@@ -91,15 +91,16 @@ const reviews = ref([
     rating: 5,
     date: '2 minggu yang lalu',
     comment: 'Sudah langganan dari lama, hasilnya selalu memuaskan. Kalian wajib kesini!',
-    service: 'Hair Coloring'
+    service: 'Hair Coloring',
   },
   {
     name: 'Yoga Prasetya',
     avatar: 'https://randomuser.me/api/portraits/men/65.jpg',
     rating: 4,
     date: '3 minggu yang lalu',
-    comment: 'Pelayanan cepat dan hasil potongannya keren. Cocok banget buat mahasiswa seperti saya.',
-    service: 'Haircut'
+    comment:
+      'Pelayanan cepat dan hasil potongannya keren. Cocok banget buat mahasiswa seperti saya.',
+    service: 'Haircut',
   },
   {
     name: 'Ari Wibowo',
@@ -107,15 +108,16 @@ const reviews = ref([
     rating: 5,
     date: '1 bulan yang lalu',
     comment: 'Tempatnya instagramable, hasil potongannya pas banget buat konten. Suka banget!',
-    service: 'Haircut & Styling'
+    service: 'Haircut & Styling',
   },
   {
     name: 'Dimas Ramadhan',
     avatar: 'https://randomuser.me/api/portraits/men/21.jpg',
     rating: 4,
     date: '2 bulan yang lalu',
-    comment: 'Pelayanan cepat, rapi, dan nyaman. Cocok buat kamu yang sibuk dan tetap ingin tampil oke.',
-    service: 'Haircut'
+    comment:
+      'Pelayanan cepat, rapi, dan nyaman. Cocok buat kamu yang sibuk dan tetap ingin tampil oke.',
+    service: 'Haircut',
   },
   {
     name: 'Reza Maulana',
@@ -123,7 +125,7 @@ const reviews = ref([
     rating: 5,
     date: '3 bulan yang lalu',
     comment: 'Gaya potongan sesuai tren! Barbershop ini tahu cara memanjakan pelanggannya.',
-    service: 'Haircut & Beard'
+    service: 'Haircut & Beard',
   },
   {
     name: 'Rendy Kurniawan',
@@ -131,7 +133,7 @@ const reviews = ref([
     rating: 4,
     date: '6 bulan yang lalu',
     comment: 'Sudah beberapa kali ke sini, hasilnya selalu konsisten dan memuaskan!',
-    service: 'Haircut'
+    service: 'Haircut',
   },
   {
     name: 'Ilham Saputra',
@@ -139,7 +141,7 @@ const reviews = ref([
     rating: 5,
     date: '9 bulan yang lalu',
     comment: 'Kesan pertama luar biasa. Sekarang jadi langganan tetap. Thanks CutsProject!',
-    service: 'Haircut & Styling'
+    service: 'Haircut & Styling',
   },
   {
     name: 'Alfan Nugraha',
@@ -147,7 +149,7 @@ const reviews = ref([
     rating: 4,
     date: '1 tahun yang lalu',
     comment: 'Bukan cuma potong rambut, tapi juga pengalaman menyenangkan setiap datang.',
-    service: 'Haircut'
+    service: 'Haircut',
   },
   {
     name: 'Steven Hartono',
@@ -155,7 +157,7 @@ const reviews = ref([
     rating: 5,
     date: '1 tahun yang lalu',
     comment: 'Tepat waktu, hasil profesional, dan suasananya bikin betah!',
-    service: 'Haircut & Beard'
+    service: 'Haircut & Beard',
   },
   {
     name: 'Bayu Aditya',
@@ -163,7 +165,7 @@ const reviews = ref([
     rating: 4,
     date: '1 tahun yang lalu',
     comment: 'Mereka benar-benar peduli dengan detail. Sangat puas dengan hasil akhirnya.',
-    service: 'Haircut'
+    service: 'Haircut',
   },
   {
     name: 'Daniel Permadi',
@@ -171,7 +173,7 @@ const reviews = ref([
     rating: 5,
     date: '1 tahun yang lalu',
     comment: 'Nyaman, bersih, dan profesional. Suka banget sama vibe-nya!',
-    service: 'Haircut & Styling'
+    service: 'Haircut & Styling',
   },
 ])
 

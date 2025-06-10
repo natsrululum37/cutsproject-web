@@ -1,5 +1,10 @@
 <template>
-  <section class="view-section hero-spacing" aria-label="Image Slider">
+  <a
+    href="#main-content"
+    class="sr-only focus:not-sr-only bg-yellow-400 text-black px-4 py-2 absolute z-50 left-2 top-2 rounded"
+    >Lewati ke Konten Utama</a
+  >
+  <section class="view-section hero-spacing" aria-label="Slider Gambar Utama Beranda">
     <div ref="sliderContainer" class="relative w-full max-w-full mx-auto">
       <swiper
         :modules="swiperModules"
@@ -20,7 +25,12 @@
           class="relative w-full aspect-[16/9] overflow-hidden bg-black"
         >
           <picture>
-            <source :srcset="slide.imageWebp" type="image/webp" />
+            <source :srcset="slide.imageWebp" type="image/webp" media="(min-width: 768px)" />
+            <source
+              :srcset="slide.imageWebpMobile || slide.imageWebp"
+              type="image/webp"
+              media="(max-width: 767px)"
+            />
             <img
               :src="slide.image"
               :alt="slide.alt"
@@ -28,26 +38,35 @@
               :loading="index === 0 ? 'eager' : 'lazy'"
               width="600"
               height="338"
-              style="aspect-ratio: 16/9; max-width: 100vw; max-height: 100vh;"
+              style="aspect-ratio: 16/9; max-width: 100vw; max-height: 100vh"
             />
           </picture>
 
           <!-- Overlay Gradient -->
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-10 transition-all duration-700"></div>
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-10 transition-all duration-700"
+          ></div>
 
           <!-- Slide Content -->
           <div class="absolute inset-0 flex items-center justify-center z-20">
-            <div class="max-w-4xl w-full mx-auto px-4 text-center text-white py-8 sm:py-12 md:py-20">
-              <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 drop-shadow-xl transition-all duration-500">
+            <div
+              class="max-w-4xl w-full mx-auto px-2 sm:px-4 text-center text-white py-6 sm:py-12 md:py-20"
+            >
+              <h2
+                class="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-3 sm:mb-4 drop-shadow-xl transition-all duration-500"
+              >
                 {{ slide.title }}
               </h2>
-              <p class="mb-8 max-w-xl mx-auto text-base sm:text-lg md:text-xl drop-shadow-lg transition-all duration-500">
+              <p
+                class="mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-lg md:text-xl drop-shadow-lg transition-all duration-500"
+              >
                 {{ slide.subtitle }}
               </p>
               <button
-                class="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-4 rounded-xl font-bold shadow-lg hover:scale-105 focus:scale-105 active:scale-95 transition-all duration-300 outline-none ring-2 ring-yellow-400/0 focus:ring-yellow-400/60"
+                class="bg-yellow-500 hover:bg-yellow-600 text-black px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold shadow-lg hover:scale-105 focus:scale-105 active:scale-95 transition-all duration-300 outline-none ring-2 ring-yellow-400/0 focus:ring-yellow-400/60 text-base sm:text-lg"
                 @click="navigateTo(slide.ctaLink)"
                 :aria-label="`${slide.ctaText} - ${slide.title}`"
+                tabindex="0"
               >
                 {{ slide.ctaText }}
               </button>
@@ -101,28 +120,28 @@ const slides = [
   {
     image: new URL('/images/slider/dekstop/slide1-desktop.webp', import.meta.url).href,
     imageWebp: new URL('/images/slider/dekstop/slide1-desktop.webp', import.meta.url).href,
-    alt: 'Featured hairstyle showcase - professional haircut and styling',
-    title: 'Transform Your Look',
-    subtitle: 'Experience the best barber services in town.',
-    ctaText: 'Book Now',
+    alt: 'Tampilan gaya rambut unggulan - potong dan styling profesional',
+    title: 'Ubah Penampilan Anda',
+    subtitle: 'Rasakan layanan barbershop terbaik di kota Anda.',
+    ctaText: 'Reservasi Sekarang',
     ctaLink: '/reservation',
   },
   {
     image: new URL('/images/slider/dekstop/slide2-desktop.webp', import.meta.url).href,
     imageWebp: new URL('/images/slider/dekstop/slide2-desktop.webp', import.meta.url).href,
-    alt: 'Professional barber services - experienced stylist working with client',
-    title: 'Expert Stylists',
-    subtitle: 'Our team is ready to give you the perfect cut.',
-    ctaText: 'Meet the Team',
+    alt: 'Layanan barber profesional - penata rambut berpengalaman',
+    title: 'Penata Rambut Ahli',
+    subtitle: 'Tim kami siap memberikan potongan rambut terbaik untuk Anda.',
+    ctaText: 'Lihat Tim Kami',
     ctaLink: '/about',
   },
   {
     image: new URL('/images/slider/dekstop/slide1-desktop.webp', import.meta.url).href,
     imageWebp: new URL('/images/slider/dekstop/slide1-desktop.webp', import.meta.url).href,
-    alt: 'Salon interior and equipment - modern barber shop facilities',
-    title: 'Modern Facilities',
-    subtitle: 'Enjoy our state-of-the-art salon environment.',
-    ctaText: 'View Gallery',
+    alt: 'Interior salon dan peralatan - fasilitas barbershop modern',
+    title: 'Fasilitas Modern',
+    subtitle: 'Nikmati suasana salon modern dan nyaman.',
+    ctaText: 'Lihat Galeri',
     ctaLink: '/gallery',
   },
 ]
@@ -175,11 +194,19 @@ onMounted(() => {
     observer.value = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          if (swiperInstance.value && swiperInstance.value.autoplay && !swiperInstance.value.autoplay.running) {
+          if (
+            swiperInstance.value &&
+            swiperInstance.value.autoplay &&
+            !swiperInstance.value.autoplay.running
+          ) {
             swiperInstance.value.autoplay.start()
           }
         } else {
-          if (swiperInstance.value && swiperInstance.value.autoplay && swiperInstance.value.autoplay.running) {
+          if (
+            swiperInstance.value &&
+            swiperInstance.value.autoplay &&
+            swiperInstance.value.autoplay.running
+          ) {
             swiperInstance.value.autoplay.stop()
           }
         }

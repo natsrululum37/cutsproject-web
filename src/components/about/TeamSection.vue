@@ -32,25 +32,25 @@ const team = [
     name: 'Anggit Pratama',
     role: 'Senior Barber',
     experience: '8+ tahun pengalaman',
-    image: baseUrl + 'images/team/anggit.png',
+    image: baseUrl + '/images/team/anggit.webp',
   },
   {
     name: 'Bima Sakti',
     role: 'Style Specialist',
     experience: '6+ tahun pengalaman',
-    image: baseUrl + 'images/team/bima.png',
+    image: baseUrl + '/images/team/bima.webp',
   },
   {
     name: 'Edo Wijaya',
     role: 'Color Expert',
     experience: '5+ tahun pengalaman',
-    image: baseUrl + 'images/team/edo.png',
+    image: baseUrl + '/images/team/edo.webp',
   },
   {
     name: 'Tyo Nugraha',
     role: 'Master Barber',
     experience: '7+ tahun pengalaman',
-    image: baseUrl + 'images/team/tyo.png',
+    image: baseUrl + '/images/team/tyo.webp',
   },
 ]
 </script>

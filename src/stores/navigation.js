@@ -16,17 +16,20 @@ export const useNavigationStore = defineStore('navigation', {
   }),
 
   getters: {
-    // Get menu item by path
+    // Get menu item by path with better matching
     getMenuItemByPath: (state) => (path) => {
-      return state.menu.find((item) => item.link === path)
-    },
-
-    // Get menu items for search/filtering
+      return state.menu.find((item) => {
+        if (!path) return false
+        if (item.link === path) return true
+        if (path !== '/' && path.startsWith(item.link + '/')) return true
+        return false
+      })
+    }, // Mendapatkan item menu untuk pencarian/filter
     menuForSearch: (state) => {
       return state.menu.map((item, idx) => ({
         id: `menu-${idx}`,
         name: item.name,
-        category: 'Menu',
+        category: 'Menu Navigasi',
         path: item.link,
         keywords: [item.name.toLowerCase()],
         icon: item.icon,
@@ -41,33 +44,43 @@ export const useNavigationStore = defineStore('navigation', {
 
   actions: {
     setActiveRoute(path) {
-      this.activeRoute = path || '/'
+      if (!path) return
+      // Handle trailing slashes consistently
+      const normalizedPath = path.endsWith('/') && path !== '/' ? path.slice(0, -1) : path
+      this.activeRoute = normalizedPath
     },
 
     isActiveRoute(path) {
-      if (!path) return false
+      if (!path || !this.activeRoute) return false
+
+      // Normalize paths (handle trailing slashes)
+      const normalizedCurrentPath =
+        this.activeRoute.endsWith('/') && this.activeRoute !== '/'
+          ? this.activeRoute.slice(0, -1)
+          : this.activeRoute
+      const normalizedPath = path.endsWith('/') && path !== '/' ? path.slice(0, -1) : path
 
       // Exact match
-      if (this.activeRoute === path) return true
+      if (normalizedCurrentPath === normalizedPath) return true
 
-      // Handle nested routes (e.g., /services/detail should match /services)
-      if (path !== '/' && this.activeRoute?.startsWith(path + '/')) return true
+      // Handle nested routes
+      if (path !== '/' && normalizedCurrentPath.startsWith(normalizedPath + '/')) return true
 
       return false
     },
 
-    // Update menu items dynamically
+    // Update menu item
     updateMenuItem(index, newItem) {
       if (index >= 0 && index < this.menu.length) {
         this.menu[index] = { ...this.menu[index], ...newItem }
       }
     },
 
-    // Add new menu item
+    // Add menu item
     addMenuItem(item) {
-      if (item && item.name && item.link) {
+      if (item?.name && item?.link) {
         this.menu.push({
-          icon: 'HomeIcon',
+          icon: item.icon || 'HomeIcon', // Default icon
           ...item,
         })
       }

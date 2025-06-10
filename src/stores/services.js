@@ -19,10 +19,11 @@ export const useServicesStore = defineStore('services', {
           },
           {
             name: 'Treatments',
-            description: 'Protein hair mask, creambath, dandruff scalling, totok wajah, pijat 15 menit, dll',
+            description:
+              'Protein hair mask, creambath, dandruff scalling, totok wajah, pijat 15 menit, dll',
             price: '20K',
-          }
-        ]
+          },
+        ],
       },
       proSculpting: {
         title: 'Pro Sculpting & Coloring',
@@ -41,8 +42,8 @@ export const useServicesStore = defineStore('services', {
             name: 'Top Perming',
             description: 'Keriting permanen dengan tingkat ke keritingan yang bervariatif',
             price: '196K',
-          }
-        ]
+          },
+        ],
       },
       premium: {
         title: 'Premium Service',
@@ -56,13 +57,28 @@ export const useServicesStore = defineStore('services', {
             name: 'Kids Haircut',
             description: 'Khusus anak-anak usia 5-12 tahun',
             price: '35K',
-          }
-        ]
-      }
-    }
+          },
+        ],
+      },
+      hairCare: {
+        title: 'Hair Care & Styling Product',
+        items: [
+          {
+            name: 'Pomade',
+            description: 'Pomade waterbased, oilbased, clay, wax, dan styling product lainnya',
+            price: 'Mulai 30K',
+          },
+          {
+            name: 'Shampoo',
+            description: 'Shampoo khusus pria, anti ketombe, hair tonic, dan vitamin rambut',
+            price: 'Mulai 25K',
+          },
+        ],
+      },
+    },
   }),
   getters: {
     getAllServices: (state) => state.services,
-    getServiceByCategory: (state) => (category) => state.services[category]
-  }
+    getServiceByCategory: (state) => (category) => state.services[category],
+  },
 })

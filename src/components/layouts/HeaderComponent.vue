@@ -1,29 +1,42 @@
 <template>
+  <a
+    href="#main-content"
+    class="sr-only focus:not-sr-only bg-yellow-400 text-black px-4 py-2 absolute z-50 left-2 top-2 rounded"
+    >Lewati ke Konten Utama</a
+  >
   <header
     class="sticky top-0 left-0 w-full z-50 transition-all duration-300 shadow-header"
     :class="[headerStore.headerClasses, { 'gradient-header': isScrolled }]"
     role="banner"
-    aria-label="Main navigation"
+    aria-label="Navigasi Utama Barbershop"
   >
-    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" role="navigation">
+    <nav
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      role="navigation"
+      aria-label="Menu Navigasi"
+    >
       <!-- Logo and Navigation Section -->
       <div class="flex flex-wrap items-center justify-between h-auto py-2 gap-y-2">
         <!-- Logo -->
         <RouterLink
           to="/"
-          class="flex items-center gap-1.5 group hover-link"
+          class="flex items-center gap-1.5 group hover-link focus:outline-none focus:ring-2 focus:ring-yellow-400"
           aria-label="CUT PROJECT - Beranda"
           @click="trackLogoClick"
         >
-          <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">CUT</span>
+          <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors"
+            >CUT</span
+          >
           <img
             :src="logoSrc"
-            alt="Logo"
+            alt="Logo CUT PROJECT Barbershop"
             class="h-6 w-6 object-contain group-hover:scale-105 transition-transform duration-300"
             @error="handleLogoError"
             loading="eager"
           />
-          <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors">PROJECT</span>
+          <span class="text-base font-medium text-gray-300 group-hover:text-white transition-colors"
+            >PROJECT</span
+          >
         </RouterLink>
 
         <!-- Desktop Search -->
@@ -35,7 +48,7 @@
               type="search"
               v-model="desktopSearchQuery"
               class="search-input"
-              placeholder="Cari layanan/menu…"
+              placeholder="Cari layanan..."
               autocomplete="off"
               spellcheck="false"
               :aria-expanded="showDesktopSearchResults"
@@ -47,6 +60,17 @@
               @keydown="handleDesktopSearchKeydown"
               @input="handleDesktopSearchInput"
             />
+            <!-- Tombol X untuk clear desktop search -->
+            <button
+              v-if="desktopSearchQuery.length > 0"
+              type="button"
+              @click="desktopSearchQuery = ''"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white p-1 rounded-full hover:bg-zinc-700/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400/50"
+              aria-label="Bersihkan pencarian"
+              tabindex="0"
+            >
+              <XMarkIcon class="w-4 h-4" />
+            </button>
             <MagnifyingGlassIcon
               class="absolute top-1/2 left-3 w-4 h-4 text-gray-400 group-focus-within:text-yellow-400 transition-colors duration-200 transform -translate-y-1/2 pointer-events-none"
               aria-hidden="true"
@@ -92,7 +116,9 @@
                     </div>
                     <div class="flex-1">
                       <div class="font-medium text-sm">{{ result.name }}</div>
-                      <div class="text-xs text-gray-400 mt-1">{{ result.category || 'Layanan' }}</div>
+                      <div class="text-xs text-gray-400 mt-1">
+                        {{ result.category || 'Layanan' }}
+                      </div>
                     </div>
                   </div>
                 </li>
@@ -113,7 +139,11 @@
         </div>
 
         <!-- Desktop nav links -->
-        <nav class="hidden lg:flex space-x-2 xl:space-x-4 items-center" role="navigation" aria-label="Navigasi utama">
+        <nav
+          class="hidden lg:flex space-x-2 xl:space-x-4 items-center"
+          role="navigation"
+          aria-label="Navigasi utama"
+        >
           <RouterLink
             v-for="(item, index) in navigationMenu"
             :key="`nav-${item.name}-${index}`"
@@ -175,7 +205,7 @@
       >
         <div
           v-if="isMobileMenuOpen"
-          class="fixed top-20 left-1/2 transform -translate-x-1/2 w-80 sm:w-96 bg-zinc-900/95 backdrop-blur rounded-2xl shadow-lg border border-zinc-700/50 z-50 mx-4 overflow-hidden"
+          class="fixed top-20 left-1/2 transform -translate-x-1/2 w-[calc(100vw-2rem)] sm:w-96 md:w-[28rem] lg:w-80 max-w-md bg-zinc-900/95 backdrop-blur rounded-2xl shadow-lg border border-zinc-700/50 z-50 mx-4 overflow-hidden"
           @click.stop
           @keydown="handleMobileMenuKeydown"
           aria-modal="true"
@@ -222,10 +252,7 @@
                   />
                 </div>
                 <span class="font-medium flex-1">{{ item.name }}</span>
-                <ChevronRightIcon
-                  class="w-4 h-4 transition-all duration-200"
-                  aria-hidden="true"
-                />
+                <ChevronRightIcon class="w-4 h-4 transition-all duration-200" aria-hidden="true" />
               </RouterLink>
             </nav>
           </div>
@@ -262,7 +289,7 @@
               ref="mobileSearchInput"
               type="search"
               class="search-input mobile-search-input"
-              placeholder="Cari layanan/menu…"
+              placeholder="Cari layanan..."
               autocomplete="off"
               spellcheck="false"
               :aria-expanded="showMobileSearchResults"
@@ -387,7 +414,7 @@ const navigationStore = useNavigationStore()
 const searchStore = useSearchStore()
 
 // STATE
-const logoSrc = ref(new URL('/images/logo/logo.webp', import.meta.url).href)
+const logoSrc = ref(new URL('@/assets/images/logo/logo.webp', import.meta.url).href)
 const logoLoaded = ref(false)
 const mobileSearchInput = ref(null)
 const mobileMenuRef = ref(null)
@@ -670,7 +697,7 @@ const trackLogoClick = () => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'logo_click', {
       event_category: 'navigation',
-      event_label: 'header_logo'
+      event_label: 'header_logo',
     })
   }
 }
@@ -680,7 +707,7 @@ const trackNavClick = (name) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'nav_click', {
       event_category: 'navigation',
-      event_label: name.toLowerCase()
+      event_label: name.toLowerCase(),
     })
   }
 }
@@ -690,7 +717,7 @@ const trackSearchClick = (term) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'search_click', {
       event_category: 'search',
-      search_term: term
+      search_term: term,
     })
   }
 }
@@ -853,13 +880,41 @@ watch(isMobileSearchOpen, (isOpen) => {
 }
 
 .logo-loading {
-  background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 25%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.1) 75%
+  );
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
 }
 
 @keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Hide default clear (X) button in search input for all browsers */
+input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+input[type='search']::-ms-clear {
+  display: none;
+}
+input[type='search']::-o-clear {
+  display: none;
+}
+input[type='search']::-moz-clear {
+  display: none;
+}
+input[type='search']::-webkit-search-decoration {
+  display: none;
 }
 </style>

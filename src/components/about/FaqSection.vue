@@ -85,15 +85,18 @@ const toggle = (index) => {
 const faqs = [
   {
     title: 'Apakah layanan bisa walk-in atau perlu reservasi?',
-    content: 'Kami menerima pelanggan walk-in, tetapi untuk menghindari antrian panjang dan mendapatkan jadwal yang pasti, kami sangat menyarankan untuk melakukan reservasi terlebih dahulu melalui WhatsApp atau website kami.'
+    content:
+      'Kami menerima pelanggan walk-in, tetapi untuk menghindari antrian panjang dan mendapatkan jadwal yang pasti, kami sangat menyarankan untuk melakukan reservasi terlebih dahulu melalui WhatsApp atau website kami.',
   },
   {
     title: 'Apa saja metode pembayaran yang tersedia?',
-    content: 'Kami menerima berbagai metode pembayaran termasuk tunai, kartu debit/kredit, dan e-wallet seperti GoPay, OVO, dan DANA untuk kenyamanan Anda.'
+    content:
+      'Kami menerima berbagai metode pembayaran termasuk tunai, kartu debit/kredit, dan e-wallet seperti GoPay, OVO, dan DANA untuk kenyamanan Anda.',
   },
   {
     title: 'Berapa lama waktu yang dibutuhkan untuk satu sesi?',
-    content: 'Waktu standar untuk layanan potong rambut berkisar 30-45 menit. Untuk layanan tambahan seperti coloring atau treatment khusus bisa membutuhkan waktu lebih lama.'
-  }
+    content:
+      'Waktu standar untuk layanan potong rambut berkisar 30-45 menit. Untuk layanan tambahan seperti coloring atau treatment khusus bisa membutuhkan waktu lebih lama.',
+  },
 ]
 </script>

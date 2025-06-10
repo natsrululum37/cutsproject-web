@@ -99,12 +99,20 @@ const form = ref({
   date: '',
   time: '',
   service: '',
-  notes: ''
+  notes: '',
 })
 
 const availableTimes = [
-  '10:00', '11:00', '12:00', '13:00', '14:00',
-  '15:00', '16:00', '17:00', '18:00', '19:00'
+  '10:00',
+  '11:00',
+  '12:00',
+  '13:00',
+  '14:00',
+  '15:00',
+  '16:00',
+  '17:00',
+  '18:00',
+  '19:00',
 ]
 
 const services = [
@@ -112,7 +120,7 @@ const services = [
   'Haircut + Wash',
   'Hair Coloring',
   'Beard Trim',
-  'Full Package (Haircut + Wash + Styling)'
+  'Full Package (Haircut + Wash + Styling)',
 ]
 
 const handleSubmit = () => {

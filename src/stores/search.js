@@ -88,19 +88,36 @@ export const useSearchStore = defineStore('search', {
       const term = (query || this.query).trim().toLowerCase()
       if (!term || !searchData?.length) return []
 
+      // Pisahkan kata kunci pencarian
+      const searchTerms = term.split(/\s+/)
+
       const results = searchData
         .filter((item) => {
-          const nameMatch = item.name?.toLowerCase().includes(term)
-          const categoryMatch = item.category?.toLowerCase().includes(term)
-          const keywordMatch = item.keywords?.some((k) => k.includes(term))
-          return nameMatch || categoryMatch || keywordMatch
+          // Cek setiap kata kunci
+          return searchTerms.every((term) => {
+            const nameMatch = item.name?.toLowerCase().includes(term)
+            const categoryMatch = item.category?.toLowerCase().includes(term)
+            const keywordMatch = item.keywords?.some((k) => k.toLowerCase().includes(term))
+            return nameMatch || categoryMatch || keywordMatch
+          })
         })
         .sort((a, b) => {
-          // Prioritize exact matches
-          const aExact = a.name?.toLowerCase().startsWith(term)
-          const bExact = b.name?.toLowerCase().startsWith(term)
-          if (aExact && !bExact) return -1
-          if (!aExact && bExact) return 1
+          // Prioritaskan hasil yang cocok dengan nama
+          const aNameMatch = searchTerms.every((term) => a.name?.toLowerCase().includes(term))
+          const bNameMatch = searchTerms.every((term) => b.name?.toLowerCase().includes(term))
+          if (aNameMatch && !bNameMatch) return -1
+          if (!aNameMatch && bNameMatch) return 1
+
+          // Prioritaskan hasil yang dimulai dengan kata kunci
+          const aStartsWith = a.name?.toLowerCase().startsWith(searchTerms[0])
+          const bStartsWith = b.name?.toLowerCase().startsWith(searchTerms[0])
+          if (aStartsWith && !bStartsWith) return -1
+          if (!aStartsWith && bStartsWith) return 1
+
+          // Urutkan berdasarkan kategori
+          if (a.category === 'Layanan' && b.category !== 'Layanan') return -1
+          if (a.category !== 'Layanan' && b.category === 'Layanan') return 1
+
           return 0
         })
         .slice(0, 8)

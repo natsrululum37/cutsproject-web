@@ -49,15 +49,15 @@ const handleImageError = (event, index) => {
 }
 
 const images = ref([
-  { src: `${baseUrl}gallery1.webp`, alt: 'Classic Fade Cut' },
-  { src: `${baseUrl}gallery2.webp`, alt: 'Modern Pompadour' },
-  { src: `${baseUrl}gallery3.webp`, alt: 'Textured Crop' },
-  { src: `${baseUrl}gallery4.webp`, alt: 'Clean Fade' },
-  { src: `${baseUrl}gallery5.webp`, alt: 'Slick Back Style' },
-  { src: `${baseUrl}gallery6.webp`, alt: 'Vintage Cut' },
-  { src: `${baseUrl}gallery7.webp`, alt: 'Modern Quiff' },
-  { src: `${baseUrl}gallery8.webp`, alt: 'Messy Textured' },
-  { src: `${baseUrl}gallery9.webp`, alt: 'Classic Taper' }
+  { src: `${baseUrl}images/gallery/gallery1.webp`, alt: 'Classic Fade Cut' },
+  { src: `${baseUrl}images/gallery/gallery2.webp`, alt: 'Modern Pompadour' },
+  { src: `${baseUrl}images/gallery/gallery3.webp`, alt: 'Textured Crop' },
+  { src: `${baseUrl}images/gallery/gallery4.webp`, alt: 'Clean Fade' },
+  { src: `${baseUrl}images/gallery/gallery5.webp`, alt: 'Slick Back Style' },
+  { src: `${baseUrl}images/gallery/gallery6.webp`, alt: 'Vintage Cut' },
+  { src: `${baseUrl}images/gallery/gallery7.webp`, alt: 'Modern Quiff' },
+  { src: `${baseUrl}images/gallery/gallery8.webp`, alt: 'Messy Textured' },
+  { src: `${baseUrl}images/gallery/gallery9.webp`, alt: 'Classic Taper' },
 ])
 </script>
 

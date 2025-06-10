@@ -34,14 +34,9 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to) => {
-  // Performance measurement for navigation complete
+  // We can still measure performance without logging
   if ('performance' in window && 'mark' in window.performance) {
     window.performance.mark(`navigation-${to.name}-end`)
-    window.performance.measure(
-      `navigation-${to.name}`,
-      `navigation-${to.name}-start`,
-      `navigation-${to.name}-end`,
-    )
   }
 
   // Reinitialize AOS after route change for better animation consistency
@@ -68,31 +63,11 @@ app.config.errorHandler = (err, instance, info) => {
     info: info,
     timestamp: new Date().toISOString(),
   })
-
-  // You can integrate with error reporting services here
-  // Example: Sentry.captureException(err, { extra: { info, component: instance } })
 }
 
 // Performance monitoring setup
 if ('PerformanceObserver' in window) {
-  const observer = new PerformanceObserver((list) => {
-    for (const entry of list.getEntries()) {
-      // Monitor navigation timing
-      if (entry.entryType === 'measure' && entry.name.startsWith('navigation-')) {
-        console.log(`🚀 Navigation: ${entry.name} completed in ${Math.round(entry.duration)}ms`)
-      }
-
-      // Monitor largest contentful paint
-      if (entry.entryType === 'largest-contentful-paint') {
-        console.log(`🎨 LCP: ${Math.round(entry.startTime)}ms`)
-      }
-
-      // Monitor first input delay
-      if (entry.entryType === 'first-input') {
-        console.log(`⚡ FID: ${Math.round(entry.processingStart - entry.startTime)}ms`)
-      }
-    }
-  })
+  const observer = new PerformanceObserver(() => {})
 
   // Observe multiple performance metrics
   try {
