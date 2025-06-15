@@ -11,7 +11,7 @@
           <h2 class="section-title flex items-center gap-1" tabindex="0">
             <span>CUT</span>
             <img
-              src="@/assets/images/logo/logo.webp"
+              src="@/assets/client/images/logo/logo.webp"
               alt="Logo CUT PROJECT Barbershop"
               class="w-8 h-8 sm:w-10 sm:h-10 inline-block -mx-0.5 align-middle"
               width="40"
@@ -95,8 +95,8 @@
 <script setup>
 import { computed } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { useSocialStore } from '@/stores/social'
-import { useBusinessStore } from '@/stores/business'
+import { useSocialStore } from '@/stores/client/social'
+import { useBusinessStore } from '@/stores/client/business'
 
 const socialStore = useSocialStore()
 const businessStore = useBusinessStore()

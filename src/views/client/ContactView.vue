@@ -167,7 +167,7 @@ import { ref, computed } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, helpers } from '@vuelidate/validators'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { useSocialStore } from '@/stores/social'
+import { useSocialStore } from '@/stores/client/social'
 
 const name = ref('')
 const emailAddress = ref('')

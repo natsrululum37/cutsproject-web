@@ -14,9 +14,9 @@
 </template>
 
 <script setup>
-import HeroSection from '@/components/home/HeroSection.vue'
-import VisionMission from '@/components/home/VisionMissionSection.vue'
-import Location from '@/components/home/LocationSection.vue'
-import Services from '@/components/home/ServicesPriceSection.vue'
-import Cta from '@/components/home/CtaSection.vue'
+import HeroSection from '@/components/client/home/HeroSection.vue'
+import VisionMission from '@/components/client/home/VisionMissionSection.vue'
+import Location from '@/components/client/home/LocationSection.vue'
+import Services from '@/components/client/home/ServicesPriceSection.vue'
+import Cta from '@/components/client/home/CtaSection.vue'
 </script>

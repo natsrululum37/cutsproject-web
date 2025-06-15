@@ -14,7 +14,7 @@
       </div>
       <div class="flex justify-center">
         <img
-          src="@/assets/images/cutsproject_place.webp"
+          src="@/assets/client/images/cutsproject_place.webp"
           alt="CutsProject"
           class="w-full max-w-[250px] rounded"
         />

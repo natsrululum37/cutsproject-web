@@ -378,9 +378,9 @@
 <script setup>
 import { ref, computed, nextTick, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useHeaderStore } from '@/stores/header'
-import { useNavigationStore } from '@/stores/navigation'
-import { useSearchStore } from '@/stores/search'
+import { useHeaderStore } from '@/stores/client/header'
+import { useNavigationStore } from '@/stores/client/navigation'
+import { useSearchStore } from '@/stores/client/search'
 import {
   MagnifyingGlassIcon,
   Bars3Icon,
@@ -414,7 +414,7 @@ const navigationStore = useNavigationStore()
 const searchStore = useSearchStore()
 
 // STATE
-const logoSrc = ref(new URL('@/assets/images/logo/logo.webp', import.meta.url).href)
+const logoSrc = ref(new URL('@/assets/client/images/logo/logo.webp', import.meta.url).href)
 const logoLoaded = ref(false)
 const mobileSearchInput = ref(null)
 const mobileMenuRef = ref(null)

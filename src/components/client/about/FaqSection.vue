@@ -6,7 +6,7 @@
       <!-- Gambar dengan overlay saat hover -->
       <div class="relative w-full lg:w-1/2 group">
         <img
-          src="@/assets/images/tools.webp"
+          src="@/assets/client/images/tools.webp"
           alt="FAQ tailwind section"
           class="w-full rounded-xl object-cover transition"
         />

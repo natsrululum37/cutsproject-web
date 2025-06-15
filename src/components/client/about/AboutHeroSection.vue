@@ -2,7 +2,7 @@
   <!-- Hero Fullscreen Image -->
   <div class="relative w-full h-[500px] overflow-hidden">
     <img
-      src="@/assets/images/CUTS.webp"
+      src="@/assets/client/images/CUTS.webp"
       alt="CutsProject Barbershop Hero Image"
       class="w-full h-full object-cover"
       width="1920"

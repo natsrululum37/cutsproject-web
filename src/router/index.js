@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Home from '@/views/HomeView.vue'
-import Gallery from '@/views/GalleryView.vue'
-import About from '@/views/AboutView.vue'
-import Contact from '@/views/ContactView.vue'
-import Reservation from '@/views/ReservationView.vue'
-import Services from '@/views/ServiceView.vue'
-import Review from '@/views/ReviewViews.vue'
+import Home from '@/views/client/HomeView.vue'
+import Gallery from '@/views/client/GalleryView.vue'
+import About from '@/views/client/AboutView.vue'
+import Contact from '@/views/client/ContactView.vue'
+import Reservation from '@/views/client/ReservationView.vue'
+import Services from '@/views/client/ServiceView.vue'
+import Review from '@/views/client/ReviewViews.vue'
 
 const routes = [
   {

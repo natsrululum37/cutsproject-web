@@ -159,6 +159,6 @@
 </template>
 
 <script setup>
-import { useServicesStore } from '@/stores/services'
+import { useServicesStore } from '@/stores/client/services'
 const { services } = useServicesStore()
 </script>

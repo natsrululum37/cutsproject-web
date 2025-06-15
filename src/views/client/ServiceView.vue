@@ -25,7 +25,7 @@
             class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
           >
             <img
-              src="@/assets/images/icons/haircut.webp"
+              src="@/assets/client/images/icons/haircut.webp"
               alt="Haircut Icon"
               class="w-10 h-10 object-contain"
               loading="lazy"
@@ -48,7 +48,7 @@
             class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
           >
             <img
-              src="@/assets/images/icons/shaving.webp"
+              src="@/assets/client/images/icons/shaving.webp"
               alt="Shaving Icon"
               class="w-10 h-10 object-contain"
               loading="lazy"
@@ -70,7 +70,7 @@
             class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
           >
             <img
-              src="@/assets/images/icons/haircoloring.webp"
+              src="@/assets/client/images/icons/haircoloring.webp"
               alt="Hair Coloring Icon"
               class="w-10 h-10 object-contain"
               loading="lazy"
@@ -92,7 +92,7 @@
             class="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center"
           >
             <img
-              src="@/assets/images/icons/facial.webp"
+              src="@/assets/client/images/icons/facial.webp"
               alt="Facial Icon"
               class="w-10 h-10 object-contain"
               loading="lazy"
@@ -123,5 +123,5 @@
 </template>
 
 <script setup>
-import ServicesSection from '@/components/home/ServicesPriceSection.vue'
+import ServicesSection from '@/components/client/home/ServicesPriceSection.vue'
 </script>

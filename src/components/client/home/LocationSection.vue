@@ -30,7 +30,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useBusinessStore } from '@/stores/business'
+import { useBusinessStore } from '@/stores/client/business'
 
 const businessStore = useBusinessStore()
 const branches = computed(() => businessStore.getBranches)

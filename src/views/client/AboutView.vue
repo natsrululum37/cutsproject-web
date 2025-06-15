@@ -18,8 +18,8 @@
 </template>
 
 <script setup>
-import AboutHeroSection from '@/components/about/AboutHeroSection.vue'
-import FaqSection from '@/components/about/FaqSection.vue'
-import AboutSection from '@/components/about/AboutSection.vue'
-import TeamSection from '@/components/about/TeamSection.vue'
+import AboutHeroSection from '@/components/client/about/AboutHeroSection.vue'
+import FaqSection from '@/components/client/about/FaqSection.vue'
+import AboutSection from '@/components/client/about/AboutSection.vue'
+import TeamSection from '@/components/client/about/TeamSection.vue'
 </script>

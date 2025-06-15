@@ -15,8 +15,8 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import Header from './components/layouts/HeaderComponent.vue'
-import Footer from './components/layouts/FooterComponent.vue'
+import Header from './components/client/layouts/HeaderComponent.vue'
+import Footer from './components/client/layouts/FooterComponent.vue'
 
 const route = useRoute()
 
