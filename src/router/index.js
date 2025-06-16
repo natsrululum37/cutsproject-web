@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+// 📁 Halaman Utama (Client)
 import Home from '@/views/client/HomeView.vue'
 import Gallery from '@/views/client/GalleryView.vue'
 import About from '@/views/client/AboutView.vue'
@@ -7,6 +8,10 @@ import Contact from '@/views/client/ContactView.vue'
 import Reservation from '@/views/client/ReservationView.vue'
 import Services from '@/views/client/ServiceView.vue'
 import Review from '@/views/client/ReviewViews.vue'
+
+// 📁 Halaman Autentikasi
+import Login from '@/views/auth/LoginView.vue'
+import Register from '@/views/auth/RegisterView.vue'
 
 const routes = [
   {
@@ -72,6 +77,24 @@ const routes = [
       description: 'Pesan jadwal potong rambut Anda sekarang juga.',
     },
   },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: {
+      title: 'Login',
+      description: 'Masuk ke akun CutsProject Anda.',
+    },
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
+    meta: {
+      title: 'Register',
+      description: 'Daftar akun baru untuk membuat reservasi di CutsProject.',
+    },
+  },
 ]
 
 const router = createRouter({
@@ -90,7 +113,7 @@ const router = createRouter({
   },
 })
 
-// Tambahan untuk memastikan scroll reset
+// Reset scroll saat pindah halaman
 router.beforeEach((to, from, next) => {
   if (to.path !== from.path) {
     document.documentElement.scrollTop = 0
