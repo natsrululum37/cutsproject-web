@@ -95,6 +95,45 @@ const routes = [
       description: 'Daftar akun baru untuk membuat reservasi di CutsProject.',
     },
   },
+
+  //  Halaman Admin
+  {
+    path: '/admin',
+    name: 'AdminDashboard',
+    component: () => import('@/views/admin/DashboardAdminView.vue'),
+    meta: {
+      title: 'Dashboard Admin',
+      description: 'Halaman utama admin dashboard.',
+    },
+  },
+  {
+    path: '/admin/reservations',
+    name: 'AdminReservations',
+    component: () => import('@/views/admin/ReservationAdminView.vue'),
+    meta: {
+      title: 'Data Reservasi',
+      description: 'Kelola semua data reservasi pelanggan.',
+    },
+  },
+  {
+    path: '/admin/services',
+    name: 'AdminServices',
+    component: () => import('@/views/admin/ServiceAdminView.vue'),
+    meta: {
+      title: 'Layanan Admin',
+      description: 'Kelola layanan potong rambut.',
+    },
+  },
+  {
+    path: '/admin/gallery',
+    name: 'AdminGallery',
+    component: () => import('@/views/admin/GalleryAdminView.vue'),
+    meta: {
+      title: 'Galeri Admin',
+      description: 'Kelola konten galeri.',
+    },
+  },
+
 ]
 
 const router = createRouter({
@@ -120,6 +159,11 @@ router.beforeEach((to, from, next) => {
     document.body.scrollTop = 0
   }
   next()
+})
+
+// Update judul halaman
+router.afterEach((to) => {
+  document.title = to.meta.title || 'CutsProject'
 })
 
 export default router
