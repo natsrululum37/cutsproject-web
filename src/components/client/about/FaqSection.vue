@@ -61,7 +61,7 @@
               </button>
               <div
                 v-show="openIndex === index"
-                class="accordion-content text-gray-400 text-base leading-relaxed mt-4 transition-all duration-500"
+                class="accordion-content justify-center text-gray-400 text-base leading-relaxed mt-4 transition-all duration-500"
               >
                 <p>{{ faq.content }}</p>
               </div>
@@ -97,6 +97,11 @@ const faqs = [
     title: 'Berapa lama waktu yang dibutuhkan untuk satu sesi?',
     content:
       'Waktu standar untuk layanan potong rambut berkisar 30-45 menit. Untuk layanan tambahan seperti coloring atau treatment khusus bisa membutuhkan waktu lebih lama.',
+  },
+  {
+    title: 'Bisakah saya meminta gaya potongan rambut sesuai preferensi saya?',
+    content:
+      'Tentu saja! Tim barber profesional kami akan dengan senang hati mendengarkan keinginan Anda dan menyesuaikan potongan rambut sesuai gaya yang Anda inginkan. Kami selalu memprioritaskan konsultasi terlebih dahulu untuk memastikan hasil akhir sesuai dengan ekspektasi Anda, sekaligus memberikan saran profesional berdasarkan bentuk wajah dan tekstur rambut Anda.',
   },
 ]
 </script>

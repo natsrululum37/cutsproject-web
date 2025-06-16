@@ -10,15 +10,16 @@
         <div class="aspect-square overflow-hidden">
           <img
             :src="member.image"
-            :alt="member.name"
+            :alt="member.nama"
             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             @error="handleImgError"
           />
         </div>
         <div class="p-6 text-center">
-          <h3 class="text-xl font-semibold mb-1">{{ member.name }}</h3>
-          <p class="text-yellow-400 text-sm mb-3">{{ member.role }}</p>
-          <p class="text-gray-400 text-sm">{{ member.experience }}</p>
+          <h3 class="text-xl font-semibold mb-1 text-white">{{ member.nama }}</h3>
+          <p class="text-sm text-gray-300 mb-1">{{ member.nim }}</p>
+          <p class="text-yellow-400 text-sm mb-3">{{ member.peran }}</p>
+          <p class="text-gray-400 text-sm">{{ member.tugas }}</p>
         </div>
       </div>
     </div>
@@ -29,28 +30,53 @@
 const baseUrl = import.meta.env.BASE_URL
 const team = [
   {
-    name: 'Anggit Pratama',
-    role: 'Senior Barber',
-    experience: '8+ tahun pengalaman',
-    image: baseUrl + '/images/team/anggit.webp',
+    nama: 'Ahmad Natsrul Ulum',
+    nim: '23.11.5524',
+    peran: 'Frontend, Backend',
+    tugas: 'Homepage, Header, Navbar, Store',
+    image: baseUrl + '/images/team/arul.webp',
   },
   {
-    name: 'Bima Sakti',
-    role: 'Style Specialist',
-    experience: '6+ tahun pengalaman',
-    image: baseUrl + '/images/team/bima.webp',
+    nama: 'Zulfa Meydita Rahma',
+    nim: '23.11.5512',
+    peran: 'Frontend, UI/UX Designer',
+    tugas: 'About, Team, Footer, Design Figma',
+    image: baseUrl + '/images/team/ulpa.webp',
   },
   {
-    name: 'Edo Wijaya',
-    role: 'Color Expert',
-    experience: '5+ tahun pengalaman',
-    image: baseUrl + '/images/team/edo.webp',
+    nama: 'Anung Binartanto',
+    nim: '23.11.5520',
+    peran: 'Frontend',
+    tugas: 'Booking',
+    image: baseUrl + '/images/team/anung.webp',
   },
   {
-    name: 'Tyo Nugraha',
-    role: 'Master Barber',
-    experience: '7+ tahun pengalaman',
-    image: baseUrl + '/images/team/tyo.webp',
+    nama: 'Eria Syalwa',
+    nim: '23.11.5535',
+    peran: 'Frontend',
+    tugas: 'Kontak',
+    image: baseUrl + '/images/team/eria.webp',
+  },
+  {
+    nama: 'Agi Muhammad Tengku Aqamaddin',
+    nim: '23.11.5518',
+    peran: 'Frontend, UI/UX Designer',
+    tugas: 'Ulasan, Design Figma',
+    image: baseUrl + '/images/team/agi.webp',
+  },
+  {
+    nama: 'Cleova Calista Aziza Kayviar',
+    nim: '23.11.5532',
+    peran: 'Frontend',
+    tugas: 'Layanan',
+    image: baseUrl + '/images/team/cleo.webp',
+  },
+  {
+    nama: 'Arya Kusuma Wijaya',
+    nim: '23.11.5554',
+    peran: 'Frontend, UI/UX Designer',
+    tugas: 'Galeri, Design Figma',
+    image: baseUrl + '/images/team/arya.webp',
   },
 ]
 </script>
