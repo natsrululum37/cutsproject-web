@@ -10,9 +10,10 @@ import 'aos/dist/aos.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faInstagram, faWhatsapp, faTiktok } from '@fortawesome/free-brands-svg-icons'
+import { faUser, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 
 // Add icons to library
-library.add(faInstagram, faWhatsapp, faTiktok)
+library.add(faInstagram, faWhatsapp, faTiktok, faUser, faEnvelope, faLock)
 
 // Enhanced router guards for SEO and performance
 router.beforeEach((to, from, next) => {
