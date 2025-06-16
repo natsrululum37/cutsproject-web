@@ -11,6 +11,7 @@ export const useNavigationStore = defineStore('navigation', {
       { name: 'Kontak', link: '/contact', icon: 'PhoneIcon' },
       { name: 'Ulasan', link: '/review', icon: 'StarIcon' },
       { name: 'Reservasi', link: '/reservation', icon: 'CalendarIcon' },
+      { name: 'Login', link: '/login', icon: 'UserIcon' }
     ],
     activeRoute: '/',
   }),
