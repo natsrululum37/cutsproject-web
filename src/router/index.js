@@ -14,6 +14,7 @@ import Login from '@/views/auth/LoginView.vue'
 import Register from '@/views/auth/RegisterView.vue'
 
 const routes = [
+  // Halaman Utama
   {
     path: '/',
     name: 'Home',
@@ -77,6 +78,8 @@ const routes = [
       description: 'Pesan jadwal potong rambut Anda sekarang juga.',
     },
   },
+
+  // Autentikasi
   {
     path: '/login',
     name: 'Login',
@@ -95,8 +98,17 @@ const routes = [
       description: 'Daftar akun baru untuk membuat reservasi di CutsProject.',
     },
   },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('@/views/auth/ProfileView.vue'),
+    meta: {
+      title: 'Profil Saya',
+      description: 'Lihat dan kelola data profil Anda di CutsProject.',
+    },
+  },
 
-  //  Halaman Admin
+  // Halaman Admin
   {
     path: '/admin',
     name: 'AdminDashboard',
@@ -133,7 +145,6 @@ const routes = [
       description: 'Kelola konten galeri.',
     },
   },
-
 ]
 
 const router = createRouter({

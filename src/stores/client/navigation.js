@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useNavigationStore = defineStore('navigation', {
   state: () => ({
+    user: null, // Status login pengguna
     menu: [
       { name: 'Beranda', link: '/', icon: 'HomeIcon' },
       { name: 'Tentang', link: '/about', icon: 'InformationCircleIcon' },
@@ -11,13 +12,28 @@ export const useNavigationStore = defineStore('navigation', {
       { name: 'Kontak', link: '/contact', icon: 'PhoneIcon' },
       { name: 'Ulasan', link: '/review', icon: 'StarIcon' },
       { name: 'Reservasi', link: '/reservation', icon: 'CalendarIcon' },
-      { name: 'Login', link: '/login', icon: 'UserIcon' }
+      { name: 'Login', link: '/login', icon: 'UserIcon' } // Akan diganti jadi "Profil" jika login
     ],
     activeRoute: '/',
   }),
 
   getters: {
-    // Get menu item by path with better matching
+    // Dinamis: Ganti Login jadi Profil jika user login
+    dynamicMenu(state) {
+      const menuCopy = [...state.menu]
+      if (state.user) {
+        const loginIndex = menuCopy.findIndex(item => item.link === '/login')
+        if (loginIndex !== -1) {
+          menuCopy[loginIndex] = {
+            name: 'Profil',
+            link: '/profile',
+            icon: 'UserIcon'
+          }
+        }
+      }
+      return menuCopy
+    },
+
     getMenuItemByPath: (state) => (path) => {
       return state.menu.find((item) => {
         if (!path) return false
@@ -25,7 +41,8 @@ export const useNavigationStore = defineStore('navigation', {
         if (path !== '/' && path.startsWith(item.link + '/')) return true
         return false
       })
-    }, // Mendapatkan item menu untuk pencarian/filter
+    },
+
     menuForSearch: (state) => {
       return state.menu.map((item, idx) => ({
         id: `menu-${idx}`,
@@ -37,16 +54,26 @@ export const useNavigationStore = defineStore('navigation', {
       }))
     },
 
-    // Check if any path matches current route
     hasActiveRoute: (state) => {
       return state.activeRoute !== null && state.activeRoute !== ''
     },
   },
 
   actions: {
+    // Login: set user data
+    setUser(userData) {
+      this.user = userData
+    },
+
+    // Logout: hapus user dan arahkan ke halaman utama
+    logout() {
+      this.user = null
+      this.setActiveRoute('/')
+    },
+
+    // Ganti route aktif
     setActiveRoute(path) {
       if (!path) return
-      // Handle trailing slashes consistently
       const normalizedPath = path.endsWith('/') && path !== '/' ? path.slice(0, -1) : path
       this.activeRoute = normalizedPath
     },
@@ -54,40 +81,33 @@ export const useNavigationStore = defineStore('navigation', {
     isActiveRoute(path) {
       if (!path || !this.activeRoute) return false
 
-      // Normalize paths (handle trailing slashes)
       const normalizedCurrentPath =
         this.activeRoute.endsWith('/') && this.activeRoute !== '/'
           ? this.activeRoute.slice(0, -1)
           : this.activeRoute
       const normalizedPath = path.endsWith('/') && path !== '/' ? path.slice(0, -1) : path
 
-      // Exact match
       if (normalizedCurrentPath === normalizedPath) return true
-
-      // Handle nested routes
       if (path !== '/' && normalizedCurrentPath.startsWith(normalizedPath + '/')) return true
 
       return false
     },
 
-    // Update menu item
     updateMenuItem(index, newItem) {
       if (index >= 0 && index < this.menu.length) {
         this.menu[index] = { ...this.menu[index], ...newItem }
       }
     },
 
-    // Add menu item
     addMenuItem(item) {
       if (item?.name && item?.link) {
         this.menu.push({
-          icon: item.icon || 'HomeIcon', // Default icon
+          icon: item.icon || 'HomeIcon',
           ...item,
         })
       }
     },
 
-    // Remove menu item
     removeMenuItem(index) {
       if (index >= 0 && index < this.menu.length) {
         this.menu.splice(index, 1)
