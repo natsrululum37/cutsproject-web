@@ -63,7 +63,7 @@ import { ref } from 'vue'
 const reviews = ref([
   {
     name: 'Budi Santoso',
-    avatar: '/images/team/anggit.png',
+    avatar: 'https://randomuser.me/api/portraits/men/92.jpg',
     rating: 5,
     date: '2 hari yang lalu',
     comment: 'Pelayanan sangat bagus, hasil potongan rambut sesuai dengan keinginan. Recommended!',
