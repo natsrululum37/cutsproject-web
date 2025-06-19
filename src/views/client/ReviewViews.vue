@@ -228,8 +228,9 @@ const newReview = ref({
 })
 
 const openReviewForm = () => {
-  showForm.value = true
+  showForm.value = !showForm.value
 }
+
 
 const submitReview = async () => {
   try {
