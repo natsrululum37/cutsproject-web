@@ -64,8 +64,8 @@ const team = [
   {
     nama: 'Anung Binartanto',
     nim: '23.11.5520',
-    peran: 'Frontend',
-    tugas: 'Booking, auth, Admin',
+    peran: 'Fullstack',
+    tugas: 'Booking, auth, Admin, Backend',
     github: 'https://github.com/anungbinartantoo',
     image: baseUrl + '/images/team/anung.webp',
   },
