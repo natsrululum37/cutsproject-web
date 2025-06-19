@@ -102,12 +102,12 @@
 
       <!-- CTA -->
       <div class="text-center mt-20">
-        <a
-          href="/reservation"
-          class="inline-block bg-yellow-500 hover:bg-yellow-400 text-black font-semibold text-lg px-10 py-4 rounded-full shadow-lg transition-all duration-300 transform hover:-translate-y-1 active:scale-95"
-        >
-          Booking Sekarang
-        </a>
+        <router-link
+  to="/reservation"
+  class="inline-block bg-yellow-500 hover:bg-yellow-400 text-black font-semibold text-lg px-10 py-4 rounded-full shadow-lg transition-all duration-300 transform hover:-translate-y-1 active:scale-95"
+>
+  Booking Sekarang
+</router-link>
       </div>
     </section>
   </div>

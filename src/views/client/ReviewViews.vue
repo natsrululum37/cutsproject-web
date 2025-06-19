@@ -53,134 +53,199 @@
           Tambah Ulasan
         </button>
       </div>
+      <!-- Form Tambah Ulasan -->
+<div v-if="showForm" class="mt-10 max-w-xl mx-auto bg-zinc-800 p-6 rounded-xl border border-zinc-700">
+  <h2 class="text-white font-semibold text-xl mb-4">Tulis Ulasan Anda</h2>
+  <form @submit.prevent="submitReview">
+    <div class="mb-4">
+      <label class="block text-gray-300 mb-1">Nama</label>
+      <input v-model="newReview.name" required class="w-full p-2 rounded bg-zinc-700 text-white" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-300 mb-1">Avatar (URL)</label>
+      <input v-model="newReview.avatar" class="w-full p-2 rounded bg-zinc-700 text-white" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-300 mb-1">Rating</label>
+      <select v-model.number="newReview.rating" required class="w-full p-2 rounded bg-zinc-700 text-white">
+        <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-300 mb-1">Layanan</label>
+      <input v-model="newReview.service" required class="w-full p-2 rounded bg-zinc-700 text-white" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-300 mb-1">Komentar</label>
+      <textarea v-model="newReview.comment" required rows="4" class="w-full p-2 rounded bg-zinc-700 text-white"></textarea>
+    </div>
+    <button type="submit" class="bg-yellow-500 text-black px-6 py-2 rounded font-semibold hover:bg-yellow-400">
+      Kirim Ulasan
+    </button>
+  </form>
+</div>
+
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+// import { ref } from 'vue'
 
-const reviews = ref([
-  {
-    name: 'Budi Santoso',
-    avatar: 'https://randomuser.me/api/portraits/men/92.jpg',
-    rating: 5,
-    date: '2 hari yang lalu',
-    comment: 'Pelayanan sangat bagus, hasil potongan rambut sesuai dengan keinginan. Recommended!',
-    service: 'Haircut Classic',
-  },
-  {
-    name: 'Rizky Fadillah',
-    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-    rating: 5,
-    date: '3 hari yang lalu',
-    comment: 'Potongannya selalu rapi dan sesuai request. Tempatnya nyaman, pelayanannya top!',
-    service: 'Haircut & Beard',
-  },
-  {
-    name: 'Andi Saputra',
-    avatar: 'https://randomuser.me/api/portraits/men/45.jpg',
-    rating: 4,
-    date: '1 minggu yang lalu',
-    comment: 'Barbernya ramah dan tahu gaya kekinian. Recommended banget!',
-    service: 'Haircut',
-  },
-  {
-    name: 'Fajar Hidayat',
-    avatar: 'https://randomuser.me/api/portraits/men/60.jpg',
-    rating: 5,
-    date: '2 minggu yang lalu',
-    comment: 'Sudah langganan dari lama, hasilnya selalu memuaskan. Kalian wajib kesini!',
-    service: 'Hair Coloring',
-  },
-  {
-    name: 'Yoga Prasetya',
-    avatar: 'https://randomuser.me/api/portraits/men/65.jpg',
-    rating: 4,
-    date: '3 minggu yang lalu',
-    comment:
-      'Pelayanan cepat dan hasil potongannya keren. Cocok banget buat mahasiswa seperti saya.',
-    service: 'Haircut',
-  },
-  {
-    name: 'Ari Wibowo',
-    avatar: 'https://randomuser.me/api/portraits/men/27.jpg',
-    rating: 5,
-    date: '1 bulan yang lalu',
-    comment: 'Tempatnya instagramable, hasil potongannya pas banget buat konten. Suka banget!',
-    service: 'Haircut & Styling',
-  },
-  {
-    name: 'Dimas Ramadhan',
-    avatar: 'https://randomuser.me/api/portraits/men/21.jpg',
-    rating: 4,
-    date: '2 bulan yang lalu',
-    comment:
-      'Pelayanan cepat, rapi, dan nyaman. Cocok buat kamu yang sibuk dan tetap ingin tampil oke.',
-    service: 'Haircut',
-  },
-  {
-    name: 'Reza Maulana',
-    avatar: 'https://randomuser.me/api/portraits/men/51.jpg',
-    rating: 5,
-    date: '3 bulan yang lalu',
-    comment: 'Gaya potongan sesuai tren! Barbershop ini tahu cara memanjakan pelanggannya.',
-    service: 'Haircut & Beard',
-  },
-  {
-    name: 'Rendy Kurniawan',
-    avatar: 'https://randomuser.me/api/portraits/men/38.jpg',
-    rating: 4,
-    date: '6 bulan yang lalu',
-    comment: 'Sudah beberapa kali ke sini, hasilnya selalu konsisten dan memuaskan!',
-    service: 'Haircut',
-  },
-  {
-    name: 'Ilham Saputra',
-    avatar: 'https://randomuser.me/api/portraits/men/58.jpg',
-    rating: 5,
-    date: '9 bulan yang lalu',
-    comment: 'Kesan pertama luar biasa. Sekarang jadi langganan tetap. Thanks CutsProject!',
-    service: 'Haircut & Styling',
-  },
-  {
-    name: 'Alfan Nugraha',
-    avatar: 'https://randomuser.me/api/portraits/men/43.jpg',
-    rating: 4,
-    date: '1 tahun yang lalu',
-    comment: 'Bukan cuma potong rambut, tapi juga pengalaman menyenangkan setiap datang.',
-    service: 'Haircut',
-  },
-  {
-    name: 'Steven Hartono',
-    avatar: 'https://randomuser.me/api/portraits/men/12.jpg',
-    rating: 5,
-    date: '1 tahun yang lalu',
-    comment: 'Tepat waktu, hasil profesional, dan suasananya bikin betah!',
-    service: 'Haircut & Beard',
-  },
-  {
-    name: 'Bayu Aditya',
-    avatar: 'https://randomuser.me/api/portraits/men/19.jpg',
-    rating: 4,
-    date: '1 tahun yang lalu',
-    comment: 'Mereka benar-benar peduli dengan detail. Sangat puas dengan hasil akhirnya.',
-    service: 'Haircut',
-  },
-  {
-    name: 'Daniel Permadi',
-    avatar: 'https://randomuser.me/api/portraits/men/22.jpg',
-    rating: 5,
-    date: '1 tahun yang lalu',
-    comment: 'Nyaman, bersih, dan profesional. Suka banget sama vibe-nya!',
-    service: 'Haircut & Styling',
-  },
-])
+// const reviews = ref([
+//   {
+//     name: 'Budi Santoso',
+//     avatar: 'https://randomuser.me/api/portraits/men/92.jpg',
+//     rating: 5,
+//     date: '2 hari yang lalu',
+//     comment: 'Pelayanan sangat bagus, hasil potongan rambut sesuai dengan keinginan. Recommended!',
+//     service: 'Haircut Classic',
+//   },
+//   {
+//     name: 'Rizky Fadillah',
+//     avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+//     rating: 5,
+//     date: '3 hari yang lalu',
+//     comment: 'Potongannya selalu rapi dan sesuai request. Tempatnya nyaman, pelayanannya top!',
+//     service: 'Haircut & Beard',
+//   },
+//   {
+//     name: 'Andi Saputra',
+//     avatar: 'https://randomuser.me/api/portraits/men/45.jpg',
+//     rating: 4,
+//     date: '1 minggu yang lalu',
+//     comment: 'Barbernya ramah dan tahu gaya kekinian. Recommended banget!',
+//     service: 'Haircut',
+//   },
+//   {
+//     name: 'Fajar Hidayat',
+//     avatar: 'https://randomuser.me/api/portraits/men/60.jpg',
+//     rating: 5,
+//     date: '2 minggu yang lalu',
+//     comment: 'Sudah langganan dari lama, hasilnya selalu memuaskan. Kalian wajib kesini!',
+//     service: 'Hair Coloring',
+//   },
+//   {
+//     name: 'Yoga Prasetya',
+//     avatar: 'https://randomuser.me/api/portraits/men/65.jpg',
+//     rating: 4,
+//     date: '3 minggu yang lalu',
+//     comment:
+//       'Pelayanan cepat dan hasil potongannya keren. Cocok banget buat mahasiswa seperti saya.',
+//     service: 'Haircut',
+//   },
+//   {
+//     name: 'Ari Wibowo',
+//     avatar: 'https://randomuser.me/api/portraits/men/27.jpg',
+//     rating: 5,
+//     date: '1 bulan yang lalu',
+//     comment: 'Tempatnya instagramable, hasil potongannya pas banget buat konten. Suka banget!',
+//     service: 'Haircut & Styling',
+//   },
+//   {
+//     name: 'Dimas Ramadhan',
+//     avatar: 'https://randomuser.me/api/portraits/men/21.jpg',
+//     rating: 4,
+//     date: '2 bulan yang lalu',
+//     comment:
+//       'Pelayanan cepat, rapi, dan nyaman. Cocok buat kamu yang sibuk dan tetap ingin tampil oke.',
+//     service: 'Haircut',
+//   },
+//   {
+//     name: 'Reza Maulana',
+//     avatar: 'https://randomuser.me/api/portraits/men/51.jpg',
+//     rating: 5,
+//     date: '3 bulan yang lalu',
+//     comment: 'Gaya potongan sesuai tren! Barbershop ini tahu cara memanjakan pelanggannya.',
+//     service: 'Haircut & Beard',
+//   },
+//   {
+//     name: 'Rendy Kurniawan',
+//     avatar: 'https://randomuser.me/api/portraits/men/38.jpg',
+//     rating: 4,
+//     date: '6 bulan yang lalu',
+//     comment: 'Sudah beberapa kali ke sini, hasilnya selalu konsisten dan memuaskan!',
+//     service: 'Haircut',
+//   },
+//   {
+//     name: 'Ilham Saputra',
+//     avatar: 'https://randomuser.me/api/portraits/men/58.jpg',
+//     rating: 5,
+//     date: '9 bulan yang lalu',
+//     comment: 'Kesan pertama luar biasa. Sekarang jadi langganan tetap. Thanks CutsProject!',
+//     service: 'Haircut & Styling',
+//   },
+//   {
+//     name: 'Alfan Nugraha',
+//     avatar: 'https://randomuser.me/api/portraits/men/43.jpg',
+//     rating: 4,
+//     date: '1 tahun yang lalu',
+//     comment: 'Bukan cuma potong rambut, tapi juga pengalaman menyenangkan setiap datang.',
+//     service: 'Haircut',
+//   },
+//   {
+//     name: 'Steven Hartono',
+//     avatar: 'https://randomuser.me/api/portraits/men/12.jpg',
+//     rating: 5,
+//     date: '1 tahun yang lalu',
+//     comment: 'Tepat waktu, hasil profesional, dan suasananya bikin betah!',
+//     service: 'Haircut & Beard',
+//   },
+//   {
+//     name: 'Bayu Aditya',
+//     avatar: 'https://randomuser.me/api/portraits/men/19.jpg',
+//     rating: 4,
+//     date: '1 tahun yang lalu',
+//     comment: 'Mereka benar-benar peduli dengan detail. Sangat puas dengan hasil akhirnya.',
+//     service: 'Haircut',
+//   },
+//   {
+//     name: 'Daniel Permadi',
+//     avatar: 'https://randomuser.me/api/portraits/men/22.jpg',
+//     rating: 5,
+//     date: '1 tahun yang lalu',
+//     comment: 'Nyaman, bersih, dan profesional. Suka banget sama vibe-nya!',
+//     service: 'Haircut & Styling',
+//   },
+// ])
+
+// const openReviewForm = () => {
+//   // Implement review form logic
+//   console.log('Opening review form')
+// }
+
+import { ref } from 'vue'
+import axios from 'axios'
+
+const showForm = ref(false)
+
+const newReview = ref({
+  name: '',
+  avatar: '',
+  rating: 5,
+  comment: '',
+  service: ''
+})
 
 const openReviewForm = () => {
-  // Implement review form logic
-  console.log('Opening review form')
+  showForm.value = true
 }
+
+const submitReview = async () => {
+  try {
+    await axios.post('http://localhost:3000/api/reviews', newReview.value)
+    alert('Ulasan berhasil dikirim!')
+    showForm.value = false
+    // Tambahkan ke list lokal (jika ingin langsung tampil)
+    reviews.value.unshift({ ...newReview.value, date: 'Baru saja' })
+    // Reset form
+    newReview.value = { name: '', avatar: '', rating: 5, comment: '', service: '' }
+  } catch (error) {
+    console.error('Gagal mengirim ulasan:', error)
+    alert('Gagal mengirim ulasan. Coba lagi.')
+  }
+}
+
 </script>
 
 <style scoped>

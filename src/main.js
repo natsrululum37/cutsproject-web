@@ -5,6 +5,8 @@ import router from './router'
 import '@/assets/client/styles/main.css'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
 
 // Font Awesome setup
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -52,6 +54,13 @@ const app = createApp(App)
 // Use plugins
 app.use(createPinia())
 app.use(router)
+
+app.use(Toast, {
+  timeout: 3000,
+  closeOnClick: true,
+  pauseOnHover: true,
+  position: 'top-right',
+})
 
 // Register global components
 app.component('font-awesome-icon', FontAwesomeIcon)
