@@ -17,6 +17,6 @@
 import HeroSection from '@/components/client/home/HeroSection.vue'
 import VisionMission from '@/components/client/home/VisionMissionSection.vue'
 import Location from '@/components/client/home/LocationSection.vue'
-import Services from '@/components/client/home/ServicesPriceSection.vue'
+import Services from '@/components/client/about/ServiceSection.vue'
 import Cta from '@/components/client/home/CtaSection.vue'
 </script>
