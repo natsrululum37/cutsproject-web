@@ -103,11 +103,16 @@
 
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faUser, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 library.add(faUser, faEnvelope, faLock)
+
+const router = useRouter()
+
 const name = ref('')
 const email = ref('')
 const password = ref('')
@@ -127,16 +132,41 @@ function validateForm() {
 
 async function handleRegister() {
   successMessage.value = ''
+  errors.value = {}
+  
   if (!validateForm()) return
   loading.value = true
+
   try {
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    successMessage.value = 'Pendaftaran berhasil! Silakan login.'
-    name.value = email.value = password.value = confirmPassword.value = ''
+    const response = await axios.post('https://3849-36-72-215-61.ngrok-free.app/api/auth/register', {
+      name: name.value,
+      email: email.value,
+      password: password.value
+    })
+
+    successMessage.value = response.data.message || 'Pendaftaran berhasil!'
+
+    // Kosongkan form
+    name.value = ''
+    email.value = ''
+    password.value = ''
+    confirmPassword.value = ''
+
+    // Redirect ke halaman login setelah 2 detik
+    setTimeout(() => router.push('/login'), 2000)
   } catch (e) {
-    console.error('Gagal mendaftar:', e)
+    console.error('Error saat register:', e)
+    const msg = e.response?.data?.message || 'Gagal mendaftar. Coba lagi.'
+    
+    // Beri error global kalau tidak spesifik
+    if (msg.toLowerCase().includes('email')) {
+      errors.value.email = msg
+    } else {
+      errors.value.name = msg
+    }
   } finally {
     loading.value = false
   }
 }
+
 </script>
