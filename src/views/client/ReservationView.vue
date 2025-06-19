@@ -12,6 +12,7 @@
                 <input
                   type="text"
                   v-model="form.name"
+                  name="name"
                   class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
                   required
                 />
@@ -22,6 +23,7 @@
                 <input
                   type="tel"
                   v-model="form.whatsapp"
+                  name="whatsapp"
                   class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
                   required
                 />
@@ -32,6 +34,7 @@
                 <input
                   type="date"
                   v-model="form.date"
+                  name="date"
                   class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
                   required
                 />
@@ -41,6 +44,7 @@
                 <span class="text-white">Waktu</span>
                 <select
                   v-model="form.time"
+                  name="time"
                   class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
                   required
                 >
@@ -55,6 +59,7 @@
                 <span class="text-white">Layanan</span>
                 <select
                   v-model="form.service"
+                  name="service"
                   class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
                   required
                 >
@@ -69,6 +74,7 @@
                 <span class="text-white">Catatan (opsional)</span>
                 <textarea
                   v-model="form.notes"
+                  name="notes"
                   rows="3"
                   class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
                 ></textarea>
@@ -92,6 +98,10 @@
 
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios'
+import { useToast } from 'vue-toastification' 
+
+const toast = useToast()
 
 const form = ref({
   name: '',
@@ -103,16 +113,8 @@ const form = ref({
 })
 
 const availableTimes = [
-  '10:00',
-  '11:00',
-  '12:00',
-  '13:00',
-  '14:00',
-  '15:00',
-  '16:00',
-  '17:00',
-  '18:00',
-  '19:00',
+  '10:00', '11:00', '12:00', '13:00', '14:00',
+  '15:00', '16:00', '17:00', '18:00', '19:00',
 ]
 
 const services = [
@@ -123,8 +125,42 @@ const services = [
   'Full Package (Haircut + Wash + Styling)',
 ]
 
-const handleSubmit = () => {
-  // Handle form submission
-  console.log('Form submitted:', form.value)
+const handleSubmit = async () => {
+  const formData = new URLSearchParams()
+  formData.append('name', form.value.name)
+  formData.append('whatsapp', form.value.whatsapp)
+  formData.append('date', form.value.date)
+  formData.append('time', form.value.time)
+  formData.append('service', form.value.service)
+  formData.append('notes', form.value.notes)
+
+  try {
+    const response = await axios.post('https://formspree.io/f/mnnvzkwn', formData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+
+    // status 200 = OK atau 202 = Accepted
+    if (response.status === 200 || response.status === 202) {
+      toast.success('Reservasi berhasil dikirim 🎉')
+      form.value = {
+        name: '',
+        whatsapp: '',
+        date: '',
+        time: '',
+        service: '',
+        notes: '',
+      }
+    } else {
+      toast.warning('Reservasi terkirim tapi respon server tidak sesuai 😐')
+      console.warn(response)
+    }
+  } catch (error) {
+    console.error(error)
+    toast.error('Gagal mengirim reservasi 😢 Cek koneksi atau endpoint kamu!')
+  }
 }
 </script>
+
+
