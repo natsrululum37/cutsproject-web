@@ -145,24 +145,32 @@
           aria-label="Navigasi utama"
         >
           <RouterLink
-            v-for="(item, index) in navigationMenu"
+            v-for="(item, index) in navigationMenuWithoutLogin"
             :key="`nav-${item.name}-${index}`"
             :to="item.link"
-            class="relative text-base font-medium text-gray-300 hover:text-white transition-all duration-300 group px-3 py-2 rounded-lg hover:bg-zinc-800/50 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            :class="{
-              'text-yellow-400': isActiveRoute(item.link),
-            }"
+            class="relative text-base font-medium text-gray-300 hover:text-white transition-all duration-300 group px-3 py-2 rounded-lg hover:bg-zinc-800/50"
+            :class="{ 'text-yellow-400': isActiveRoute(item.link) }"
             @click="trackNavClick(item.name)"
           >
-            <span class="relative z-10">{{ item.name }}</span>
-            <span
-              class="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-400 transition-all duration-300 transform origin-left scale-x-0"
-              :class="{
-                'scale-x-100': isActiveRoute(item.link),
-                'group-hover:scale-x-100': !isActiveRoute(item.link),
-              }"
-              aria-hidden="true"
-            ></span>
+            <span>{{ item.name }}</span>
+          </RouterLink>
+          <!-- Tampilkan Login hanya jika belum login -->
+          <RouterLink
+            v-if="!auth.isLoggedIn"
+            to="/login"
+            class="relative text-base font-medium text-gray-300 hover:text-white transition-all duration-300 group px-3 py-2 rounded-lg hover:bg-zinc-800/50"
+            :class="{ 'text-yellow-400': isActiveRoute('/login') }"
+          >
+            <span>Login</span>
+          </RouterLink>
+          <!-- Tampilkan Profile jika sudah login -->
+          <RouterLink
+            v-else
+            to="/profile"
+            class="relative text-base font-medium text-yellow-400 hover:text-white transition-all duration-300 group px-3 py-2 rounded-lg hover:bg-zinc-800/50"
+            :class="{ 'text-yellow-400': isActiveRoute('/profile') }"
+          >
+            <span>Profile</span>
           </RouterLink>
         </nav>
 
@@ -225,34 +233,34 @@
             </div>
             <nav class="py-2" aria-label="Navigasi mobile">
               <RouterLink
-                v-for="(item, index) in navigationMenu"
+                v-for="(item, index) in filteredNavigationMenu"
                 :key="`mobile-nav-${item.name}-${index}`"
                 :to="item.link"
-                class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50 transition-all duration-200 group focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-inset"
-                :class="{
-                  'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute(
-                    item.link,
-                  ),
-                }"
+                class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50"
+                :class="{ 'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute(item.link) }"
                 @click="handleMobileNavClick(item.name)"
-                :aria-current="isActiveRoute(item.link) ? 'page' : undefined"
               >
-                <div
-                  class="p-2 rounded-lg bg-zinc-800/30 mr-4 group-hover:bg-zinc-700/50 transition-colors"
-                >
-                  <component
-                    v-if="item.icon && icons[item.icon]"
-                    :is="icons[item.icon]"
-                    class="w-5 h-5 flex-shrink-0"
-                    :class="{
-                      'text-yellow-400': isActiveRoute(item.link),
-                      'text-gray-400 group-hover:text-white': !isActiveRoute(item.link),
-                    }"
-                    aria-hidden="true"
-                  />
-                </div>
                 <span class="font-medium flex-1">{{ item.name }}</span>
-                <ChevronRightIcon class="w-4 h-4 transition-all duration-200" aria-hidden="true" />
+              </RouterLink>
+              <!-- Tampilkan Login hanya jika belum login -->
+              <RouterLink
+                v-if="!auth.isLoggedIn"
+                to="/login"
+                class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50"
+                :class="{ 'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute('/login') }"
+                @click="handleMobileNavClick('Login')"
+              >
+                <span class="font-medium flex-1">Login</span>
+              </RouterLink>
+              <!-- Tampilkan Profile jika sudah login -->
+              <RouterLink
+                v-else
+                to="/profile"
+                class="flex items-center px-6 py-4 text-yellow-400 hover:text-white hover:bg-zinc-800/50"
+                :class="{ 'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute('/profile') }"
+                @click="handleMobileNavClick('Profile')"
+              >
+                <span class="font-medium flex-1">Profile</span>
               </RouterLink>
             </nav>
           </div>
@@ -381,6 +389,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useHeaderStore } from '@/stores/client/header'
 import { useNavigationStore } from '@/stores/client/navigation'
 import { useSearchStore } from '@/stores/client/search'
+import { useAuthStore } from '@/stores/auth' 
 import {
   MagnifyingGlassIcon,
   Bars3Icon,
@@ -412,6 +421,7 @@ const route = useRoute()
 const headerStore = useHeaderStore()
 const navigationStore = useNavigationStore()
 const searchStore = useSearchStore()
+const auth = useAuthStore() 
 
 // STATE
 const logoSrc = ref(new URL('@/assets/client/images/logo/logo.webp', import.meta.url).href)
@@ -430,7 +440,9 @@ const selectedMobileSearchIndex = ref(-1)
 const isMobileMenuOpen = computed(() => headerStore.isMobileMenuOpen)
 const isMobileSearchOpen = computed(() => headerStore.isMobileSearchOpen)
 const navigationMenu = computed(() => navigationStore.menu)
-
+const navigationMenuWithoutLogin = computed(() =>
+  navigationMenu.value.filter(item => item.link !== '/login')
+)
 //ref untuk isScrolled
 const isScrolled = ref(false)
 

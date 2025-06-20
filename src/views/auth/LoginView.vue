@@ -66,15 +66,17 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const auth = useAuthStore()
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
 const errors = ref({})
 const successMessage = ref('')
 
-const API_URL = 'https://3849-36-72-215-61.ngrok-free.app/api/auth/login' // atau ganti dengan URL ngrok jika remote
+const API_URL = 'https://ed67-36-72-215-61.ngrok-free.app/api/auth/login' // atau ganti dengan URL ngrok jika remote
 
 async function handleLogin() {
   errors.value = {}
@@ -88,12 +90,13 @@ async function handleLogin() {
     })
 
     const token = response.data.token
-    localStorage.setItem('token', token)
+    const userData = response.data.user // pastikan API mengirim data user
+    auth.login(token, userData)
 
     successMessage.value = 'Login berhasil!'
     setTimeout(() => {
-      router.push('/')
-    }, 1500)
+      router.push('/profile')
+    }, 1000)
   } catch (err) {
     const message = err.response?.data?.message || 'Terjadi kesalahan saat login'
     if (message.includes('Email')) {

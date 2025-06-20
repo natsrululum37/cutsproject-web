@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 // 📁 Halaman Utama (Client)
 import Home from '@/views/client/HomeView.vue'
@@ -8,6 +9,7 @@ import Contact from '@/views/client/ContactView.vue'
 import Reservation from '@/views/client/ReservationView.vue'
 import Services from '@/views/client/ServiceView.vue'
 import Review from '@/views/client/ReviewViews.vue'
+import ProfileView from '@/views/auth/ProfileView.vue'
 
 // 📁 Halaman Autentikasi
 import Login from '@/views/auth/LoginView.vue'
@@ -100,11 +102,12 @@ const routes = [
   },
   {
     path: '/profile',
-    name: 'Profile',
-    component: () => import('@/views/auth/ProfileView.vue'),
+    name: 'ProfileView',
+    component: ProfileView,
     meta: {
       title: 'Profil Saya',
       description: 'Lihat dan kelola data profil Anda di CutsProject.',
+      requiresAuth: true,
     },
   },
 
@@ -165,6 +168,17 @@ const router = createRouter({
 
 // Reset scroll saat pindah halaman
 router.beforeEach((to, from, next) => {
+  const auth = useAuthStore()
+  // Jika route butuh login dan belum login, redirect ke login
+  if (to.meta.requiresAuth && !auth.isLoggedIn) {
+    next('/login')
+    return
+  }
+  // Jika sudah login, blokir akses ke login/register
+  if ((to.path === '/login' || to.path === '/register') && auth.isLoggedIn) {
+    next('/profile')
+    return
+  }
   if (to.path !== from.path) {
     document.documentElement.scrollTop = 0
     document.body.scrollTop = 0
