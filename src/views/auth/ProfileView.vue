@@ -15,8 +15,8 @@
           class="w-24 h-24 rounded-full border-4 border-yellow-400"
         />
         <div class="text-center md:text-left">
-          <p class="text-xl font-semibold">Nama Pengguna</p>
-          <p class="text-gray-400 text-sm">user@example.com</p>
+          <p class="text-xl font-semibold">{{ user.name }}</p>
+          <p class="text-gray-400 text-sm">{{ user.email }}</p>
         </div>
       </div>
 
@@ -59,11 +59,28 @@
 </template>
 
 <script setup>
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
-
+ 
+const user = ref(null);
 const auth = useAuthStore();
 const router = useRouter();
+ 
+onMounted(async () => {
+  const token = localStorage.getItem('token');
+  try {
+    const res = await axios.get('http://localhost:3000/api/auth/profile', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    user.value = res.data;
+  } catch (error) {
+    console.error(error); // Lihat error detail di console
+  }
+});
 
 function logout() {
   auth.logout();
