@@ -59,8 +59,14 @@
 </template>
 
 <script setup>
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+
+const auth = useAuthStore();
+const router = useRouter();
+
 function logout() {
-  alert('Berhasil logout!')
-  // Tambahkan logika redirect atau hapus token jika ada
+  auth.logout();
+  router.push('/login');
 }
 </script>
