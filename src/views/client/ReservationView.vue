@@ -1,98 +1,103 @@
 <template>
-  <div class="min-h-screen section-dark">
-    <div class="view-section section-spacing-y">
-      <div class="container-narrow">
-        <h1 class="text-4xl font-bold text-center mb-8" data-aos="fade-up">Reservasi</h1>
-
-        <div class="bg-zinc-900 rounded-xl p-6 md:p-8 shadow-xl border border-zinc-800">
-          <form @submit.prevent="handleSubmit" class="space-y-6">
-            <div class="space-y-4">
-              <label class="block">
-                <span class="text-white">Nama Lengkap</span>
-                <input
-                  type="text"
-                  v-model="form.name"
-                  name="name"
-                  class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
-                  required
-                />
-              </label>
-
-              <label class="block">
-                <span class="text-white">WhatsApp</span>
-                <input
-                  type="tel"
-                  v-model="form.whatsapp"
-                  name="whatsapp"
-                  class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
-                  required
-                />
-              </label>
-
-              <label class="block">
-                <span class="text-white">Tanggal</span>
-                <input
-                  type="date"
-                  v-model="form.date"
-                  name="date"
-                  class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
-                  required
-                />
-              </label>
-
-              <label class="block">
-                <span class="text-white">Waktu</span>
-                <select
-                  v-model="form.time"
-                  name="time"
-                  class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
-                  required
-                >
-                  <option value="">Pilih Waktu</option>
-                  <option v-for="time in availableTimes" :key="time" :value="time">
-                    {{ time }}
-                  </option>
-                </select>
-              </label>
-
-              <label class="block">
-                <span class="text-white">Layanan</span>
-                <select
-                  v-model="form.service"
-                  name="service"
-                  class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
-                  required
-                >
-                  <option value="">Pilih Layanan</option>
-                  <option v-for="service in services" :key="service" :value="service">
-                    {{ service }}
-                  </option>
-                </select>
-              </label>
-
-              <label class="block">
-                <span class="text-white">Catatan (opsional)</span>
-                <textarea
-                  v-model="form.notes"
-                  name="notes"
-                  rows="3"
-                  class="mt-1 block w-full rounded-lg bg-zinc-800 border-zinc-700 text-white"
-                ></textarea>
-              </label>
-            </div>
-
-            <div class="text-center">
-              <button
-                type="submit"
-                class="bg-yellow-500 text-black px-8 py-3 rounded-lg font-semibold hover:bg-yellow-400 transition-colors"
-              >
-                Buat Reservasi
-              </button>
-            </div>
-          </form>
-        </div>
+  <div class="min-h-screen bg-black">
+    <section class="py-12 sm:py-16 px-4 md:px-8 max-w-2xl mx-auto text-white">
+      <div class="text-center mb-10">
+        <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-yellow-400 drop-shadow-md">Reservasi</h1>
+        <p class="text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
+          Isi formulir berikut untuk melakukan reservasi layanan di CutsProject. Kami akan menghubungi Anda melalui WhatsApp untuk konfirmasi.
+        </p>
       </div>
-    </div>
+
+      <div class="bg-zinc-900 rounded-xl p-6 sm:p-8 shadow-xl border border-zinc-800 fade-up-reservation">
+        <form @submit.prevent="handleSubmit" class="space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Nama Lengkap</label>
+              <input
+                type="text"
+                v-model="form.name"
+                name="name"
+                class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                required
+                autocomplete="name"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">WhatsApp</label>
+              <input
+                type="tel"
+                v-model="form.whatsapp"
+                name="whatsapp"
+                class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                required
+                autocomplete="tel"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Tanggal</label>
+              <input
+                type="date"
+                v-model="form.date"
+                name="date"
+                class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Waktu</label>
+              <select
+                v-model="form.time"
+                name="time"
+                class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                required
+              >
+                <option value="">Pilih Waktu</option>
+                <option v-for="time in availableTimes" :key="time" :value="time">
+                  {{ time }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Layanan</label>
+            <select
+              v-model="form.service"
+              name="service"
+              class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+              required
+            >
+              <option value="">Pilih Layanan</option>
+              <option v-for="service in services" :key="service" :value="service">
+                {{ service }}
+              </option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Catatan (opsional)</label>
+            <textarea
+              v-model="form.notes"
+              name="notes"
+              rows="3"
+              class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+            ></textarea>
+          </div>
+
+          <div class="text-center">
+            <button
+              type="submit"
+              class="w-full sm:w-auto px-8 py-3 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
+            >
+              Buat Reservasi
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -141,7 +146,6 @@ const handleSubmit = async () => {
       },
     })
 
-    // status 200 = OK atau 202 = Accepted
     if (response.status === 200 || response.status === 202) {
       toast.success('Reservasi berhasil dikirim 🎉')
       form.value = {
@@ -162,5 +166,20 @@ const handleSubmit = async () => {
   }
 }
 </script>
+
+<style scoped>
+.fade-up-reservation {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  animation: fadeUpReservation 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 0.15s;
+}
+@keyframes fadeUpReservation {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
 
 

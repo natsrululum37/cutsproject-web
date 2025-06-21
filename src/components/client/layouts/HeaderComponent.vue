@@ -145,11 +145,11 @@
           aria-label="Navigasi utama"
         >
           <RouterLink
-            v-for="(item, index) in navigationMenuWithoutLogin"
+            v-for="(item, index) in navigationMenuWithoutLoginAndLogin"
             :key="`nav-${item.name}-${index}`"
             :to="item.link"
             class="relative text-base font-medium text-gray-300 hover:text-white transition-all duration-300 group px-3 py-2 rounded-lg hover:bg-zinc-800/50"
-            :class="{ 'text-yellow-400': isActiveRoute(item.link) }"
+            :class="{ 'text-yellow-400': isActiveRoute(item.link) || (item.link === '/profile' && isActiveProfile()) }"
             @click="trackNavClick(item.name)"
           >
             <span>{{ item.name }}</span>
@@ -167,8 +167,8 @@
           <RouterLink
             v-else
             to="/profile"
-            class="relative text-base font-medium text-yellow-400 hover:text-white transition-all duration-300 group px-3 py-2 rounded-lg hover:bg-zinc-800/50"
-            :class="{ 'text-yellow-400': isActiveRoute('/profile') }"
+            class="relative text-base font-medium text-gray-300 hover:text-white transition-all duration-300 group px-3 py-2 rounded-lg hover:bg-zinc-800/50"
+            :class="{ 'text-yellow-400': isActiveProfile() }"
           >
             <span>Profile</span>
           </RouterLink>
@@ -246,15 +246,7 @@
               <span class="font-medium flex-1">Login</span>
             </RouterLink>
             <!-- Tampilkan Profile jika sudah login -->
-            <RouterLink
-              v-else
-              to="/profile"
-              class="flex items-center px-6 py-4 text-yellow-400 hover:text-white hover:bg-zinc-800/50"
-              :class="{ 'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute('/profile') }"
-              @click="handleMobileNavClick('Profile')"
-            >
-              <span class="font-medium flex-1">Profile</span>
-            </RouterLink>
+            
           </nav>
         </div>
       </div>
@@ -435,6 +427,9 @@ const navigationMenu = computed(() => navigationStore.menu)
 const navigationMenuWithoutLogin = computed(() =>
   navigationMenu.value.filter(item => item.link !== '/login')
 )
+const navigationMenuWithoutLoginAndLogin = computed(() =>
+  navigationMenu.value.filter(item => item.link !== '/login' && item.link !== '/profile')
+)
 //ref untuk isScrolled
 const isScrolled = ref(false)
 
@@ -519,7 +514,7 @@ const activeMobileSearchResultId = computed(() =>
 )
 
 // ROUTE CHECK
-const isActiveRoute = (path) => navigationStore.isActiveRoute(path)
+const isActiveRoute = (path) => route.path.replace(/\/$/, '') === path.replace(/\/$/, '')
 
 // === SEARCH HANDLERS ===
 const handleDesktopSearchFocus = () => {
@@ -831,6 +826,10 @@ watch(isMobileSearchOpen, (isOpen) => {
     })
   }
 })
+
+// === PROFILE ROUTE CHECK ===
+const isActiveProfile = () => route.path === '/profile' || route.path.startsWith('/profile/')
+
 </script>
 
 <style scoped>
