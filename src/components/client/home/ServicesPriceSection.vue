@@ -16,9 +16,10 @@
     <!-- Services Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
       <div
-        v-for="service in services"
+        v-for="(service, idx) in services"
         :key="service.id"
-        class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-yellow-500/30 transition-all duration-300 group"
+        class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-yellow-500/30 transition-all duration-300 group fade-up-card"
+        :style="{ animationDelay: (0.1 + idx * 0.15) + 's' }"
       >
         <!-- Image -->
         <div class="aspect-video relative overflow-hidden">
@@ -88,3 +89,18 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+.fade-up-card {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  animation: fadeUpCard 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeUpCard {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
