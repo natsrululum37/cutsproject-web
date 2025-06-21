@@ -175,7 +175,7 @@
         </nav>
 
         <!-- Mobile menu & search buttons -->
-        <div class="flex items-center space-x-2 lg:hidden ml-auto">
+        <div class="flex items-center space-x-2 lg:hidden ml-auto z-50">
           <button
             type="button"
             @click="handleMobileSearchToggle"
@@ -193,6 +193,7 @@
             :class="{ 'bg-zinc-800/50 text-yellow-400': isMobileMenuOpen }"
             :aria-expanded="isMobileMenuOpen"
             aria-label="Buka menu navigasi"
+            style="z-index:51"
           >
             <Transition mode="out-in">
               <XMarkIcon v-if="isMobileMenuOpen" class="h-6 w-6" />
@@ -203,74 +204,65 @@
       </div>
 
       <!-- Mobile menu -->
-      <Transition
-        enter-active-class="transition duration-300 ease-out"
-        enter-from-class="opacity-0 scale-95 translate-y-2"
-        enter-to-class="opacity-100 scale-100 translate-y-0"
-        leave-active-class="transition duration-200 ease-in"
-        leave-from-class="opacity-100 scale-100 translate-y-0"
-        leave-to-class="opacity-0 scale-95 translate-y-2"
+      <div
+        v-if="isMobileMenuOpen"
+        class="fixed top-20 left-0 w-full bg-zinc-900/95 backdrop-blur rounded-b-2xl shadow-lg border-t border-zinc-700/50 z-[60] overflow-y-auto"
+        style="min-height:calc(100vh - 5rem); max-height:calc(100vh - 5rem);"
+        aria-modal="true"
+        role="dialog"
+        aria-labelledby="mobile-menu-title"
+        tabindex="-1"
+        ref="mobileMenuRef"
       >
-        <div
-          v-if="isMobileMenuOpen"
-          class="fixed top-20 left-1/2 transform -translate-x-1/2 w-[calc(100vw-2rem)] sm:w-96 md:w-[28rem] lg:w-80 max-w-md bg-zinc-900/95 backdrop-blur rounded-2xl shadow-lg border border-zinc-700/50 z-50 mx-4 overflow-hidden"
-          @click.stop
-          @keydown="handleMobileMenuKeydown"
-          aria-modal="true"
-          role="dialog"
-          aria-labelledby="mobile-menu-title"
-          tabindex="-1"
-          ref="mobileMenuRef"
-        >
-          <div class="py-2">
-            <div
-              class="px-6 py-4 border-b border-zinc-700/50 bg-gradient-to-r from-zinc-800/30 to-zinc-900/30"
-            >
-              <h3 id="mobile-menu-title" class="text-white text-sm font-semibold flex items-center">
-                <Bars3Icon class="w-4 h-4 mr-2 text-yellow-400" />
-                Menu Navigasi
-              </h3>
-            </div>
-            <nav class="py-2" aria-label="Navigasi mobile">
-              <RouterLink
-                v-for="(item, index) in filteredNavigationMenu"
-                :key="`mobile-nav-${item.name}-${index}`"
-                :to="item.link"
-                class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50"
-                :class="{ 'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute(item.link) }"
-                @click="handleMobileNavClick(item.name)"
-              >
-                <span class="font-medium flex-1">{{ item.name }}</span>
-              </RouterLink>
-              <!-- Tampilkan Login hanya jika belum login -->
-              <RouterLink
-                v-if="!auth.isLoggedIn"
-                to="/login"
-                class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50"
-                :class="{ 'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute('/login') }"
-                @click="handleMobileNavClick('Login')"
-              >
-                <span class="font-medium flex-1">Login</span>
-              </RouterLink>
-              <!-- Tampilkan Profile jika sudah login -->
-              <RouterLink
-                v-else
-                to="/profile"
-                class="flex items-center px-6 py-4 text-yellow-400 hover:text-white hover:bg-zinc-800/50"
-                :class="{ 'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute('/profile') }"
-                @click="handleMobileNavClick('Profile')"
-              >
-                <span class="font-medium flex-1">Profile</span>
-              </RouterLink>
-            </nav>
+        <div class="py-2">
+          <div
+            class="px-6 py-4 border-b border-zinc-700/50 bg-gradient-to-r from-zinc-800/30 to-zinc-900/30"
+          >
+            <h3 id="mobile-menu-title" class="text-white text-sm font-semibold flex items-center">
+              <Bars3Icon class="w-4 h-4 mr-2 text-yellow-400" />
+              Menu Navigasi
+            </h3>
           </div>
+          <nav class="py-2" aria-label="Navigasi mobile">
+            <!-- Tampilkan SEMUA menu utama (kecuali /login) -->
+            <RouterLink
+              v-for="(item, index) in navigationMenuWithoutLogin"
+              :key="`mobile-nav-${item.name}-${index}`"
+              :to="item.link"
+              class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50"
+              :class="{ 'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute(item.link) }"
+              @click="handleMobileNavClick(item.name)"
+            >
+              <span class="font-medium flex-1">{{ item.name }}</span>
+            </RouterLink>
+            <!-- Tampilkan Login hanya jika belum login -->
+            <RouterLink
+              v-if="!auth.isLoggedIn"
+              to="/login"
+              class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50"
+              :class="{ 'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute('/login') }"
+              @click="handleMobileNavClick('Login')"
+            >
+              <span class="font-medium flex-1">Login</span>
+            </RouterLink>
+            <!-- Tampilkan Profile jika sudah login -->
+            <RouterLink
+              v-else
+              to="/profile"
+              class="flex items-center px-6 py-4 text-yellow-400 hover:text-white hover:bg-zinc-800/50"
+              :class="{ 'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute('/profile') }"
+              @click="handleMobileNavClick('Profile')"
+            >
+              <span class="font-medium flex-1">Profile</span>
+            </RouterLink>
+          </nav>
         </div>
-      </Transition>
+      </div>
 
       <!-- Mobile menu backdrop -->
       <div
         v-if="isMobileMenuOpen"
-        class="fixed inset-0 bg-black/40 mobile-menu-backdrop -z-10"
+        class="fixed inset-0 bg-black/40 mobile-menu-backdrop z-40"
         @click="closeMobileMenu"
         aria-hidden="true"
       ></div>
@@ -645,11 +637,6 @@ const selectMobileSearchResult = (result) => {
 }
 
 // === MOBILE MENU HANDLERS ===
-const handleMobileMenuKeydown = (e) => {
-  if (e.key === 'Escape') {
-    closeMobileMenu()
-  }
-}
 
 // === OVERLAY & TOGGLE HANDLERS ===
 const handleMobileMenuToggle = async () => {
