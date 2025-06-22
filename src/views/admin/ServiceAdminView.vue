@@ -4,7 +4,8 @@
       <h1 class="text-2xl sm:text-3xl font-bold text-yellow-400 mb-2">Manajemen Layanan</h1>
       <p class="text-gray-300 text-sm sm:text-base">Kelola semua layanan potong rambut dan styling.</p>
     </div>
-    <div class="flex justify-end mb-4">
+    <!-- Tombol tambah layanan di dalam container tabel -->
+    <div class="w-full max-w-6xl mx-auto mb-4 flex justify-end">
       <button
         @click="openAddModal"
         class="bg-yellow-400 hover:bg-yellow-300 text-black px-4 sm:px-5 py-2 rounded font-semibold shadow text-sm sm:text-base"

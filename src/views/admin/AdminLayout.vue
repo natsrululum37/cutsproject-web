@@ -122,7 +122,7 @@
     </div>
 
     <!-- Footer Fixed -->
-    <footer class="fixed bottom-0 left-0 w-full bg-black text-gray-500 text-center py-2 border-t border-gray-700 z-50">
+    <footer class="hidden sm:block fixed bottom-0 left-0 w-full bg-black text-gray-500 text-center py-2 border-t border-gray-700 z-50">
       © 2025 CutsProject
     </footer>
   </div>
