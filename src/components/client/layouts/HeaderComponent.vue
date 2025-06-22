@@ -149,7 +149,10 @@
             :key="`nav-${item.name}-${index}`"
             :to="item.link"
             class="relative text-base font-medium text-gray-300 hover:text-white transition-all duration-300 group px-3 py-2 rounded-lg hover:bg-zinc-800/50"
-            :class="{ 'text-yellow-400': isActiveRoute(item.link) || (item.link === '/profile' && isActiveProfile()) }"
+            :class="{
+              'text-yellow-400':
+                isActiveRoute(item.link) || (item.link === '/profile' && isActiveProfile()),
+            }"
             @click="trackNavClick(item.name)"
           >
             <span>{{ item.name }}</span>
@@ -193,7 +196,7 @@
             :class="{ 'bg-zinc-800/50 text-yellow-400': isMobileMenuOpen }"
             :aria-expanded="isMobileMenuOpen"
             aria-label="Buka menu navigasi"
-            style="z-index:51"
+            style="z-index: 51"
           >
             <Transition mode="out-in">
               <XMarkIcon v-if="isMobileMenuOpen" class="h-6 w-6" />
@@ -207,7 +210,7 @@
       <div
         v-if="isMobileMenuOpen"
         class="fixed top-20 left-0 w-full bg-zinc-900/95 backdrop-blur rounded-b-2xl shadow-lg border-t border-zinc-700/50 z-[60] overflow-y-auto"
-        style="min-height:calc(100vh - 5rem); max-height:calc(100vh - 5rem);"
+        style="min-height: calc(100vh - 5rem); max-height: calc(100vh - 5rem)"
         aria-modal="true"
         role="dialog"
         aria-labelledby="mobile-menu-title"
@@ -230,23 +233,27 @@
               :key="`mobile-nav-${item.name}-${index}`"
               :to="item.link"
               class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50"
-              :class="{ 'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute(item.link) }"
+              :class="{
+                'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute(
+                  item.link,
+                ),
+              }"
               @click="handleMobileNavClick(item.name)"
             >
               <span class="font-medium flex-1">{{ item.name }}</span>
             </RouterLink>
-            <!-- Tampilkan Login hanya jika belum login -->
             <RouterLink
               v-if="!auth.isLoggedIn"
               to="/login"
               class="flex items-center px-6 py-4 text-gray-300 hover:text-white hover:bg-zinc-800/50"
-              :class="{ 'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400': isActiveRoute('/login') }"
+              :class="{
+                'text-yellow-400 bg-zinc-800/30 border-r-2 border-yellow-400':
+                  isActiveRoute('/login'),
+              }"
               @click="handleMobileNavClick('Login')"
             >
               <span class="font-medium flex-1">Login</span>
             </RouterLink>
-            <!-- Tampilkan Profile jika sudah login -->
-            
           </nav>
         </div>
       </div>
@@ -373,7 +380,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useHeaderStore } from '@/stores/client/header'
 import { useNavigationStore } from '@/stores/client/navigation'
 import { useSearchStore } from '@/stores/client/search'
-import { useAuthStore } from '@/stores/auth' 
+import { useAuthStore } from '@/stores/auth'
 import {
   MagnifyingGlassIcon,
   Bars3Icon,
@@ -405,7 +412,7 @@ const route = useRoute()
 const headerStore = useHeaderStore()
 const navigationStore = useNavigationStore()
 const searchStore = useSearchStore()
-const auth = useAuthStore() 
+const auth = useAuthStore()
 
 // STATE
 const logoSrc = ref(new URL('@/assets/client/images/logo/logo.webp', import.meta.url).href)
@@ -425,10 +432,12 @@ const isMobileMenuOpen = computed(() => headerStore.isMobileMenuOpen)
 const isMobileSearchOpen = computed(() => headerStore.isMobileSearchOpen)
 const navigationMenu = computed(() => navigationStore.menu)
 const navigationMenuWithoutLogin = computed(() =>
-  navigationMenu.value.filter(item => item.link !== '/login')
+  navigationMenu.value.filter((item) =>
+    item.link !== '/login' && (auth.isLoggedIn || item.link !== '/profile')
+  )
 )
 const navigationMenuWithoutLoginAndLogin = computed(() =>
-  navigationMenu.value.filter(item => item.link !== '/login' && item.link !== '/profile')
+  navigationMenu.value.filter((item) => item.link !== '/login' && item.link !== '/profile'),
 )
 //ref untuk isScrolled
 const isScrolled = ref(false)
@@ -829,7 +838,6 @@ watch(isMobileSearchOpen, (isOpen) => {
 
 // === PROFILE ROUTE CHECK ===
 const isActiveProfile = () => route.path === '/profile' || route.path.startsWith('/profile/')
-
 </script>
 
 <style scoped>

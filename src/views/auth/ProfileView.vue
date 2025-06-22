@@ -209,7 +209,13 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
+import { useAuthStore } from '@/stores/auth' 
+
+const router = useRouter()
+const authStore = useAuthStore()
+
 import {
   PencilSquareIcon,
   CheckCircleIcon,
@@ -300,8 +306,8 @@ function logout() {
     cancelButtonText: 'Batal'
   }).then((result) => {
     if (result.isConfirmed) {
-      // Simulasi logout
-      window.location.href = '/login'
+      authStore.logout()
+      router.push('/login')
     }
   })
 }

@@ -41,6 +41,15 @@
           </div>
           <p v-if="errors.password" class="text-red-500 text-sm mt-1">{{ errors.password }}</p>
         </div>
+        <div class="flex justify-end">
+  <button
+    type="button"
+    class="text-xs text-yellow-400 hover:underline font-medium"
+    @click="showForgotModal = true"
+  >
+    Lupa password?
+  </button>
+</div>
 
         <!-- Tombol -->
         <button
@@ -58,6 +67,34 @@
       </form>
 
       <p v-if="successMessage" class="text-green-400 text-sm text-center mt-2">{{ successMessage }}</p>
+      <transition name="fade">
+  <div v-if="showForgotModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+    <div class="bg-zinc-900 rounded-xl p-6 w-full max-w-xs shadow-lg border border-zinc-700 relative">
+      <button @click="showForgotModal = false" class="absolute top-2 right-2 text-gray-400 hover:text-yellow-400 text-xl">&times;</button>
+      <h2 class="text-lg font-bold mb-4 text-yellow-400 text-center">Reset Password</h2>
+      <form @submit.prevent="handleForgotPassword" class="space-y-4">
+        <div>
+          <label class="block text-gray-300 mb-1">Email</label>
+          <input
+            v-model="forgotEmail"
+            type="email"
+            required
+            class="w-full px-4 py-2 rounded bg-zinc-800 border border-zinc-700 text-white"
+            placeholder="you@example.com"
+          />
+        </div>
+        <div class="flex gap-2 justify-end pt-2">
+          <button type="button" @click="showForgotModal = false" class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white font-semibold text-sm">Batal</button>
+          <button type="submit" class="px-4 py-2 rounded bg-yellow-400 hover:bg-yellow-300 text-black font-semibold text-sm" :disabled="forgotLoading">
+            {{ forgotLoading ? 'Mengirim...' : 'Kirim Link Reset' }}
+          </button>
+        </div>
+        <p v-if="forgotSuccess" class="text-green-400 text-xs mt-2 text-center">{{ forgotSuccess }}</p>
+        <p v-if="forgotError" class="text-red-400 text-xs mt-2 text-center">{{ forgotError }}</p>
+      </form>
+    </div>
+  </div>
+</transition>
     </div>
   </div>
 </template>
@@ -75,6 +112,11 @@ const password = ref('')
 const loading = ref(false)
 const errors = ref({})
 const successMessage = ref('')
+const showForgotModal = ref(false)
+const forgotEmail = ref('')
+const forgotLoading = ref(false)
+const forgotSuccess = ref('')
+const forgotError = ref('')
 
 const API_URL = 'https://f54b-36-81-84-198.ngrok-free.app/api/auth/login' // atau ganti dengan URL ngrok jika remote
 
@@ -106,6 +148,23 @@ async function handleLogin() {
     }
   } finally {
     loading.value = false
+  }
+}
+
+async function handleForgotPassword() {
+  forgotSuccess.value = ''
+  forgotError.value = ''
+  forgotLoading.value = true
+  try {
+    await axios.post('https://f54b-36-81-84-198.ngrok-free.app/api/auth/forgot-password', {
+      email: forgotEmail.value
+    })
+    forgotSuccess.value = 'Link reset password telah dikirim ke email Anda.'
+    forgotEmail.value = ''
+  } catch (err) {
+    forgotError.value = err.response?.data?.message || 'Gagal mengirim link reset password.'
+  } finally {
+    forgotLoading.value = false
   }
 }
 </script>
