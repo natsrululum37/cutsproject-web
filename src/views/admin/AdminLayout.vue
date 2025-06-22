@@ -26,6 +26,9 @@
           <router-link to="/admin/services" class="nav-link" :class="{active: isActive('/admin/services')}">
             Layanan
           </router-link>
+          <router-link to="/admin/testimoni" class="nav-link" :class="{active: isActive('/admin/testimoni')}">
+            Testimoni
+          </router-link>
           <router-link to="/admin/team" class="nav-link" :class="{active: isActive('/admin/team')}">
             Tim
           </router-link>
@@ -134,13 +137,17 @@ function saveProfile() {
 
 // Sidebar active helper
 function isActive(path) {
-  return route.path === path || route.path.startsWith(path + '/')
+  if (path === '/admin') {
+    return route.path === '/admin'
+  }
+  return route.path.startsWith(path)
 }
 
 // Judul halaman otomatis
 const pageTitle = computed(() => {
   if (route.path.startsWith('/admin/gallery')) return 'Galeri'
   if (route.path.startsWith('/admin/services')) return 'Layanan'
+  if (route.path.startsWith('/admin/testimoni')) return 'Testimoni'
   if (route.path.startsWith('/admin/team')) return 'Tim'
   if (route.path.startsWith('/admin/manage-admin')) return 'Kelola Admin'
   return 'Dashboard'

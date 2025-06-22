@@ -6,8 +6,6 @@
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-yellow-400">Dashboard Admin</h1>
         <div class="flex items-center gap-4">
-          <span class="text-sm text-gray-400">👋 Selamat datang, Admin</span>
-          <button class="bg-yellow-400 text-black px-4 py-1 rounded hover:bg-yellow-300 text-sm">Profil</button>
         </div>
       </div>
 

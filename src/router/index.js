@@ -20,6 +20,7 @@ import AdminLayout from '@/views/admin/AdminLayout.vue'
 import DashboardAdminView from '@/views/admin/DashboardAdminView.vue'
 import GalleryAdminView from '@/views/admin/GalleryAdminView.vue'
 import ServiceAdminView from '@/views/admin/ServiceAdminView.vue'
+import TestimoniAdminView from '@/views/admin/TestimoniAdminView.vue'
 import TeamAdminView from '@/views/admin/TeamAdminView.vue'
 import ManageAdminView from '@/views/admin/ManageAdminView.vue'
 
@@ -149,6 +150,15 @@ const routes = [
         meta: {
           title: 'Layanan Admin',
           description: 'Kelola layanan potong rambut.',
+        },
+      },
+      {
+        path: 'testimoni',
+        name: 'AdminTestimoni',
+        component: TestimoniAdminView,
+        meta: {
+          title: 'Testimoni Admin',
+          description: 'Kelola testimoni pelanggan.',
         },
       },
       {
