@@ -4,7 +4,7 @@
       class="flex flex-col justify-center items-center gap-x-16 gap-y-5 xl:gap-28 lg:flex-row lg:justify-between max-lg:max-w-2xl mx-auto max-w-full"
     >
       <!-- Gambar dengan overlay saat hover -->
-      <div class="relative w-full lg:w-1/2 group">
+      <div class="relative w-full lg:w-1/2 group mb-8 lg:mb-0">
         <img
           src="@/assets/client/images/tools.webp"
           alt="FAQ tailwind section"
@@ -14,7 +14,7 @@
         <div
           class="absolute inset-0 bg-black bg-opacity-90 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
         >
-          <div class="text-white text-[15rem] font-bold select-none">?</div>
+          <div class="text-white text-[8rem] md:text-[12rem] font-bold select-none">?</div>
         </div>
       </div>
 
@@ -23,26 +23,32 @@
         <div class="lg:max-w-xl">
           <div class="mb-1 lg:mb-1">
             <h2
-              class="text-5xl text-justify font-bold text-white leading-[3.25rem] mb-1 lg:text-justify"
+              class="text-3xl md:text-5xl font-bold text-yellow-400 leading-tight mb-4 text-center md:text-left"
             >
               FAQ ABOUT CUTS PROJECT
             </h2>
           </div>
-          <div class="accordion-group">
+          <div class="accordion-group space-y-3">
             <div
               v-for="(faq, index) in faqs"
               :key="index"
-              class="accordion py-8 border-b border-solid border-[#B8860B]"
+              class="accordion bg-zinc-900 rounded-lg shadow border border-zinc-800"
             >
               <button
                 @click="toggle(index)"
-                class="accordion-toggle group inline-flex items-center justify-between w-full text-xl font-normal leading-8 text-gray-600 transition duration-500 hover:text-[#B8860B]"
+                class="accordion-toggle group inline-flex items-center justify-between w-full text-lg md:text-xl font-medium leading-8 text-gray-200 transition duration-300 hover:text-yellow-400 px-6 py-4 focus:outline-none"
               >
-                <h5 class="text-justify">{{ faq.title }}</h5>
+                <span class="flex items-center gap-2">
+                  <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01" />
+                  </svg>
+                  {{ faq.title }}
+                </span>
                 <svg
                   :class="[
-                    'transition duration-500 group-hover:text-[#B8860B]',
-                    { 'rotate-180 text-[#B8860B]': openIndex === index },
+                    'transition-transform duration-300 group-hover:text-yellow-400',
+                    { 'rotate-180 text-yellow-400': openIndex === index },
                   ]"
                   width="22"
                   height="22"
@@ -59,12 +65,14 @@
                   />
                 </svg>
               </button>
-              <div
-                v-show="openIndex === index"
-                class="accordion-content justify-center text-gray-400 text-base leading-relaxed mt-4 transition-all duration-500"
-              >
-                <p>{{ faq.content }}</p>
-              </div>
+              <transition name="fade-slide">
+                <div
+                  v-if="openIndex === index"
+                  class="accordion-content px-6 pb-4 text-gray-300 text-base leading-relaxed animate-fade-up"
+                >
+                  <p>{{ faq.content }}</p>
+                </div>
+              </transition>
             </div>
           </div>
         </div>
@@ -105,3 +113,26 @@ const faqs = [
   },
 ]
 </script>
+
+<style scoped>
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.fade-slide-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+</style>
