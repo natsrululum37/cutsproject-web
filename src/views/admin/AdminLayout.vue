@@ -1,7 +1,13 @@
 <template>
   <div class="min-h-screen bg-[#111] text-white font-sans">
-    <!-- Sidebar Fixed -->
-    <aside class="fixed top-0 left-0 h-full w-64 bg-black flex flex-col justify-between shadow-lg z-40">
+    <!-- Sidebar Fixed / Drawer -->
+    <aside
+      :class="[
+        'fixed top-0 left-0 h-full w-64 bg-black flex flex-col justify-between shadow-lg z-40 transition-transform duration-300',
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+        'md:translate-x-0'
+      ]"
+    >
       <div>
         <!-- Logo Gambar -->
         <div class="p-6 flex items-center justify-center gap-2">
@@ -39,17 +45,33 @@
       </div>
     </aside>
 
+    <!-- Overlay untuk sidebar di mobile -->
+    <div
+      v-if="sidebarOpen"
+      class="fixed inset-0 bg-black/40 z-30 md:hidden"
+      @click="sidebarOpen = false"
+    ></div>
+
     <!-- Main Area (margin-left for sidebar) -->
-    <div class="ml-64 flex flex-col min-h-screen">
+    <div class="md:ml-64 flex flex-col min-h-screen">
       <!-- Header Fixed -->
-      <header class="sticky top-0 z-30 flex justify-between items-center px-6 py-4 border-b border-zinc-800 bg-[#1a1a1a]">
-        <h1 class="text-2xl font-bold text-yellow-400 capitalize">
+      <header class="sticky top-0 z-30 flex justify-between items-center px-4 md:px-6 py-4 border-b border-zinc-800 bg-[#1a1a1a]">
+        <!-- Tombol menu di mobile -->
+        <button
+          class="md:hidden mr-2 text-yellow-400 focus:outline-none"
+          @click="sidebarOpen = true"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <h1 class="text-xl md:text-2xl font-bold text-yellow-400 capitalize flex-1">
           {{ pageTitle }}
         </h1>
         <div class="relative">
           <button @click="toggleProfileMenu" class="flex items-center gap-3 focus:outline-none">
-            <img :src="admin.avatar" alt="Admin" class="w-10 h-10 rounded-full border-2 border-yellow-400 object-cover" />
-            <span class="font-semibold text-white">{{ admin.name }}</span>
+            <img :src="admin.avatar" alt="Admin" class="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-yellow-400 object-cover" />
+            <span class="font-semibold text-white hidden sm:inline">{{ admin.name }}</span>
           </button>
           <!-- Overlay Profile Menu -->
           <transition name="fade">
@@ -94,7 +116,7 @@
       </transition>
 
       <!-- Main Content Scrollable -->
-      <main class="flex-1 overflow-y-auto p-6 bg-[#1a1a1a]" style="min-height:calc(100vh-64px)">
+      <main class="flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 bg-[#1a1a1a]" style="min-height:calc(100vh-64px)">
         <router-view />
       </main>
     </div>
@@ -112,6 +134,7 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const logoSrc = ref(new URL('@/assets/client/images/logo/logo.webp', import.meta.url).href)
+const sidebarOpen = ref(false)
 
 // Dummy admin data
 const admin = ref({
@@ -177,5 +200,17 @@ const pageTitle = computed(() => {
 }
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
+}
+
+/* Responsive sidebar */
+@media (max-width: 767px) {
+  aside {
+    width: 80vw !important;
+    min-width: 0 !important;
+    max-width: 320px !important;
+  }
+  .md\:ml-64 {
+    margin-left: 0 !important;
+  }
 }
 </style>
