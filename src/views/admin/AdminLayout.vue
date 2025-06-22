@@ -23,22 +23,28 @@
         </div>
         <!-- Menu -->
         <nav class="space-y-2 px-4 mt-4">
-          <router-link to="/admin" class="nav-link" :class="{active: isActive('/admin')}">
+          <router-link to="/admin" class="nav-link flex items-center gap-3" :class="{active: isActive('/admin')}">
+            <HomeIcon class="w-5 h-5"/>
             Dashboard
           </router-link>
-          <router-link to="/admin/gallery" class="nav-link" :class="{active: isActive('/admin/gallery')}">
+          <router-link to="/admin/gallery" class="nav-link flex items-center gap-3" :class="{active: isActive('/admin/gallery')}">
+            <PhotoIcon class="w-5 h-5"/>
             Galeri
           </router-link>
-          <router-link to="/admin/services" class="nav-link" :class="{active: isActive('/admin/services')}">
+          <router-link to="/admin/services" class="nav-link flex items-center gap-3" :class="{active: isActive('/admin/services')}">
+            <ScissorsIcon class="w-5 h-5"/>
             Layanan
           </router-link>
-          <router-link to="/admin/testimoni" class="nav-link" :class="{active: isActive('/admin/testimoni')}">
+          <router-link to="/admin/testimoni" class="nav-link flex items-center gap-3" :class="{active: isActive('/admin/testimoni')}">
+            <ChatBubbleLeftRightIcon class="w-5 h-5"/>
             Testimoni
           </router-link>
-          <router-link to="/admin/team" class="nav-link" :class="{active: isActive('/admin/team')}">
+          <router-link to="/admin/team" class="nav-link flex items-center gap-3" :class="{active: isActive('/admin/team')}">
+            <UsersIcon class="w-5 h-5"/>
             Tim
           </router-link>
-          <router-link to="/admin/manage-admin" class="nav-link" :class="{active: isActive('/admin/manage-admin')}">
+          <router-link to="/admin/manage-admin" class="nav-link flex items-center gap-3" :class="{active: isActive('/admin/manage-admin')}">
+            <ShieldCheckIcon class="w-5 h-5"/>
             Kelola Admin
           </router-link>
         </nav>
@@ -131,6 +137,14 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import {
+  HomeIcon,
+  PhotoIcon,
+  ScissorsIcon,
+  ChatBubbleLeftRightIcon,
+  UsersIcon,
+  ShieldCheckIcon
+} from '@heroicons/vue/24/outline'
 
 const route = useRoute()
 const logoSrc = ref(new URL('@/assets/client/images/logo/logo.webp', import.meta.url).href)
@@ -179,7 +193,7 @@ const pageTitle = computed(() => {
 
 <style scoped>
 .nav-link {
-  display: block;
+  /* display: block; */
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   color: #d1d5db;
