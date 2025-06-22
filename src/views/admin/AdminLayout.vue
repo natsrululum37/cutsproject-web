@@ -27,6 +27,10 @@
             <HomeIcon class="w-5 h-5"/>
             Dashboard
           </router-link>
+          <router-link to="/admin/reservasi" class="nav-link flex items-center gap-3" :class="{active: isActive('/admin/reservasi')}">
+            <PencilSquareIcon class="w-5 h-5"/>
+            Reservasi
+          </router-link>
           <router-link to="/admin/gallery" class="nav-link flex items-center gap-3" :class="{active: isActive('/admin/gallery')}">
             <PhotoIcon class="w-5 h-5"/>
             Galeri
@@ -143,7 +147,8 @@ import {
   ScissorsIcon,
   ChatBubbleLeftRightIcon,
   UsersIcon,
-  ShieldCheckIcon
+  ShieldCheckIcon,
+  PencilSquareIcon
 } from '@heroicons/vue/24/outline'
 
 const route = useRoute()
@@ -182,6 +187,7 @@ function isActive(path) {
 
 // Judul halaman otomatis
 const pageTitle = computed(() => {
+  if (route.path.startsWith('/admin/reservasi')) return 'Reservasi'
   if (route.path.startsWith('/admin/gallery')) return 'Galeri'
   if (route.path.startsWith('/admin/services')) return 'Layanan'
   if (route.path.startsWith('/admin/testimoni')) return 'Testimoni'

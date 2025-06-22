@@ -18,6 +18,7 @@ import Register from '@/views/auth/RegisterView.vue'
 // 📁 Halaman Admin
 import AdminLayout from '@/views/admin/AdminLayout.vue'
 import DashboardAdminView from '@/views/admin/DashboardAdminView.vue'
+import ReservationAdminView from '@/views/admin/ReservationAdminView.vue'
 import GalleryAdminView from '@/views/admin/GalleryAdminView.vue'
 import ServiceAdminView from '@/views/admin/ServiceAdminView.vue'
 import TestimoniAdminView from '@/views/admin/TestimoniAdminView.vue'
@@ -132,6 +133,15 @@ const routes = [
         meta: {
           title: 'Dashboard Admin',
           description: 'Halaman utama admin dashboard.',
+        },
+      },
+      {
+        path: 'reservasi',
+        name: 'AdminReservation',
+        component: ReservationAdminView,
+        meta: {
+          title: 'Reservasi Admin',
+          description: 'Kelola reservasi pelanggan.',
         },
       },
       {
