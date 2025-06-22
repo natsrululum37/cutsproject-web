@@ -1,13 +1,10 @@
 <template>
-  <div class="min-h-screen bg-black text-white p-6 flex flex-col items-center">
-    <!-- Header -->
+  <section>
     <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold mb-2">Galeri Foto</h1>
+      <h1 class="text-3xl font-bold text-yellow-400 mb-2">Galeri Foto</h1>
       <p class="text-gray-400">Tambah, edit, atau hapus foto dari galeri.</p>
     </div>
-
-    <!-- Form Upload -->
-    <div class="w-full max-w-2xl bg-zinc-900 shadow rounded-lg p-6 mb-10 border border-zinc-700">
+    <div class="w-full max-w-2xl bg-zinc-900 shadow rounded-lg p-6 mb-10 border border-zinc-700 mx-auto">
       <h2 class="text-lg font-semibold mb-4">Tambah Gambar</h2>
       <form @submit.prevent="handleUpload" class="space-y-4">
         <div>
@@ -25,9 +22,7 @@
         <button type="submit" class="mt-4 bg-yellow-400 hover:bg-yellow-300 text-black px-4 py-2 rounded shadow font-semibold">Upload</button>
       </form>
     </div>
-
-    <!-- Galeri Gambar -->
-    <div class="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div class="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mx-auto">
       <div v-for="(image, index) in gallery" :key="index" class="bg-gray-900 border border-zinc-700 rounded-lg overflow-hidden shadow">
         <img :src="image.url" :alt="image.title" class="w-full h-48 object-cover" />
         <div class="p-4">
@@ -39,7 +34,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup>

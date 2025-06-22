@@ -15,6 +15,14 @@ import ProfileView from '@/views/auth/ProfileView.vue'
 import Login from '@/views/auth/LoginView.vue'
 import Register from '@/views/auth/RegisterView.vue'
 
+// 📁 Halaman Admin
+import AdminLayout from '@/views/admin/AdminLayout.vue'
+import DashboardAdminView from '@/views/admin/DashboardAdminView.vue'
+import GalleryAdminView from '@/views/admin/GalleryAdminView.vue'
+import ServiceAdminView from '@/views/admin/ServiceAdminView.vue'
+import TeamAdminView from '@/views/admin/TeamAdminView.vue'
+import ManageAdminView from '@/views/admin/ManageAdminView.vue'
+
 const routes = [
   // Halaman Utama
   {
@@ -114,39 +122,54 @@ const routes = [
   // Halaman Admin
   {
     path: '/admin',
-    name: 'AdminDashboard',
-    component: () => import('@/views/admin/DashboardAdminView.vue'),
-    meta: {
-      title: 'Dashboard Admin',
-      description: 'Halaman utama admin dashboard.',
-    },
-  },
-  {
-    path: '/admin/reservations',
-    name: 'AdminReservations',
-    component: () => import('@/views/admin/ReservationAdminView.vue'),
-    meta: {
-      title: 'Data Reservasi',
-      description: 'Kelola semua data reservasi pelanggan.',
-    },
-  },
-  {
-    path: '/admin/services',
-    name: 'AdminServices',
-    component: () => import('@/views/admin/ServiceAdminView.vue'),
-    meta: {
-      title: 'Layanan Admin',
-      description: 'Kelola layanan potong rambut.',
-    },
-  },
-  {
-    path: '/admin/gallery',
-    name: 'AdminGallery',
-    component: () => import('@/views/admin/GalleryAdminView.vue'),
-    meta: {
-      title: 'Galeri Admin',
-      description: 'Kelola konten galeri.',
-    },
+    component: AdminLayout,
+    children: [
+      {
+        path: '',
+        name: 'AdminDashboard',
+        component: DashboardAdminView,
+        meta: {
+          title: 'Dashboard Admin',
+          description: 'Halaman utama admin dashboard.',
+        },
+      },
+      {
+        path: 'gallery',
+        name: 'AdminGallery',
+        component: GalleryAdminView,
+        meta: {
+          title: 'Galeri Admin',
+          description: 'Kelola konten galeri.',
+        },
+      },
+      {
+        path: 'services',
+        name: 'AdminServices',
+        component: ServiceAdminView,
+        meta: {
+          title: 'Layanan Admin',
+          description: 'Kelola layanan potong rambut.',
+        },
+      },
+      {
+        path: 'team',
+        name: 'AdminTeam',
+        component: TeamAdminView,
+        meta: {
+          title: 'Tim Admin',
+          description: 'Kelola data dan informasi tim.',
+        },
+      },
+      {
+        path: 'manage-admin',
+        name: 'ManageAdmin',
+        component: ManageAdminView,
+        meta: {
+          title: 'Kelola Admin',
+          description: 'Kelola akun dan hak akses admin lain.',
+        },
+      },
+    ],
   },
 ]
 

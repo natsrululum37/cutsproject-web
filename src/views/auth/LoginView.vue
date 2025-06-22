@@ -76,7 +76,7 @@ const loading = ref(false)
 const errors = ref({})
 const successMessage = ref('')
 
-const API_URL = 'https://ed67-36-72-215-61.ngrok-free.app/api/auth/login' // atau ganti dengan URL ngrok jika remote
+const API_URL = 'https://f54b-36-81-84-198.ngrok-free.app/api/auth/login' // atau ganti dengan URL ngrok jika remote
 
 async function handleLogin() {
   errors.value = {}

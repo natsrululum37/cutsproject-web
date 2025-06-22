@@ -13,21 +13,15 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Header from './components/client/layouts/HeaderComponent.vue'
 import Footer from './components/client/layouts/FooterComponent.vue'
 
 const route = useRoute()
 
-const showHeaderFooter = ref(true)
-watch(
-  () => route.meta,
-  (meta) => {
-    showHeaderFooter.value = meta?.layout !== 'minimal'
-  },
-  { immediate: true },
-)
+// Navbar/footer user hanya tampil jika BUKAN di /admin
+const showHeaderFooter = computed(() => !route.path.startsWith('/admin'))
 </script>
 
 <style>

@@ -1,12 +1,9 @@
 <template>
-  <div class="min-h-screen bg-black text-white p-6">
-    <!-- Header -->
+  <section>
     <div class="text-center mb-8">
       <h1 class="text-3xl font-bold mb-2 text-yellow-400">Data Reservasi</h1>
       <p class="text-gray-400">Kelola semua data reservasi pelanggan di sini.</p>
     </div>
-
-    <!-- Table -->
     <div class="w-full overflow-auto max-w-6xl mx-auto bg-zinc-900 border border-zinc-700 rounded-lg shadow">
       <table class="w-full text-sm text-left">
         <thead class="bg-zinc-800 text-gray-300 uppercase text-xs">
@@ -49,7 +46,7 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup>

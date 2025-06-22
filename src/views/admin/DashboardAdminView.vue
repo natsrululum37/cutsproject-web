@@ -1,21 +1,5 @@
 <template>
   <div class="min-h-screen flex bg-[#111] text-white font-sans">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-black hidden md:flex flex-col justify-between shadow-lg">
-      <div>
-        <div class="p-6 text-2xl font-bold text-yellow-400">CutsProject</div>
-        <nav class="space-y-2 px-4 mt-4">
-          <router-link to="/admin" class="nav-link">Dashboard</router-link>
-          <router-link to="/admin/reservations" class="nav-link">Reservasi</router-link>
-          <router-link to="/admin/gallery" class="nav-link">Galeri</router-link>
-          <router-link to="/admin/services" class="nav-link">Layanan</router-link>
-        </nav>
-      </div>
-      <div class="p-4 border-t border-gray-700">
-        <button @click="logout" class="text-sm text-gray-400 hover:text-yellow-400 transition">Keluar</button>
-      </div>
-    </aside>
-
     <!-- Main Content -->
     <main class="flex-1 p-6 space-y-6 bg-[#1a1a1a]">
       <!-- Header -->
@@ -31,20 +15,20 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="card">
           <p class="text-sm text-gray-400">Total Reservasi</p>
-          <p class="text-3xl font-bold">{{ stats.reservations }}</p>
+          <p class="text-3xl font-bold text-yellow-400">{{ stats.reservations }}</p>
         </div>
         <div class="card">
           <p class="text-sm text-gray-400">Layanan Aktif</p>
-          <p class="text-3xl font-bold">{{ stats.services }}</p>
+          <p class="text-3xl font-bold text-yellow-400">{{ stats.services }}</p>
         </div>
         <div class="card">
           <p class="text-sm text-gray-400">Testimoni Masuk</p>
-          <p class="text-3xl font-bold">{{ stats.testimonials }}</p>
+          <p class="text-3xl font-bold text-yellow-400">{{ stats.testimonials }}</p>
         </div>
       </div>
 
       <!-- Chart -->
-      <div class="bg-[#222] rounded-xl shadow p-6">
+      <div class="bg-zinc-900 rounded-xl shadow p-6">
         <h2 class="text-xl font-semibold text-yellow-400 mb-4">Statistik Reservasi</h2>
         <Bar :data="chartData" :options="chartOptions" />
       </div>

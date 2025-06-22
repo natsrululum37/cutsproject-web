@@ -1,10 +1,9 @@
 <template>
-  <div class="max-w-6xl mx-auto py-10 px-6">
+  <section>
     <div class="mb-6 text-center">
       <h1 class="text-3xl font-bold text-yellow-400 mb-2">Manajemen Layanan</h1>
       <p class="text-gray-300">Kelola semua layanan potong rambut dan styling.</p>
     </div>
-
     <div class="bg-zinc-900 shadow-md rounded-lg overflow-hidden text-white">
       <table class="min-w-full table-auto text-sm">
         <thead class="bg-yellow-400 text-black">
@@ -71,7 +70,7 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup>
