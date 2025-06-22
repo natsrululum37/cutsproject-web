@@ -9,7 +9,7 @@
         </div>
         <div>
           <h2 class="text-xl sm:text-2xl font-semibold text-white" tabindex="0">Lokasi</h2>
-          <div class="text-xs text-gray-400 -mt-1">Di Semarang</div>
+          <div class="text-xs text-gray-400 -mt-1">Di Sragen</div>
         </div>
       </div>
 

@@ -37,27 +37,16 @@
         </div>
       </div>
 
-      <!-- Service Image -->
-      <div class="group relative overflow-hidden rounded-xl bg-black border border-gray-700/50 hover:border-gray-500/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-gray-500/20 h-full min-h-[400px] flex flex-col">
-        <div class="absolute inset-0 bg-gradient-to-br from-gray-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <div class="relative p-6 flex-1 flex items-center justify-center">
-          <div class="relative group w-full h-full">
-            <div class="absolute -inset-1 bg-gradient-to-r from-gray-500 to-gray-600 rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-300"></div>
-            <img src="/images/service/haircut.webp" alt="Haircut" class="relative w-full h-full object-cover rounded-xl shadow-xl border border-gray-700/50 group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Pro Services -->
+      <!-- RIGHT: Premium Services -->
       <div class="group relative overflow-hidden rounded-xl bg-black border border-gray-700/50 hover:border-gray-500/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-gray-500/20 h-full min-h-[400px] flex flex-col">
         <div class="absolute inset-0 bg-gradient-to-br from-gray-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <div class="relative p-6 flex-1 flex flex-col">
           <div class="flex items-center gap-2 mb-5">
-            <PaintBrushIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-            <h3 class="text-yellow-400 text-lg font-bold">Pro Sculpting & Coloring</h3>
+            <StarIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+            <h3 class="text-yellow-400 text-lg font-bold">Premium Service</h3>
           </div>
           <div class="space-y-4 flex-1">
-            <div v-for="(service, index) in services.proSculpting.items" :key="index" class="flex items-start gap-3 p-3 rounded-lg bg-gray-900/50 hover:bg-gray-800/60 transition-colors duration-200 group/item border border-gray-800/50">
+            <div v-for="(service, index) in services.premium.items" :key="index" class="flex items-start gap-3 p-3 rounded-lg bg-gray-900/50 hover:bg-gray-800/60 transition-colors duration-200 group/item border border-gray-800/50">
               <component :is="service.icon" class="h-5 w-5 text-gray-400 mt-1 flex-shrink-0" aria-hidden="true" />
               <div class="flex-1 min-w-0">
                 <div class="font-semibold text-white group-hover/item:text-gray-100 transition-colors">{{ service.name }}</div>
@@ -71,6 +60,18 @@
           </div>
         </div>
       </div>
+      
+      <!-- Service Image -->
+      <div class="group relative overflow-hidden rounded-xl bg-black border border-gray-700/50 hover:border-gray-500/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-gray-500/20 h-full min-h-[400px] flex flex-col">
+        <div class="absolute inset-0 bg-gradient-to-br from-gray-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div class="relative p-6 flex-1 flex items-center justify-center">
+          <div class="relative group w-full h-full">
+            <div class="absolute -inset-1 bg-gradient-to-r from-gray-500 to-gray-600 rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-300"></div>
+            <img src="/images/service/haircut.webp" alt="Haircut" class="relative w-full h-full object-cover rounded-xl shadow-xl border border-gray-700/50 group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- SECOND ROW -->
@@ -110,16 +111,16 @@
         </div>
       </div>
 
-      <!-- RIGHT: Premium Services -->
+      <!-- Pro Services -->
       <div class="group relative overflow-hidden rounded-xl bg-black border border-gray-700/50 hover:border-gray-500/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-gray-500/20 h-full min-h-[400px] flex flex-col">
         <div class="absolute inset-0 bg-gradient-to-br from-gray-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <div class="relative p-6 flex-1 flex flex-col">
           <div class="flex items-center gap-2 mb-5">
-            <StarIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-            <h3 class="text-yellow-400 text-lg font-bold">Premium Service</h3>
+            <PaintBrushIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+            <h3 class="text-yellow-400 text-lg font-bold">Pro Sculpting & Coloring</h3>
           </div>
           <div class="space-y-4 flex-1">
-            <div v-for="(service, index) in services.premium.items" :key="index" class="flex items-start gap-3 p-3 rounded-lg bg-gray-900/50 hover:bg-gray-800/60 transition-colors duration-200 group/item border border-gray-800/50">
+            <div v-for="(service, index) in services.proSculpting.items" :key="index" class="flex items-start gap-3 p-3 rounded-lg bg-gray-900/50 hover:bg-gray-800/60 transition-colors duration-200 group/item border border-gray-800/50">
               <component :is="service.icon" class="h-5 w-5 text-gray-400 mt-1 flex-shrink-0" aria-hidden="true" />
               <div class="flex-1 min-w-0">
                 <div class="font-semibold text-white group-hover/item:text-gray-100 transition-colors">{{ service.name }}</div>

@@ -41,7 +41,7 @@
         <div class="w-full aspect-video overflow-hidden rounded-lg shadow-lg">
           <iframe
             class="w-full h-full border-0"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3951.5937999999997!2d111.5322504!3d-7.9371239!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e79bc1ea2e3c401%3A0x3f20a14940475a0e!2sBarbershop%20Cuts%20Project!5e0!3m2!1sid!2sid!4v1716537999999"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.4762797616427!2d111.03077537642345!3d-7.412420773003094!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a03f1e79cc031%3A0xdc95a8ff89406670!2sCuts%20project%20barber!5e0!3m2!1sid!2sid!4v1750608148420!5m2!1sid!2sid"
             allowfullscreen=""
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"

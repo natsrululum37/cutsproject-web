@@ -24,19 +24,19 @@ export const useBusinessStore = defineStore('business', {
       branches: [
         {
           name: 'CUTS 1',
-          address: 'Jl. Pemuda No.1 (Simpang Lima)',
+          address: 'Jl. Jend. Sudirman, Sidomulyo',
         },
         {
           name: 'CUTS 2',
-          address: 'Jl. Pandanaran No.34',
+          address: 'Jl. Perintis Kemerdekaan, Sragen Wetan',
         },
         {
           name: 'CUTS 3',
-          address: 'Jl. S. Parman No.5',
+          address: 'Jl. Krapyak, Sragen Tengah',
         },
         {
           name: 'CUTS 4',
-          address: 'Jl. Gajah Mada No.12',
+          address: 'Jl. Brigjen Katamso, Sragen Kulon',
         },
       ],
     },
