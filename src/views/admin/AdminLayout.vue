@@ -139,7 +139,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import {
   HomeIcon,
@@ -152,36 +152,87 @@ import {
 } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const route = useRoute()
 const logoSrc = ref(new URL('@/assets/client/images/logo/logo.webp', import.meta.url).href)
 const sidebarOpen = ref(false)
 
-// Dummy admin data
 const admin = ref({
-  name: 'Admin Utama',
-  email: 'admin@cutsproject.com',
-  avatar: 'https://randomuser.me/api/portraits/men/32.jpg'
+  name: '',
+  email: '',
+  avatar: '',
+  photo: ''
 })
 
 const showProfileMenu = ref(false)
 const showEditProfile = ref(false)
+const loadingProfile = ref(false)
 
 function toggleProfileMenu() {
   showProfileMenu.value = !showProfileMenu.value
 }
+
 const auth = useAuthStore()
 const router = useRouter()
+
+async function fetchAdminProfile() {
+  loadingProfile.value = true
+  try {
+    const res = await axios.get('/api/admin/profile', {
+      headers: {
+        Authorization: `Bearer ${auth.token}`
+      }
+    })
+    // Gunakan photo sebagai avatar jika ada
+    admin.value = {
+      ...res.data,
+      avatar: res.data.photo || res.data.avatar || 'https://ui-avatars.com/api/?name=Admin'
+    }
+  } catch (err) {
+    Swal.fire('Gagal', err.response?.data?.error || 'Gagal memuat profil admin', 'error')
+    // Jika gagal, logout paksa
+    auth.logout()
+    router.push('/login')
+  } finally {
+    loadingProfile.value = false
+  }
+}
+
+async function saveProfile() {
+  try {
+    const payload = {
+      name: admin.value.name,
+      email: admin.value.email,
+      photo: admin.value.avatar
+    }
+    const res = await axios.put('/api/admin/profile', payload, {
+      headers: {
+        Authorization: `Bearer ${auth.token}`
+      }
+    })
+    admin.value = {
+      ...res.data.admin,
+      avatar: res.data.admin.photo || res.data.admin.avatar || 'https://ui-avatars.com/api/?name=Admin'
+    }
+    Swal.fire({
+      icon: 'success',
+      title: 'Profil berhasil diupdate!',
+      timer: 1200,
+      showConfirmButton: false
+    })
+    showEditProfile.value = false
+  } catch (err) {
+    Swal.fire('Gagal', err.response?.data?.error || 'Gagal update profil', 'error')
+  }
+}
+
 function logout() {
   auth.logout()
   router.push('/login')
 }
-function saveProfile() {
-  showEditProfile.value = false
-  // Simpan perubahan profil admin di backend jika sudah ada API
-}
 
-// Sidebar active helper
 function isActive(path) {
   if (path === '/admin') {
     return route.path === '/admin'
@@ -189,7 +240,6 @@ function isActive(path) {
   return route.path.startsWith(path)
 }
 
-// Judul halaman otomatis
 const pageTitle = computed(() => {
   if (route.path.startsWith('/admin/reservasi')) return 'Reservasi'
   if (route.path.startsWith('/admin/gallery')) return 'Galeri'
@@ -198,6 +248,10 @@ const pageTitle = computed(() => {
   if (route.path.startsWith('/admin/team')) return 'Tim'
   if (route.path.startsWith('/admin/manage-admin')) return 'Kelola Admin'
   return 'Dashboard'
+})
+
+onMounted(() => {
+  fetchAdminProfile()
 })
 </script>
 

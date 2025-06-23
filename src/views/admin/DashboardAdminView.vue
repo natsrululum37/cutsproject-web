@@ -52,8 +52,16 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 onMounted(async () => {
   try {
-    const res = await axios.get('/api/admins/dashboard-stats')
-    console.log('DATA BACKEND:', res.data)
+
+    const token = localStorage.getItem('token') || '';
+    
+    const res = await axios.get('/api/admins/dashboard-stats', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    // console.log('DATA BACKEND:', res.data)
 
     stats.value.reservations = res.data.totalBooking
     stats.value.services = res.data.totalActiveServices
