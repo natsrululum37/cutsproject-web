@@ -36,43 +36,43 @@
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">Tanggal</label>
-              <input
-                type="date"
-                v-model="form.date"
-                name="date"
-                class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                required
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">Waktu</label>
-              <select
-                v-model="form.time"
-                name="time"
-                class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                required
-              >
-                <option value="">Pilih Waktu</option>
-                <option v-for="time in availableTimes" :key="time" :value="time">
-                  {{ time }}
-                </option>
-              </select>
-            </div>
-          </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-300 mb-2">Tanggal</label>
+      <input
+        type="date"
+        v-model="form.date"
+        name="date"
+        class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+        required
+      />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-300 mb-2">Waktu</label>
+      <select
+        v-model="form.time"
+        name="time"
+        class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+        required
+      >
+        <option value="">Pilih Waktu</option>
+        <option v-for="time in availableTimes" :key="time" :value="time">
+          {{ time }}
+        </option>
+      </select>
+    </div>
+  </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-2">Layanan</label>
             <select
-              v-model="form.service"
+              v-model="form.serviceId"
               name="service"
               class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
               required
             >
               <option value="">Pilih Layanan</option>
-              <option v-for="service in services" :key="service" :value="service">
-                {{ service }}
+              <option v-for="service in services" :key="service.id" :value="service.id">
+                {{ service.name }}
               </option>
             </select>
           </div>
@@ -101,7 +101,7 @@
   </div>
 </template>
 
-<script setup>
+<!-- <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
 import { useToast } from 'vue-toastification' 
@@ -163,6 +163,113 @@ const handleSubmit = async () => {
   } catch (error) {
     console.error(error)
     toast.error('Gagal mengirim reservasi 😢 Cek koneksi atau endpoint kamu!')
+  }
+}
+</script> -->
+<script setup>
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
+
+const form = ref({
+  name: '',
+  whatsapp: '',
+  date: '',
+  time: '',
+  serviceId: '',
+  notes: '',
+})
+
+const services = ref([])
+const availableTimes = [
+  '10:00', '11:00', '12:00', '13:00', '14:00',
+  '15:00', '16:00', '17:00', '18:00', '19:00',
+]
+
+// Ambil daftar layanan dari backend
+const fetchServices = async () => {
+  try {
+    const res = await axios.get('http://localhost:3000/api/services')
+    services.value = res.data
+  } catch (e) {
+    console.error('Gagal mengambil daftar layanan:', e)
+    toast.error('Gagal mengambil daftar layanan')
+  }
+}
+
+onMounted(() => {
+  fetchServices()
+})
+
+// watch([() => form.value.date, () => form.value.serviceId], fetchAvailableTimes)
+
+const handleSubmit = async () => {
+  if (!form.value.name || !form.value.whatsapp || !form.value.date || !form.value.time || !form.value.serviceId) {
+    toast.error('Semua field wajib diisi')
+    return
+  }
+
+  // Data untuk backend
+  const payload = {
+    name: form.value.name,
+    phone: form.value.whatsapp,
+    date: form.value.date,
+    time: form.value.time,
+    serviceId: form.value.serviceId,
+    notes: form.value.notes,
+  }
+
+  // Data untuk Formspree
+  const formData = new URLSearchParams()
+  formData.append('name', form.value.name)
+  formData.append('whatsapp', form.value.whatsapp)
+  formData.append('date', form.value.date)
+  formData.append('time', form.value.time)
+  // Kirim nama layanan, bukan ID, ke Formspree
+  const selectedService = services.value.find(s => s.id == form.value.serviceId)
+  formData.append('service', selectedService ? selectedService.name : '')
+  formData.append('notes', form.value.notes)
+
+  let backendSuccess = false
+  let formspreeSuccess = false
+
+  try {
+    // Kirim ke backend
+    const resBackend = await axios.post('http://localhost:3000/api/bookings', payload)
+    if (resBackend.status === 201) backendSuccess = true
+  } catch (error) {
+    toast.error('Gagal menyimpan reservasi ke database')
+    console.error(error)
+  }
+
+  try {
+    // Kirim ke Formspree
+    const resFormspree = await axios.post('https://formspree.io/f/mnnvzkwn', formData, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    })
+    if (resFormspree.status === 200 || resFormspree.status === 202) formspreeSuccess = true
+  } catch (error) {
+    toast.error('Gagal mengirim reservasi ke Formspree')
+    console.error(error)
+  }
+
+  if (backendSuccess && formspreeSuccess) {
+    toast.success('Reservasi berhasil dikirim ke database & email 🎉')
+    form.value = {
+      name: '',
+      whatsapp: '',
+      date: '',
+      time: '',
+      serviceId: '',
+      notes: '',
+    }
+    availableTimes.value = []
+  } else if (backendSuccess) {
+    toast.warning('Reservasi hanya tersimpan di database, gagal kirim ke email')
+  } else if (formspreeSuccess) {
+    toast.warning('Reservasi hanya terkirim ke email, gagal simpan ke database')
   }
 }
 </script>

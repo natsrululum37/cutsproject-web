@@ -71,7 +71,12 @@
           </div>
           <div>
             <label class="block text-gray-300 mb-1">Layanan</label>
-            <input v-model="newReview.service" required class="w-full p-2 rounded bg-zinc-700 text-white" />
+            <select v-model="newReview.serviceId" required class="w-full p-2 rounded bg-zinc-700 text-white">
+              <option value="" disabled>Pilih Layanan</option>
+              <option v-for="service in services" :key="service.id" :value="service.id">
+                {{ service.name }}
+              </option>
+            </select>
           </div>
           <div>
             <label class="block text-gray-300 mb-1">Komentar</label>
@@ -87,10 +92,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const showForm = ref(false)
+const services = ref([])
 
 const reviews = ref([
   {
@@ -125,88 +132,6 @@ const reviews = ref([
     comment: 'Sudah langganan dari lama, hasilnya selalu memuaskan. Kalian wajib kesini!',
     service: 'Hair Coloring',
   },
-  {
-    name: 'Yoga Prasetya',
-    avatar: 'https://randomuser.me/api/portraits/men/65.jpg',
-    rating: 4,
-    date: '3 minggu yang lalu',
-    comment:
-      'Pelayanan cepat dan hasil potongannya keren. Cocok banget buat mahasiswa seperti saya.',
-    service: 'Haircut',
-  },
-  {
-    name: 'Ari Wibowo',
-    avatar: 'https://randomuser.me/api/portraits/men/27.jpg',
-    rating: 5,
-    date: '1 bulan yang lalu',
-    comment: 'Tempatnya instagramable, hasil potongannya pas banget buat konten. Suka banget!',
-    service: 'Haircut & Styling',
-  },
-  {
-    name: 'Dimas Ramadhan',
-    avatar: 'https://randomuser.me/api/portraits/men/21.jpg',
-    rating: 4,
-    date: '2 bulan yang lalu',
-    comment:
-      'Pelayanan cepat, rapi, dan nyaman. Cocok buat kamu yang sibuk dan tetap ingin tampil oke.',
-    service: 'Haircut',
-  },
-  {
-    name: 'Reza Maulana',
-    avatar: 'https://randomuser.me/api/portraits/men/51.jpg',
-    rating: 5,
-    date: '3 bulan yang lalu',
-    comment: 'Gaya potongan sesuai tren! Barbershop ini tahu cara memanjakan pelanggannya.',
-    service: 'Haircut & Beard',
-  },
-  {
-    name: 'Rendy Kurniawan',
-    avatar: 'https://randomuser.me/api/portraits/men/38.jpg',
-    rating: 4,
-    date: '6 bulan yang lalu',
-    comment: 'Sudah beberapa kali ke sini, hasilnya selalu konsisten dan memuaskan!',
-    service: 'Haircut',
-  },
-  {
-    name: 'Ilham Saputra',
-    avatar: 'https://randomuser.me/api/portraits/men/58.jpg',
-    rating: 5,
-    date: '9 bulan yang lalu',
-    comment: 'Kesan pertama luar biasa. Sekarang jadi langganan tetap. Thanks CutsProject!',
-    service: 'Haircut & Styling',
-  },
-  {
-    name: 'Alfan Nugraha',
-    avatar: 'https://randomuser.me/api/portraits/men/43.jpg',
-    rating: 4,
-    date: '1 tahun yang lalu',
-    comment: 'Bukan cuma potong rambut, tapi juga pengalaman menyenangkan setiap datang.',
-    service: 'Haircut',
-  },
-  {
-    name: 'Steven Hartono',
-    avatar: 'https://randomuser.me/api/portraits/men/12.jpg',
-    rating: 5,
-    date: '1 tahun yang lalu',
-    comment: 'Tepat waktu, hasil profesional, dan suasananya bikin betah!',
-    service: 'Haircut & Beard',
-  },
-  {
-    name: 'Bayu Aditya',
-    avatar: 'https://randomuser.me/api/portraits/men/19.jpg',
-    rating: 4,
-    date: '1 tahun yang lalu',
-    comment: 'Mereka benar-benar peduli dengan detail. Sangat puas dengan hasil akhirnya.',
-    service: 'Haircut',
-  },
-  {
-    name: 'Daniel Permadi',
-    avatar: 'https://randomuser.me/api/portraits/men/22.jpg',
-    rating: 5,
-    date: '1 tahun yang lalu',
-    comment: 'Nyaman, bersih, dan profesional. Suka banget sama vibe-nya!',
-    service: 'Haircut & Styling',
-  },
 ])
 
 const newReview = ref({
@@ -214,7 +139,7 @@ const newReview = ref({
   avatar: '',
   rating: 5,
   comment: '',
-  service: ''
+  serviceId: ''
 })
 
 const openReviewForm = () => {
@@ -224,15 +149,36 @@ const openReviewForm = () => {
 const submitReview = async () => {
   try {
     await axios.post('http://localhost:3000/api/reviews', newReview.value)
-    alert('Ulasan berhasil dikirim!')
+    Swal.fire({
+      icon: 'success',
+      title: 'Ulasan berhasil dikirim!',
+      showConfirmButton: false,
+      timer: 1500
+    })
     showForm.value = false
-    reviews.value.unshift({ ...newReview.value, date: 'Baru saja' })
-    newReview.value = { name: '', avatar: '', rating: 5, comment: '', service: '' }
+    const serviceName = services.value.find(s => s.id === newReview.value.serviceId)?.name || ''
+    reviews.value.unshift({ ...newReview.value, date: 'Baru saja', service: serviceName })
+    newReview.value = { name: '', avatar: '', rating: 5, comment: '', serviceId: '' }
   } catch (error) {
     console.error('Gagal mengirim ulasan:', error)
-    alert('Gagal mengirim ulasan. Coba lagi.')
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal mengirim ulasan',
+      text: 'Coba lagi.'
+    })
   }
 }
+
+// Fetch daftar layanan dari backend
+onMounted(async () => {
+  try {
+    const res = await axios.get('http://localhost:3000/api/services')
+    services.value = res.data
+  } catch (err) {
+    console.error('Gagal mengambil daftar layanan:', err)
+    services.value = []
+  }
+})
 </script>
 
 <style scoped>
