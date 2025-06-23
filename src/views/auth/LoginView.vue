@@ -118,7 +118,7 @@ const forgotLoading = ref(false)
 const forgotSuccess = ref('')
 const forgotError = ref('')
 
-const API_URL = 'https://f54b-36-81-84-198.ngrok-free.app/api/auth/login' // atau ganti dengan URL ngrok jika remote
+const API_URL = '/api/auth/login' // atau ganti dengan URL ngrok jika remote
 
 async function handleLogin() {
   errors.value = {}
@@ -156,7 +156,7 @@ async function handleForgotPassword() {
   forgotError.value = ''
   forgotLoading.value = true
   try {
-    await axios.post('https://f54b-36-81-84-198.ngrok-free.app/api/auth/forgot-password', {
+    await axios.post('/api/auth/forgot-password', {
       email: forgotEmail.value
     })
     forgotSuccess.value = 'Link reset password telah dikirim ke email Anda.'

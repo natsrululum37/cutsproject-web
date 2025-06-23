@@ -1,48 +1,37 @@
 <template>
   <div class="min-h-screen bg-black text-white py-12 px-4 flex items-start justify-center">
-    <div class="w-full max-w-3xl bg-zinc-900 rounded-2xl shadow-2xl p-8 md:p-12 space-y-10">
+    <div
+      class="w-full max-w-lg bg-zinc-900 rounded-2xl shadow-2xl p-8 md:p-14 space-y-12 profile-card fadeup"
+    >
       <!-- Header -->
-      <div class="text-center">
-        <h1 class="text-4xl font-bold text-yellow-400">Profil Pengguna</h1>
-        <p class="text-gray-400 mt-2">Kelola informasi akun Anda dengan mudah dan aman.</p>
+      <div class="text-center mb-6">
+        <h1 class="text-4xl font-bold text-yellow-400 mb-2">Profil Pengguna</h1>
+        <p class="text-gray-400">Lihat dan kelola data akun Anda.</p>
       </div>
 
       <!-- Avatar + Info -->
-      <div class="flex flex-col md:flex-row items-center gap-6 border-b border-gray-700 pb-6">
+      <div class="flex flex-col items-center gap-5 border-b border-gray-700 pb-8">
         <img
           :src="avatarUrl"
           alt="Avatar"
-          class="w-24 h-24 rounded-full border-4 border-yellow-400"
+          class="w-28 h-28 rounded-full border-4 border-yellow-400 object-cover mb-2"
         />
-        <div class="text-center md:text-left">
-          <p class="text-xl font-semibold flex items-center gap-2 justify-center md:justify-start">
+        <div class="text-center">
+          <p class="text-2xl font-semibold flex items-center gap-2 justify-center mb-1">
             {{ user?.name }}
             <span v-if="user?.role" class="inline-block px-3 py-1 rounded-full bg-yellow-400 text-black text-xs font-bold ml-2">
               {{ user.role }}
             </span>
           </p>
-          <p class="text-gray-400 text-sm">{{ user?.email }}</p>
-        </div>
-      </div>
-
-      <!-- Statistik -->
-      <div class="flex gap-6 justify-center mt-4">
-        <div class="text-center">
-          <p class="text-2xl font-bold text-yellow-400">{{ stats.reservasi }}</p>
-          <p class="text-xs text-gray-400">Reservasi</p>
-        </div>
-        <div class="text-center">
-          <p class="text-2xl font-bold text-yellow-400">{{ stats.testimoni }}</p>
-          <p class="text-xs text-gray-400">Testimoni</p>
+          <p class="text-gray-400 text-base">{{ user?.email }}</p>
+          <p v-if="user?.phone" class="text-gray-400 text-base mt-1">
+            <span class="font-semibold text-white">No. HP:</span> {{ user.phone }}
+          </p>
         </div>
       </div>
 
       <!-- Detail -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-300">
-        <div>
-          <p class="font-semibold text-white mb-1">Nomor Telepon</p>
-          <p>{{ user?.phone || '-' }}</p>
-        </div>
+      <div class="grid grid-cols-1 gap-6 text-gray-300 mt-4">
         <div>
           <p class="font-semibold text-white mb-1">Tanggal Bergabung</p>
           <p>{{ joinDate }}</p>
@@ -50,24 +39,24 @@
       </div>
 
       <!-- Tombol Aksi -->
-      <div class="flex flex-col md:flex-row justify-between gap-4 mt-10">
+      <div class="flex flex-col sm:flex-row sm:justify-center gap-4 mt-12 fadeup delay-150">
         <button
-          class="w-full md:w-auto flex items-center gap-2 px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black font-semibold rounded-lg shadow-md transition"
+          class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black font-semibold rounded-lg shadow-md transition-all duration-150 text-base"
           @click="startEdit"
         >
-          <PencilSquareIcon class="w-5 h-5" /> Edit Profil
+          <PencilSquareIcon class="w-5 h-5" /> <span>Edit Profil</span>
         </button>
         <button
-          class="w-full md:w-auto flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg shadow-md transition"
+          class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg shadow-md transition-all duration-150 text-base"
           @click="showPasswordModal = true"
         >
-          <KeyIcon class="w-5 h-5" /> Ganti Password
+          <KeyIcon class="w-5 h-5" /> <span>Ganti Password</span>
         </button>
         <button
+          class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-400 text-white font-semibold rounded-lg shadow-md transition-all duration-150 text-base"
           @click="logout"
-          class="w-full md:w-auto flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-400 text-white font-semibold rounded-lg shadow-md transition"
         >
-          <ArrowRightOnRectangleIcon class="w-5 h-5" /> Logout
+          <ArrowRightOnRectangleIcon class="w-5 h-5" /> <span>Logout</span>
         </button>
       </div>
 
@@ -87,12 +76,12 @@
                 <input v-model="editForm.email" type="email" required class="w-full px-4 py-2 rounded bg-zinc-900 border border-zinc-700 text-white focus:border-yellow-400" />
               </div>
               <div>
-                <label class="block text-gray-300 mb-1">Nomor Telepon</label>
-                <input v-model="editForm.phone" type="tel" class="w-full px-4 py-2 rounded bg-zinc-900 border border-zinc-700 text-white focus:border-yellow-400" />
+                <label class="block text-gray-300 mb-1">No. HP</label>
+                <input v-model="editForm.phone" type="text" class="w-full px-4 py-2 rounded bg-zinc-900 border border-zinc-700 text-white focus:border-yellow-400" />
               </div>
               <div>
                 <label class="block text-gray-300 mb-1">Avatar (URL)</label>
-                <input v-model="editForm.avatar" type="url" class="w-full px-4 py-2 rounded bg-zinc-900 border border-zinc-700 text-white focus:border-yellow-400" />
+                <input v-model="editForm.photo" type="url" class="w-full px-4 py-2 rounded bg-zinc-900 border border-zinc-700 text-white focus:border-yellow-400" />
               </div>
               <div class="flex gap-4 justify-end">
                 <button type="button" @click="showEditModal = false" class="flex items-center gap-2 px-6 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white font-semibold">
@@ -134,87 +123,16 @@
           </div>
         </div>
       </transition>
-
-      <!-- Riwayat Reservasi -->
-      <div class="mt-12">
-        <h2 class="text-xl font-bold text-yellow-400 mb-4">Riwayat Reservasi</h2>
-        <!-- Search & Info -->
-        <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center justify-between mb-3">
-          <input
-            v-model="search"
-            type="text"
-            placeholder="Cari layanan atau tanggal..."
-            class="w-full sm:w-72 px-4 py-2 rounded bg-zinc-800 border border-zinc-700 text-white text-sm"
-          />
-          <span class="text-xs text-gray-400 mt-1 sm:mt-0">Total: {{ filteredReservasi.length }}</span>
-        </div>
-        <!-- Fade-up animasi -->
-        <transition name="fade-up">
-          <div v-if="paginatedReservasi.length > 0" class="overflow-x-auto rounded-lg border border-zinc-700 bg-zinc-900">
-            <table class="w-full text-xs sm:text-sm text-left min-w-[700px]">
-              <thead class="bg-yellow-400 text-black">
-                <tr>
-                  <th class="px-2 sm:px-4 py-3">Tanggal</th>
-                  <th class="px-2 sm:px-4 py-3">Waktu</th>
-                  <th class="px-2 sm:px-4 py-3">Layanan</th>
-                  <th class="px-2 sm:px-4 py-3">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(r, idx) in paginatedReservasi" :key="idx" class="border-b border-zinc-700">
-                  <td class="px-2 sm:px-4 py-3">{{ r.date }}</td>
-                  <td class="px-2 sm:px-4 py-3">{{ r.time }}</td>
-                  <td class="px-2 sm:px-4 py-3">{{ r.service }}</td>
-                  <td class="px-2 sm:px-4 py-3">
-                    <span v-if="r.done" class="inline-flex items-center gap-1 text-green-400 font-semibold">
-                      <CheckCircleIcon class="w-4 h-4" /> Selesai
-                    </span>
-                    <span v-else-if="r.canceled" class="inline-flex items-center gap-1 text-red-400 font-semibold">
-                      <XCircleIcon class="w-4 h-4" /> Dibatalkan
-                    </span>
-                    <span v-else class="text-yellow-400 font-semibold">Belum</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- Pagination -->
-            <div v-if="totalPages > 1" class="flex justify-center gap-2 mt-4 mb-2 min-w-max">
-              <button
-                class="px-3 py-1 rounded bg-zinc-800 text-gray-300 hover:bg-yellow-400 hover:text-black text-xs font-semibold"
-                :disabled="page === 1"
-                @click="page--"
-              >Prev</button>
-              <button
-                v-for="p in totalPages"
-                :key="p"
-                class="px-3 py-1 rounded font-semibold"
-                :class="page === p ? 'bg-yellow-400 text-black' : 'bg-zinc-800 text-gray-300 hover:bg-yellow-400 hover:text-black'"
-                @click="page = p"
-              >{{ p }}</button>
-              <button
-                class="px-3 py-1 rounded bg-zinc-800 text-gray-300 hover:bg-yellow-400 hover:text-black text-xs font-semibold"
-                :disabled="page === totalPages"
-                @click="page++"
-              >Next</button>
-            </div>
-          </div>
-          <div v-else class="px-2 sm:px-4 py-6 text-center text-gray-500 border border-zinc-700 rounded-lg bg-zinc-900">
-            Belum ada riwayat reservasi.
-          </div>
-        </transition>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
-import { useAuthStore } from '@/stores/auth' 
-
-const router = useRouter()
-const authStore = useAuthStore()
+import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
 
 import {
   PencilSquareIcon,
@@ -224,24 +142,17 @@ import {
   XCircleIcon
 } from '@heroicons/vue/24/outline'
 
-// Dummy data user & statistik
+const router = useRouter()
+const authStore = useAuthStore()
+
 const user = ref({
-  name: 'Budi Santoso',
-  email: 'budi@mail.com',
-  phone: '081234567890',
-  avatar: '',
-  role: 'User',
-  createdAt: '2024-01-10T10:00:00Z'
+  name: '',
+  email: '',
+  photo: '',
+  phone: '',
+  role: '',
+  createdAt: ''
 })
-const stats = ref({
-  reservasi: 12,
-  testimoni: 3
-})
-const reservasiDummy = ref([
-  { date: '2025-06-20', time: '10:00', service: 'Haircut Classic', done: true },
-  { date: '2025-06-15', time: '13:00', service: 'Haircut + Wash', canceled: true },
-  { date: '2025-06-10', time: '15:00', service: 'Full Package', done: false }
-])
 
 const showEditModal = ref(false)
 const showPasswordModal = ref(false)
@@ -249,14 +160,14 @@ const showPasswordModal = ref(false)
 const editForm = ref({
   name: '',
   email: '',
-  phone: '',
-  avatar: ''
+  photo: '',
+  phone: ''
 })
 
 const avatarUrl = computed(() =>
   showEditModal.value
-    ? (editForm.value.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(editForm.value.name || 'User')}&background=facc15&color=000`)
-    : (user.value?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.value?.name || 'User')}&background=facc15&color=000`)
+    ? (editForm.value.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(editForm.value.name || 'User')}&background=facc15&color=000`)
+    : (user.value?.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.value?.name || 'User')}&background=facc15&color=000`)
 )
 
 const joinDate = computed(() => {
@@ -265,33 +176,57 @@ const joinDate = computed(() => {
   return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
 })
 
-// Ganti Password
-const passwordForm = ref({
-  oldPassword: '',
-  newPassword: '',
-  confirmPassword: ''
+// Fetch profile saat halaman dimuat
+onMounted(async () => {
+  try {
+    const res = await axios.get('/api/users/profile', {
+      headers: { Authorization: `Bearer ${authStore.token}` }
+    })
+    user.value = res.data
+  } catch (err) {
+    Swal.fire({ icon: 'error', title: 'Gagal memuat profil', text: err.response?.data?.error || 'Terjadi kesalahan.' })
+  }
 })
 
 function startEdit() {
   editForm.value = {
     name: user.value?.name || '',
     email: user.value?.email || '',
-    phone: user.value?.phone || '',
-    avatar: user.value?.avatar || '',
+    photo: user.value?.photo || '',
+    phone: user.value?.phone || ''
   }
   showEditModal.value = true
 }
 
 async function saveProfile() {
-  // Simulasi request
-  user.value = { ...user.value, ...editForm.value }
-  showEditModal.value = false
-  Swal.fire({
-    icon: 'success',
-    title: 'Profil berhasil diperbarui!',
-    timer: 1200,
-    showConfirmButton: false
-  })
+  // Validasi manual (opsional tapi disarankan)
+  if (!editForm.value.name || !editForm.value.email || !editForm.value.photo || !editForm.value.phone) {
+    return Swal.fire({ icon: 'error', title: 'Semua field wajib diisi!' })
+  }
+
+  if (!/^\d{10,15}$/.test(editForm.value.phone)) {
+    return Swal.fire({ icon: 'error', title: 'Format nomor HP tidak valid!' })
+  }
+
+  try {
+    const res = await axios.put('/api/users/profile', editForm.value, {
+      headers: { Authorization: `Bearer ${authStore.token}` }
+    })
+    user.value = res.data
+    showEditModal.value = false
+    Swal.fire({
+      icon: 'success',
+      title: 'Profil berhasil diperbarui!',
+      timer: 1200,
+      showConfirmButton: false
+    })
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal update profil',
+      text: err.response?.data?.error || 'Terjadi kesalahan.'
+    })
+  }
 }
 
 function logout() {
@@ -312,7 +247,14 @@ function logout() {
   })
 }
 
-function changePassword() {
+// Ganti Password
+const passwordForm = ref({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
+
+async function changePassword() {
   if (!passwordForm.value.oldPassword || !passwordForm.value.newPassword || !passwordForm.value.confirmPassword) {
     Swal.fire({ icon: 'error', title: 'Semua field harus diisi!' })
     return
@@ -321,66 +263,73 @@ function changePassword() {
     Swal.fire({ icon: 'error', title: 'Konfirmasi password tidak cocok!' })
     return
   }
-  // Simulasi request
-  showPasswordModal.value = false
-  passwordForm.value.oldPassword = ''
-  passwordForm.value.newPassword = ''
-  passwordForm.value.confirmPassword = ''
-  Swal.fire({
-    icon: 'success',
-    title: 'Password berhasil diganti!',
-    timer: 1200,
-    showConfirmButton: false
-  })
+  try {
+    await axios.post(
+      '/api/users/change-password',
+      {
+        oldPassword: passwordForm.value.oldPassword,
+        newPassword: passwordForm.value.newPassword,
+        confirmPassword: passwordForm.value.confirmPassword
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authStore.token}`
+        }
+      }
+    )
+    showPasswordModal.value = false
+    passwordForm.value.oldPassword = ''
+    passwordForm.value.newPassword = ''
+    passwordForm.value.confirmPassword = ''
+    Swal.fire({
+      icon: 'success',
+      title: 'Password berhasil diganti!',
+      timer: 1200,
+      showConfirmButton: false
+    })
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal ganti password',
+      text: error.response?.data?.error || 'Terjadi kesalahan, coba lagi.'
+    })
+  }
 }
-
-// Data table logic
-const search = ref('')
-const page = ref(1)
-const perPage = 5
-
-const filteredReservasi = computed(() => {
-  if (!search.value.trim()) return reservasiDummy.value
-  const s = search.value.trim().toLowerCase()
-  return reservasiDummy.value.filter(r =>
-    r.service.toLowerCase().includes(s) ||
-    r.date.toLowerCase().includes(s)
-  )
-})
-const totalPages = computed(() => Math.ceil(filteredReservasi.value.length / perPage))
-const paginatedReservasi = computed(() =>
-  filteredReservasi.value.slice((page.value - 1) * perPage, page.value * perPage)
-)
-watch(search, () => { page.value = 1 })
 </script>
 
 <style scoped>
+.profile-card {
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.45), 0 1.5px 4px 0 rgba(250,204,21,0.07);
+  border: 1.5px solid #333;
+  /* Untuk animasi fadeup */
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeup 0.7s cubic-bezier(.4,0,.2,1) 0.1s forwards;
+}
+.fadeup.delay-150 {
+  animation-delay: 0.25s;
+}
+@keyframes fadeup {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+input, textarea {
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+input:focus, textarea:focus {
+  border-color: #facc15;
+  box-shadow: 0 0 0 2px #facc1580;
+}
+button:focus {
+  outline: 2px solid #facc15;
+}
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.2s;
 }
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
-}
-.fade-up-enter-active {
-  transition: opacity 0.3s, transform 0.3s;
-}
-.fade-up-enter-from {
-  opacity: 0;
-  transform: translateY(30px);
-}
-.fade-up-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-.fade-up-leave-active {
-  transition: opacity 0.2s, transform 0.2s;
-}
-.fade-up-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-.fade-up-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
 }
 </style>

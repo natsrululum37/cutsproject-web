@@ -138,7 +138,7 @@ async function handleRegister() {
   loading.value = true
 
   try {
-    const response = await axios.post('https://f54b-36-81-84-198.ngrok-free.app/api/auth/register', {
+    const response = await axios.post('/api/auth/register', {
       name: name.value,
       email: email.value,
       password: password.value
