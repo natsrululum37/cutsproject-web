@@ -114,64 +114,26 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { getGalleryItems } from '@/services/api.js'
-
-const baseUrl = import.meta.env.BASE_URL
+import axios from 'axios'
 
 const images = ref([])
 const loading = ref(true)
 const error = ref(null)
 const modalImage = ref(null)
 
-// Function to determine if a string is a valid URL
-const isValidUrl = (string) => {
-  try {
-    new URL(string)
-    return true
-  } catch (error) {
-    console.error('Error parsing URL:', error)
-    return false
-  }
-}
-
-// Function to process image path
+// Function to process image path (langsung pakai url dari backend)
 const processImagePath = (imagePath) => {
-  if (!imagePath) return `${baseUrl}images/service-1.webp` // Default fallback
-  
-  // If it's already a full URL, return as is
-  if (isValidUrl(imagePath)) {
-    return imagePath
-  }
-  
-  // If it starts with http or https but isn't a valid URL, treat as relative
-  if (imagePath.startsWith('http')) {
-    return `${baseUrl}images/gallery/${imagePath}`
-  }
-  
-  // If it's a relative path, construct full path
-  if (imagePath.startsWith('/')) {
-    return `${baseUrl}${imagePath.substring(1)}`
-  }
-  
-  // Default: assume it's a filename in gallery folder
-  return `${baseUrl}images/gallery/${imagePath}`
+  if (!imagePath) return '/images/service-1.webp'
+  return imagePath
 }
 
 const handleImageError = (event, index) => {
-  console.warn(`Failed to load image at index ${index}:`, event.target.src)
-  
-  // Mark image as error
   images.value[index].error = true
   images.value[index].loading = false
-  
-  // Try fallback image
-  if (!event.target.src.includes('service-1.webp')) {
-    event.target.src = `${baseUrl}images/service-1.webp`
-  }
+  event.target.src = '/images/service-1.webp'
 }
 
 const handleImageLoad = (event, index) => {
-  // Mark image as loaded
   if (images.value[index]) {
     images.value[index].loading = false
     images.value[index].error = false
@@ -180,27 +142,21 @@ const handleImageLoad = (event, index) => {
 
 const openModal = (image) => {
   modalImage.value = image
-  // Prevent body scroll when modal is open
   document.body.style.overflow = 'hidden'
 }
 
 const closeModal = () => {
   modalImage.value = null
-  // Restore body scroll
   document.body.style.overflow = 'auto'
 }
 
 const loadGallery = async () => {
   loading.value = true
   error.value = null
-  
   try {
-    const data = await getGalleryItems()
-    
-    if (!Array.isArray(data)) {
-      throw new Error('Data galeri tidak valid')
-    }
-    
+    // Ambil semua data galeri dari endpoint backend
+    const res = await axios.get('/api/gallery')
+    const data = Array.isArray(res.data.data) ? res.data.data : res.data // support jika backend return array langsung
     images.value = data.map((item, index) => ({
       id: item.id || index,
       src: processImagePath(item.image || item.src || item.url),
@@ -208,12 +164,10 @@ const loadGallery = async () => {
       description: item.description || item.desc || null,
       loading: true,
       error: false,
-      originalData: item // Keep original data for reference
+      originalData: item
     }))
-    
   } catch (err) {
-    console.error('Error loading gallery:', err)
-    error.value = err.message || 'Gagal memuat galeri. Silakan coba lagi.'
+    error.value = err.response?.data?.error || err.message || 'Gagal memuat galeri. Silakan coba lagi.'
   } finally {
     loading.value = false
   }
@@ -233,7 +187,6 @@ onMounted(async () => {
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown)
-  // Restore body scroll on unmount
   document.body.style.overflow = 'auto'
 })
 </script>
