@@ -155,6 +155,14 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
+axios.interceptors.request.use(config => {
+  const auth = useAuthStore()
+  if (auth.token && config.url.startsWith('/api/admin')) {
+    config.headers.Authorization = `Bearer ${auth.token}`
+  }
+  return config
+})
+
 const route = useRoute()
 const logoSrc = ref(new URL('@/assets/client/images/logo/logo.webp', import.meta.url).href)
 const sidebarOpen = ref(false)
