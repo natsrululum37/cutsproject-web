@@ -3,7 +3,9 @@
     <div class="view-section section-spacing-y">
       <!-- Judul -->
       <div class="text-center mb-10 mt-10">
-        <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-yellow-400 drop-shadow-md">Ulasan Pelanggan</h1>
+        <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-yellow-400 drop-shadow-md">
+          Ulasan Pelanggan
+        </h1>
         <p class="text-gray-400 max-w-2xl mx-auto">
           Lihat apa yang dikatakan pelanggan kami tentang pengalaman mereka di CutsProject
         </p>
@@ -11,15 +13,17 @@
 
       <!-- Loading State -->
       <div v-if="loading" class="text-center py-10">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400 mb-4"></div>
+        <div
+          class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400 mb-4"
+        ></div>
         <p class="text-yellow-400 font-semibold">Memuat ulasan...</p>
       </div>
 
       <!-- Error State -->
       <div v-else-if="error" class="text-center py-10">
         <p class="text-red-400 font-semibold mb-4">❌ {{ error }}</p>
-        <button 
-          @click="loadReviews" 
+        <button
+          @click="loadReviews"
           class="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-300 transition"
         >
           Coba Lagi
@@ -38,30 +42,74 @@
           v-for="(review, index) in reviews"
           :key="review.id || index"
           class="bg-zinc-900 rounded-xl p-6 border border-zinc-800 shadow-xl fade-up-review"
-          :style="{ animationDelay: (0.1 + index * 0.1) + 's' }"
+          :style="{ animationDelay: 0.1 + index * 0.1 + 's' }"
         >
           <div class="flex items-start mb-4">
             <img
-              :src="getAvatarUrl(review.avatar)"
+              :src="review.avatar"
               :alt="review.name"
               class="w-12 h-12 rounded-full object-cover border-2 border-yellow-400"
-              @error="handleAvatarError($event)"
+              @error="
+                (e) =>
+                  (e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(review.name)}&background=facc15&color=000`)
+              "
             />
             <div class="ml-4 flex-1">
               <h3 class="font-semibold text-white text-base">{{ review.name }}</h3>
               <div class="flex items-center mt-1">
                 <div class="flex text-yellow-400 text-lg">
                   <span v-for="star in review.rating" :key="star">★</span>
-                  <span v-for="star in 5 - review.rating" :key="'empty' + star" class="text-gray-600">☆</span>
+                  <span
+                    v-for="star in 5 - review.rating"
+                    :key="'empty' + star"
+                    class="text-gray-600"
+                    >☆</span
+                  >
                 </div>
-                <span class="ml-2 text-xs text-gray-400">{{ formatDate(review.createdAt) }}</span>
+                <span class="ml-2 text-xs text-gray-400">{{ review.date }}</span>
               </div>
             </div>
           </div>
           <p class="text-gray-300 text-sm mb-3">{{ review.comment }}</p>
           <div class="text-xs text-gray-400">
-            <span>Layanan: <span class="font-semibold text-yellow-400">{{ getServiceName(review.serviceId) }}</span></span>
+            <span
+              >Layanan:
+              <span class="font-semibold text-yellow-400">{{ review.service }}</span></span
+            >
           </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div v-if="pagination.totalPages > 1" class="flex justify-center mt-8">
+        <div class="flex space-x-2">
+          <button
+            @click="changePage(pagination.page - 1)"
+            :disabled="pagination.page === 1"
+            class="px-3 py-1 rounded bg-zinc-800 text-white hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Prev
+          </button>
+          <div v-for="p in paginationNumbers" :key="p">
+            <button
+              @click="changePage(p)"
+              class="px-3 py-1 rounded"
+              :class="
+                p === pagination.page
+                  ? 'bg-yellow-400 text-black'
+                  : 'bg-zinc-800 text-white hover:bg-zinc-700'
+              "
+            >
+              {{ p }}
+            </button>
+          </div>
+          <button
+            @click="changePage(pagination.page + 1)"
+            :disabled="pagination.page === pagination.totalPages"
+            class="px-3 py-1 rounded bg-zinc-800 text-white hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
         </div>
       </div>
 
@@ -76,43 +124,44 @@
       </div>
 
       <!-- Form Tambah Ulasan -->
-      <div v-if="showForm" class="mt-10 max-w-xl mx-auto bg-zinc-800 p-6 rounded-xl border border-zinc-700 fade-up-review" style="animation-delay:0.2s">
+      <div
+        v-if="showForm"
+        class="mt-10 max-w-xl mx-auto bg-zinc-800 p-6 rounded-xl border border-zinc-700 fade-up-review"
+        style="animation-delay: 0.2s"
+      >
         <h2 class="text-white font-semibold text-xl mb-4">Tulis Ulasan Anda</h2>
         <form @submit.prevent="submitReview" class="space-y-4">
           <div>
             <label class="block text-gray-300 mb-1">Nama</label>
-            <input 
-              v-model="newReview.name" 
-              required 
-              class="w-full p-2 rounded bg-zinc-700 text-white border border-zinc-600 focus:border-yellow-400 focus:outline-none"
-              placeholder="Masukkan nama Anda"
+            <input
+              v-model="newReview.name"
+              required
+              class="w-full p-2 rounded bg-zinc-700 text-white focus:outline-none focus:ring-1 focus:ring-yellow-400"
             />
           </div>
           <div>
-            <label class="block text-gray-300 mb-1">Avatar (URL) - Opsional</label>
-            <input 
-              v-model="newReview.avatar" 
-              class="w-full p-2 rounded bg-zinc-700 text-white border border-zinc-600 focus:border-yellow-400 focus:outline-none"
-              placeholder="https://example.com/avatar.jpg"
+            <label class="block text-gray-300 mb-1">Avatar (URL)</label>
+            <input
+              v-model="newReview.avatar"
+              class="w-full p-2 rounded bg-zinc-700 text-white focus:outline-none focus:ring-1 focus:ring-yellow-400"
             />
           </div>
           <div>
             <label class="block text-gray-300 mb-1">Rating</label>
-            <select 
-              v-model.number="newReview.rating" 
-              required 
-              class="w-full p-2 rounded bg-zinc-700 text-white border border-zinc-600 focus:border-yellow-400 focus:outline-none"
+            <select
+              v-model.number="newReview.rating"
+              required
+              class="w-full p-2 rounded bg-zinc-700 text-white focus:outline-none focus:ring-1 focus:ring-yellow-400"
             >
-              <option value="" disabled>Pilih Rating</option>
-              <option v-for="n in 5" :key="n" :value="n">{{ n }} Bintang</option>
+              <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
             </select>
           </div>
           <div>
             <label class="block text-gray-300 mb-1">Layanan</label>
-            <select 
-              v-model="newReview.serviceId" 
-              required 
-              class="w-full p-2 rounded bg-zinc-700 text-white border border-zinc-600 focus:border-yellow-400 focus:outline-none"
+            <select
+              v-model="newReview.serviceId"
+              required
+              class="w-full p-2 rounded bg-zinc-700 text-white focus:outline-none focus:ring-1 focus:ring-yellow-400"
             >
               <option value="" disabled>Pilih Layanan</option>
               <option v-for="service in services" :key="service.id" :value="service.id">
@@ -122,18 +171,17 @@
           </div>
           <div>
             <label class="block text-gray-300 mb-1">Komentar</label>
-            <textarea 
-              v-model="newReview.comment" 
-              required 
-              rows="4" 
-              class="w-full p-2 rounded bg-zinc-700 text-white border border-zinc-600 focus:border-yellow-400 focus:outline-none resize-none"
-              placeholder="Bagikan pengalaman Anda..."
+            <textarea
+              v-model="newReview.comment"
+              required
+              rows="4"
+              class="w-full p-2 rounded bg-zinc-700 text-white focus:outline-none focus:ring-1 focus:ring-yellow-400"
             ></textarea>
           </div>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             :disabled="submitting"
-            class="bg-yellow-500 text-black px-6 py-2 rounded font-semibold hover:bg-yellow-400 w-full transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
+            class="bg-yellow-500 text-black px-6 py-2 rounded font-semibold hover:bg-yellow-400 w-full transition-colors disabled:bg-gray-600 disabled:text-gray-300"
           >
             {{ submitting ? 'Mengirim...' : 'Kirim Ulasan' }}
           </button>
@@ -144,7 +192,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
@@ -155,123 +203,121 @@ const submitting = ref(false)
 const services = ref([])
 const reviews = ref([])
 
+// Pagination state
+const pagination = ref({
+  page: 1,
+  limit: 9, // 9 review per page untuk grid 3x3
+  total: 0,
+  totalPages: 0,
+})
+
+// Computed untuk pagination numbers (tampilkan max 5 halaman)
+const paginationNumbers = computed(() => {
+  const numbers = []
+  const start = Math.max(1, pagination.value.page - 2)
+  const end = Math.min(pagination.value.totalPages, pagination.value.page + 2)
+
+  for (let i = start; i <= end; i++) {
+    numbers.push(i)
+  }
+
+  return numbers
+})
+
 const newReview = ref({
   name: '',
   avatar: '',
-  rating: '',
+  rating: 5,
   comment: '',
-  serviceId: ''
+  serviceId: '',
 })
-
-// Default avatar jika tidak ada atau error
-const defaultAvatar = 'https://ui-avatars.com/api/?name=User&background=fbbf24&color=000&size=48'
-
-// Function untuk mendapatkan URL avatar yang valid
-const getAvatarUrl = (avatar) => {
-  if (!avatar) return defaultAvatar
-  if (avatar.startsWith('http')) return avatar
-  if (avatar.startsWith('/')) return `${window.location.origin}${avatar}`
-  return defaultAvatar
-}
-
-const handleAvatarError = (event) => {
-  event.target.src = defaultAvatar
-}
-
-const formatDate = (dateString) => {
-  if (!dateString) return 'Tidak diketahui'
-  const date = new Date(dateString)
-  const now = new Date()
-  const diffTime = Math.abs(now - date)
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  if (diffDays === 1) return 'Hari ini'
-  if (diffDays === 2) return 'Kemarin'
-  if (diffDays <= 7) return `${diffDays - 1} hari yang lalu`
-  if (diffDays <= 30) return `${Math.floor(diffDays / 7)} minggu yang lalu`
-  if (diffDays <= 365) return `${Math.floor(diffDays / 30)} bulan yang lalu`
-  return date.toLocaleDateString('id-ID', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
-
-const getServiceName = (serviceId) => {
-  const service = services.value.find(s => s.id === serviceId)
-  return service ? service.name : 'Layanan tidak diketahui'
-}
 
 const loadReviews = async () => {
   loading.value = true
   error.value = null
+
   try {
-    const response = await axios.get('http://localhost:3000/api/reviews')
-    if (!Array.isArray(response.data)) {
-      throw new Error('Format data ulasan tidak valid')
-    }
-    reviews.value = response.data.sort((a, b) => {
-      return new Date(b.createdAt || b.created_at) - new Date(a.createdAt || a.created_at)
+    const res = await axios.get('/api/reviews', {
+      params: {
+        page: pagination.value.page,
+        limit: pagination.value.limit,
+      },
     })
+
+    // Cek struktur response
+    if (res.data && Array.isArray(res.data.data)) {
+      reviews.value = res.data.data
+
+      // Update pagination info
+      if (res.data.meta) {
+        pagination.value = {
+          ...pagination.value,
+          total: res.data.meta.total,
+          totalPages: res.data.meta.totalPages,
+        }
+      }
+    } else {
+      console.error('Format response tidak sesuai:', res.data)
+      throw new Error('Format data tidak valid')
+    }
   } catch (err) {
-    error.value = err.response?.data?.message || err.message || 'Gagal memuat ulasan'
-    reviews.value = [] // Tidak fallback ke data static, hanya tampil error
+    console.error('Error loading reviews:', err)
+    error.value = 'Gagal memuat ulasan. Silakan coba lagi.'
   } finally {
     loading.value = false
   }
 }
 
-const loadServices = async () => {
-  try {
-    const response = await axios.get('http://localhost:3000/api/services')
-    services.value = Array.isArray(response.data) ? response.data : []
-  } catch {
-    services.value = []
-  }
+const changePage = (page) => {
+  if (page < 1 || page > pagination.value.totalPages) return
+  pagination.value.page = page
+  loadReviews()
+
+  // Scroll to top setelah pindah halaman
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 const openReviewForm = () => {
   showForm.value = !showForm.value
-  if (showForm.value) {
-    newReview.value = {
-      name: '',
-      avatar: '',
-      rating: '',
-      comment: '',
-      serviceId: ''
-    }
-  }
 }
 
 const submitReview = async () => {
+  if (!newReview.value.name || !newReview.value.comment || !newReview.value.serviceId) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Form tidak lengkap',
+      text: 'Semua field wajib diisi kecuali avatar.',
+    })
+    return
+  }
+
   submitting.value = true
+
   try {
-    const reviewData = {
-      ...newReview.value,
-      avatar: newReview.value.avatar || null
-    }
-    await axios.post('http://localhost:3000/api/reviews', reviewData)
+    await axios.post('/api/reviews', newReview.value)
+
     Swal.fire({
       icon: 'success',
       title: 'Ulasan berhasil dikirim!',
-      text: 'Terima kasih atas ulasan Anda',
       showConfirmButton: false,
-      timer: 2000
+      timer: 1500,
     })
-    await loadReviews()
+
     showForm.value = false
-    newReview.value = {
-      name: '',
-      avatar: '',
-      rating: '',
-      comment: '',
-      serviceId: ''
-    }
-  } catch (err) {
+
+    // Reset form
+    newReview.value = { name: '', avatar: '', rating: 5, comment: '', serviceId: '' }
+
+    // Reload untuk menampilkan ulasan baru
+    pagination.value.page = 1 // Kembali ke halaman pertama
+    await loadReviews()
+  } catch (error) {
+    console.error('Gagal mengirim ulasan:', error)
+
     Swal.fire({
       icon: 'error',
       title: 'Gagal mengirim ulasan',
-      text: err.response?.data?.message || 'Silakan coba lagi',
-      confirmButtonColor: '#fbbf24'
+      text: error.response?.data?.error || 'Silakan coba lagi.',
     })
   } finally {
     submitting.value = false
@@ -279,10 +325,15 @@ const submitReview = async () => {
 }
 
 onMounted(async () => {
-  await Promise.all([
-    loadServices(),
-    loadReviews()
-  ])
+  try {
+    const res = await axios.get('/api/services')
+    services.value = res.data
+  } catch (err) {
+    console.error('Gagal mengambil daftar layanan:', err)
+    services.value = []
+  }
+
+  await loadReviews()
 })
 </script>
 
@@ -300,7 +351,7 @@ onMounted(async () => {
   }
 }
 
-/* Loading spinner animation */
+/* Loading spinner */
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -309,12 +360,5 @@ onMounted(async () => {
 
 .animate-spin {
   animation: spin 1s linear infinite;
-}
-
-/* Form input focus styles */
-input:focus,
-select:focus,
-textarea:focus {
-  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
 }
 </style>
