@@ -3,14 +3,14 @@
     <div
       class="flex flex-col justify-center items-center gap-x-16 gap-y-5 xl:gap-28 lg:flex-row lg:justify-between max-lg:max-w-2xl mx-auto max-w-full"
     >
-      <!-- Gambar dengan overlay saat hover -->
+      <!-- Gambar -->
       <div class="relative w-full lg:w-1/2 group mb-8 lg:mb-0">
         <img
           src="@/assets/client/images/tools.webp"
           alt="FAQ tailwind section"
           class="w-full rounded-xl object-cover transition"
         />
-        <!-- Overlay muncul saat hover -->
+        <!-- Overlay -->
         <div
           class="absolute inset-0 bg-black bg-opacity-90 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
         >
@@ -18,17 +18,15 @@
         </div>
       </div>
 
-      <!-- Accordion Section -->
+      <!-- FAQ -->
       <div class="w-full lg:w-1/2">
         <div class="lg:max-w-xl">
           <div class="mb-1 lg:mb-1">
-            <h2
-              class="text-3xl md:text-5xl font-bold text-yellow-400 leading-tight mb-4 text-center md:text-left"
-            >
+            <h2 class="text-3xl md:text-5xl font-bold text-yellow-400 leading-tight mb-4 text-center md:text-left">
               FAQ ABOUT CUTS PROJECT
             </h2>
           </div>
-          <div class="accordion-group space-y-3">
+          <div class="accordion-group space-y-3 pb-16">
             <div
               v-for="(faq, index) in faqs"
               :key="index"
@@ -36,10 +34,16 @@
             >
               <button
                 @click="toggle(index)"
-                class="accordion-toggle group inline-flex items-center justify-between w-full text-lg md:text-xl font-medium leading-8 text-gray-200 transition duration-300 hover:text-yellow-400 px-6 py-4 focus:outline-none"
-              >
-                <span class="flex items-center gap-2">
-                  <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                class="accordion-toggle group inline-flex items-center justify-between w-full text-lg md:text-xl font-medium leading-normal text-gray-200 transition duration-300 hover:text-yellow-400 px-6 py-4 focus:outline-none"
+              > 
+                <span class="flex items-center gap-4 text-left">
+                  <svg
+                    class="w-5 h-5 text-yellow-400 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                  >
                     <circle cx="12" cy="12" r="10" />
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01" />
                   </svg>
@@ -47,7 +51,7 @@
                 </span>
                 <svg
                   :class="[
-                    'transition-transform duration-300 group-hover:text-yellow-400',
+                    'ml-4 transition-transform duration-300 group-hover:text-yellow-400',
                     { 'rotate-180 text-yellow-400': openIndex === index },
                   ]"
                   width="22"
@@ -70,7 +74,7 @@
                   v-if="openIndex === index"
                   class="accordion-content px-6 pb-4 text-gray-300 text-base leading-relaxed animate-fade-up"
                 >
-                  <p>{{ faq.content }}</p>
+                  <p class="text-justify">{{ faq.content }}</p>
                 </div>
               </transition>
             </div>

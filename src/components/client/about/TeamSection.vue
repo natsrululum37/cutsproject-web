@@ -59,7 +59,7 @@ const team = [
     peran: 'Frontend, UI/UX Designer',
     tugas: 'About, Team, Footer, Design Figma',
     github: 'https://github.com/ulpaav',
-    image: baseUrl + '/images/team/ulpa.webp',
+    image: baseUrl + '/images/team/ulpaa.webp',
   },
   {
     nama: 'Anung Binartanto',

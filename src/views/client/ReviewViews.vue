@@ -9,19 +9,43 @@
         </p>
       </div>
 
+      <!-- Loading State -->
+      <div v-if="loading" class="text-center py-10">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400 mb-4"></div>
+        <p class="text-yellow-400 font-semibold">Memuat ulasan...</p>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="text-center py-10">
+        <p class="text-red-400 font-semibold mb-4">❌ {{ error }}</p>
+        <button 
+          @click="loadReviews" 
+          class="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-300 transition"
+        >
+          Coba Lagi
+        </button>
+      </div>
+
+      <!-- Empty State -->
+      <div v-else-if="reviews.length === 0" class="text-center py-10">
+        <p class="text-gray-400 font-semibold mb-4">💬 Belum ada ulasan</p>
+        <p class="text-sm text-gray-500">Jadilah yang pertama memberikan ulasan!</p>
+      </div>
+
       <!-- List Ulasan -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div
           v-for="(review, index) in reviews"
-          :key="index"
+          :key="review.id || index"
           class="bg-zinc-900 rounded-xl p-6 border border-zinc-800 shadow-xl fade-up-review"
           :style="{ animationDelay: (0.1 + index * 0.1) + 's' }"
         >
           <div class="flex items-start mb-4">
             <img
-              :src="review.avatar"
+              :src="getAvatarUrl(review.avatar)"
               :alt="review.name"
               class="w-12 h-12 rounded-full object-cover border-2 border-yellow-400"
+              @error="handleAvatarError($event)"
             />
             <div class="ml-4 flex-1">
               <h3 class="font-semibold text-white text-base">{{ review.name }}</h3>
@@ -30,13 +54,13 @@
                   <span v-for="star in review.rating" :key="star">★</span>
                   <span v-for="star in 5 - review.rating" :key="'empty' + star" class="text-gray-600">☆</span>
                 </div>
-                <span class="ml-2 text-xs text-gray-400">{{ review.date }}</span>
+                <span class="ml-2 text-xs text-gray-400">{{ formatDate(review.createdAt) }}</span>
               </div>
             </div>
           </div>
           <p class="text-gray-300 text-sm mb-3">{{ review.comment }}</p>
           <div class="text-xs text-gray-400">
-            <span>Layanan: <span class="font-semibold text-yellow-400">{{ review.service }}</span></span>
+            <span>Layanan: <span class="font-semibold text-yellow-400">{{ getServiceName(review.serviceId) }}</span></span>
           </div>
         </div>
       </div>
@@ -57,21 +81,39 @@
         <form @submit.prevent="submitReview" class="space-y-4">
           <div>
             <label class="block text-gray-300 mb-1">Nama</label>
-            <input v-model="newReview.name" required class="w-full p-2 rounded bg-zinc-700 text-white" />
+            <input 
+              v-model="newReview.name" 
+              required 
+              class="w-full p-2 rounded bg-zinc-700 text-white border border-zinc-600 focus:border-yellow-400 focus:outline-none"
+              placeholder="Masukkan nama Anda"
+            />
           </div>
           <div>
-            <label class="block text-gray-300 mb-1">Avatar (URL)</label>
-            <input v-model="newReview.avatar" class="w-full p-2 rounded bg-zinc-700 text-white" />
+            <label class="block text-gray-300 mb-1">Avatar (URL) - Opsional</label>
+            <input 
+              v-model="newReview.avatar" 
+              class="w-full p-2 rounded bg-zinc-700 text-white border border-zinc-600 focus:border-yellow-400 focus:outline-none"
+              placeholder="https://example.com/avatar.jpg"
+            />
           </div>
           <div>
             <label class="block text-gray-300 mb-1">Rating</label>
-            <select v-model.number="newReview.rating" required class="w-full p-2 rounded bg-zinc-700 text-white">
-              <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+            <select 
+              v-model.number="newReview.rating" 
+              required 
+              class="w-full p-2 rounded bg-zinc-700 text-white border border-zinc-600 focus:border-yellow-400 focus:outline-none"
+            >
+              <option value="" disabled>Pilih Rating</option>
+              <option v-for="n in 5" :key="n" :value="n">{{ n }} Bintang</option>
             </select>
           </div>
           <div>
             <label class="block text-gray-300 mb-1">Layanan</label>
-            <select v-model="newReview.serviceId" required class="w-full p-2 rounded bg-zinc-700 text-white">
+            <select 
+              v-model="newReview.serviceId" 
+              required 
+              class="w-full p-2 rounded bg-zinc-700 text-white border border-zinc-600 focus:border-yellow-400 focus:outline-none"
+            >
               <option value="" disabled>Pilih Layanan</option>
               <option v-for="service in services" :key="service.id" :value="service.id">
                 {{ service.name }}
@@ -80,10 +122,20 @@
           </div>
           <div>
             <label class="block text-gray-300 mb-1">Komentar</label>
-            <textarea v-model="newReview.comment" required rows="4" class="w-full p-2 rounded bg-zinc-700 text-white"></textarea>
+            <textarea 
+              v-model="newReview.comment" 
+              required 
+              rows="4" 
+              class="w-full p-2 rounded bg-zinc-700 text-white border border-zinc-600 focus:border-yellow-400 focus:outline-none resize-none"
+              placeholder="Bagikan pengalaman Anda..."
+            ></textarea>
           </div>
-          <button type="submit" class="bg-yellow-500 text-black px-6 py-2 rounded font-semibold hover:bg-yellow-400 w-full">
-            Kirim Ulasan
+          <button 
+            type="submit" 
+            :disabled="submitting"
+            class="bg-yellow-500 text-black px-6 py-2 rounded font-semibold hover:bg-yellow-400 w-full transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
+          >
+            {{ submitting ? 'Mengirim...' : 'Kirim Ulasan' }}
           </button>
         </form>
       </div>
@@ -97,87 +149,140 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 
 const showForm = ref(false)
+const loading = ref(true)
+const error = ref(null)
+const submitting = ref(false)
 const services = ref([])
-
-const reviews = ref([
-  {
-    name: 'Budi Santoso',
-    avatar: 'https://randomuser.me/api/portraits/men/92.jpg',
-    rating: 5,
-    date: '2 hari yang lalu',
-    comment: 'Pelayanan sangat bagus, hasil potongan rambut sesuai dengan keinginan. Recommended!',
-    service: 'Haircut Classic',
-  },
-  {
-    name: 'Rizky Fadillah',
-    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-    rating: 5,
-    date: '3 hari yang lalu',
-    comment: 'Potongannya selalu rapi dan sesuai request. Tempatnya nyaman, pelayanannya top!',
-    service: 'Haircut & Beard',
-  },
-  {
-    name: 'Andi Saputra',
-    avatar: 'https://randomuser.me/api/portraits/men/45.jpg',
-    rating: 4,
-    date: '1 minggu yang lalu',
-    comment: 'Barbernya ramah dan tahu gaya kekinian. Recommended banget!',
-    service: 'Haircut',
-  },
-  {
-    name: 'Fajar Hidayat',
-    avatar: 'https://randomuser.me/api/portraits/men/60.jpg',
-    rating: 5,
-    date: '2 minggu yang lalu',
-    comment: 'Sudah langganan dari lama, hasilnya selalu memuaskan. Kalian wajib kesini!',
-    service: 'Hair Coloring',
-  },
-])
+const reviews = ref([])
 
 const newReview = ref({
   name: '',
   avatar: '',
-  rating: 5,
+  rating: '',
   comment: '',
   serviceId: ''
 })
 
+// Default avatar jika tidak ada atau error
+const defaultAvatar = 'https://ui-avatars.com/api/?name=User&background=fbbf24&color=000&size=48'
+
+// Function untuk mendapatkan URL avatar yang valid
+const getAvatarUrl = (avatar) => {
+  if (!avatar) return defaultAvatar
+  if (avatar.startsWith('http')) return avatar
+  if (avatar.startsWith('/')) return `${window.location.origin}${avatar}`
+  return defaultAvatar
+}
+
+const handleAvatarError = (event) => {
+  event.target.src = defaultAvatar
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return 'Tidak diketahui'
+  const date = new Date(dateString)
+  const now = new Date()
+  const diffTime = Math.abs(now - date)
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  if (diffDays === 1) return 'Hari ini'
+  if (diffDays === 2) return 'Kemarin'
+  if (diffDays <= 7) return `${diffDays - 1} hari yang lalu`
+  if (diffDays <= 30) return `${Math.floor(diffDays / 7)} minggu yang lalu`
+  if (diffDays <= 365) return `${Math.floor(diffDays / 30)} bulan yang lalu`
+  return date.toLocaleDateString('id-ID', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
+
+const getServiceName = (serviceId) => {
+  const service = services.value.find(s => s.id === serviceId)
+  return service ? service.name : 'Layanan tidak diketahui'
+}
+
+const loadReviews = async () => {
+  loading.value = true
+  error.value = null
+  try {
+    const response = await axios.get('http://localhost:3000/api/reviews')
+    if (!Array.isArray(response.data)) {
+      throw new Error('Format data ulasan tidak valid')
+    }
+    reviews.value = response.data.sort((a, b) => {
+      return new Date(b.createdAt || b.created_at) - new Date(a.createdAt || a.created_at)
+    })
+  } catch (err) {
+    error.value = err.response?.data?.message || err.message || 'Gagal memuat ulasan'
+    reviews.value = [] // Tidak fallback ke data static, hanya tampil error
+  } finally {
+    loading.value = false
+  }
+}
+
+const loadServices = async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/api/services')
+    services.value = Array.isArray(response.data) ? response.data : []
+  } catch {
+    services.value = []
+  }
+}
+
 const openReviewForm = () => {
   showForm.value = !showForm.value
+  if (showForm.value) {
+    newReview.value = {
+      name: '',
+      avatar: '',
+      rating: '',
+      comment: '',
+      serviceId: ''
+    }
+  }
 }
 
 const submitReview = async () => {
+  submitting.value = true
   try {
-    await axios.post('http://localhost:3000/api/reviews', newReview.value)
+    const reviewData = {
+      ...newReview.value,
+      avatar: newReview.value.avatar || null
+    }
+    await axios.post('http://localhost:3000/api/reviews', reviewData)
     Swal.fire({
       icon: 'success',
       title: 'Ulasan berhasil dikirim!',
+      text: 'Terima kasih atas ulasan Anda',
       showConfirmButton: false,
-      timer: 1500
+      timer: 2000
     })
+    await loadReviews()
     showForm.value = false
-    const serviceName = services.value.find(s => s.id === newReview.value.serviceId)?.name || ''
-    reviews.value.unshift({ ...newReview.value, date: 'Baru saja', service: serviceName })
-    newReview.value = { name: '', avatar: '', rating: 5, comment: '', serviceId: '' }
-  } catch (error) {
-    console.error('Gagal mengirim ulasan:', error)
+    newReview.value = {
+      name: '',
+      avatar: '',
+      rating: '',
+      comment: '',
+      serviceId: ''
+    }
+  } catch (err) {
     Swal.fire({
       icon: 'error',
       title: 'Gagal mengirim ulasan',
-      text: 'Coba lagi.'
+      text: err.response?.data?.message || 'Silakan coba lagi',
+      confirmButtonColor: '#fbbf24'
     })
+  } finally {
+    submitting.value = false
   }
 }
 
-// Fetch daftar layanan dari backend
 onMounted(async () => {
-  try {
-    const res = await axios.get('http://localhost:3000/api/services')
-    services.value = res.data
-  } catch (err) {
-    console.error('Gagal mengambil daftar layanan:', err)
-    services.value = []
-  }
+  await Promise.all([
+    loadServices(),
+    loadReviews()
+  ])
 })
 </script>
 
@@ -187,10 +292,29 @@ onMounted(async () => {
   transform: translateY(40px) scale(0.98);
   animation: fadeUpReview 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
+
 @keyframes fadeUpReview {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Form input focus styles */
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
 }
 </style>
