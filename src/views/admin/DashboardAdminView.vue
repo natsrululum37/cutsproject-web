@@ -5,7 +5,6 @@
       <!-- Header -->
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-yellow-400">Dashboard Admin</h1>
-        <div class="flex items-center gap-4"></div>
       </div>
 
       <!-- Cards -->
@@ -116,9 +115,7 @@ const chartOptions = {
   },
 }
 
-function logout() {
-  alert('Berhasil logout!')
-}
+
 </script>
 
 <style scoped>

@@ -132,12 +132,27 @@ async function handleLogin() {
     })
 
     const token = response.data.token
-    const userData = response.data.user // pastikan API mengirim data user
-    auth.login(token, userData)
+    if (!token) {
+      errors.value.password = 'Login gagal: token tidak ditemukan'
+      return
+    }
+    let payload
+    try {
+      payload = JSON.parse(atob(token.split('.')[1]))
+    } catch (e) {
+      errors.value.password = 'Login gagal: token tidak valid'
+      return
+    }
+
+    auth.login(token, response.data.user)
 
     successMessage.value = 'Login berhasil!'
     setTimeout(() => {
-      router.push('/profile')
+      if (payload && payload.role === 'admin') {
+        router.push('/admin')
+      } else {
+        router.push('/')
+      }
     }, 1000)
   } catch (err) {
     const message = err.response?.data?.message || 'Terjadi kesalahan saat login'
