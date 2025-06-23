@@ -35,7 +35,7 @@
               <button
                 @click="toggle(index)"
                 class="accordion-toggle group inline-flex items-center justify-between w-full text-lg md:text-xl font-medium leading-normal text-gray-200 transition duration-300 hover:text-yellow-400 px-6 py-4 focus:outline-none"
-              >
+              > 
                 <span class="flex items-center gap-4 text-left">
                   <svg
                     class="w-5 h-5 text-yellow-400 shrink-0"
