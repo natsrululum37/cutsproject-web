@@ -212,20 +212,35 @@ const router = createRouter({
 // Reset scroll saat pindah halaman
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
+  const token = localStorage.getItem('token')
+  let role = null
+  if (token) {
+    try {
+      role = JSON.parse(atob(token.split('.')[1])).role
+    } catch (e) {}
+  }
+
+  // Hanya admin yang boleh ke /admin
+  if (to.path.startsWith('/admin') && role !== 'admin') {
+    return next('/')
+  }
+
   // Jika route butuh login dan belum login, redirect ke login
   if (to.meta.requiresAuth && !auth.isLoggedIn) {
-    next('/login')
-    return
+    return next('/login')
   }
+
   // Jika sudah login, blokir akses ke login/register
   if ((to.path === '/login' || to.path === '/register') && auth.isLoggedIn) {
-    next('/profile')
-    return
+    return next('/profile')
   }
+
+  // Reset scroll
   if (to.path !== from.path) {
     document.documentElement.scrollTop = 0
     document.body.scrollTop = 0
   }
+
   next()
 })
 

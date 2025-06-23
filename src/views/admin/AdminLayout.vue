@@ -150,6 +150,8 @@ import {
   ShieldCheckIcon,
   PencilSquareIcon
 } from '@heroicons/vue/24/outline'
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 
 const route = useRoute()
 const logoSrc = ref(new URL('@/assets/client/images/logo/logo.webp', import.meta.url).href)
@@ -168,9 +170,11 @@ const showEditProfile = ref(false)
 function toggleProfileMenu() {
   showProfileMenu.value = !showProfileMenu.value
 }
+const auth = useAuthStore()
+const router = useRouter()
 function logout() {
-  alert('Berhasil logout!')
-  // router.push('/login')
+  auth.logout()
+  router.push('/login')
 }
 function saveProfile() {
   showEditProfile.value = false
