@@ -20,8 +20,9 @@
         type="text"
         placeholder="Cari nama, nim, peran, tugas..."
         class="w-full sm:w-72 px-4 py-2 rounded bg-zinc-800 border border-zinc-700 text-white text-sm"
+        @input="debouncedFetch"
       />
-      <span class="text-xs text-gray-400 mt-1 sm:mt-0">Total: {{ filteredTeam.length }}</span>
+      <span class="text-xs text-gray-400 mt-1 sm:mt-0">Total: {{ meta.total }}</span>
     </div>
     <!-- Data Table -->
     <div class="w-full max-w-6xl mx-auto bg-zinc-900 border border-zinc-700 rounded-lg shadow overflow-x-auto">
@@ -39,8 +40,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(member, idx) in paginatedTeam" :key="idx" class="border-b border-zinc-700">
-            <td class="px-2 sm:px-4 py-3">{{ idx + 1 + (page-1)*perPage }}</td>
+          <tr v-for="(member, idx) in team" :key="member.id" class="border-b border-zinc-700">
+            <td class="px-2 sm:px-4 py-3">{{ idx + 1 + (meta.page-1)*meta.limit }}</td>
             <td class="px-2 sm:px-4 py-3">{{ member.nama }}</td>
             <td class="px-2 sm:px-4 py-3">{{ member.nim }}</td>
             <td class="px-2 sm:px-4 py-3">{{ member.peran }}</td>
@@ -52,34 +53,35 @@
               <img :src="member.image" alt="Foto" class="w-12 h-12 rounded-full object-cover border-2 border-yellow-400" />
             </td>
             <td class="px-2 sm:px-4 py-3 space-x-2">
-              <button @click="openEditModal(idx + (page-1)*perPage)" class="text-yellow-400 hover:text-yellow-300 text-xs font-semibold">Edit</button>
-              <button @click="deleteMember(idx + (page-1)*perPage)" class="text-red-400 hover:text-red-300 text-xs font-semibold">Hapus</button>
+              <button @click="openEditModal(member)" class="text-yellow-400 hover:text-yellow-300 text-xs font-semibold">Edit</button>
+              <button @click="deleteMember(member)" class="text-red-400 hover:text-red-300 text-xs font-semibold">Hapus</button>
             </td>
           </tr>
-          <tr v-if="paginatedTeam.length === 0">
+          <tr v-if="!loading && team.length === 0">
             <td colspan="8" class="px-2 sm:px-4 py-6 text-center text-gray-500">Belum ada anggota tim.</td>
           </tr>
         </tbody>
       </table>
       <!-- Pagination -->
-      <div v-if="totalPages > 1" class="relative mt-4 mb-2 flex justify-center min-w-max" style="overflow-x: auto;">
+      <div v-if="meta.totalPages > 1" class="relative mt-4 mb-2 flex justify-center min-w-max" style="overflow-x: auto;">
         <div class="flex gap-2">
           <button
             class="px-3 py-1 rounded bg-zinc-800 text-gray-300 hover:bg-yellow-400 hover:text-black text-xs font-semibold"
-            :disabled="page === 1"
-            @click="page--"
+            :disabled="meta.page === 1 || loading"
+            @click="changePage(meta.page - 1)"
           >Prev</button>
           <button
-            v-for="p in totalPages"
+            v-for="p in paginationNumbers"
             :key="p"
             class="px-3 py-1 rounded font-semibold"
-            :class="page === p ? 'bg-yellow-400 text-black' : 'bg-zinc-800 text-gray-300 hover:bg-yellow-400 hover:text-black'"
-            @click="page = p"
+            :class="meta.page === p ? 'bg-yellow-400 text-black' : 'bg-zinc-800 text-gray-300 hover:bg-yellow-400 hover:text-black'"
+            :disabled="loading"
+            @click="changePage(p)"
           >{{ p }}</button>
           <button
             class="px-3 py-1 rounded bg-zinc-800 text-gray-300 hover:bg-yellow-400 hover:text-black text-xs font-semibold"
-            :disabled="page === totalPages"
-            @click="page++"
+            :disabled="meta.page === meta.totalPages || loading"
+            @click="changePage(meta.page + 1)"
           >Next</button>
         </div>
       </div>
@@ -93,7 +95,7 @@
           style="max-height:90vh; overflow-y:auto;"
         >
           <button @click="closeModal" class="absolute top-2 right-2 text-gray-400 hover:text-yellow-400 text-xl">&times;</button>
-          <h2 class="text-lg font-bold mb-4 text-yellow-400">{{ editIdx === null ? 'Tambah Anggota' : 'Edit Anggota' }}</h2>
+          <h2 class="text-lg font-bold mb-4 text-yellow-400">{{ editId === null ? 'Tambah Anggota' : 'Edit Anggota' }}</h2>
           <form @submit.prevent="handleSubmit" class="space-y-3 sm:space-y-4">
             <div>
               <label class="block text-gray-300 mb-1">Nama</label>
@@ -124,8 +126,8 @@
             </div>
             <div class="flex gap-2 justify-end pt-2">
               <button type="button" @click="closeModal" class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white font-semibold text-sm">Batal</button>
-              <button type="submit" class="px-4 py-2 rounded bg-yellow-400 hover:bg-yellow-300 text-black font-semibold text-sm">
-                {{ editIdx === null ? 'Tambah' : 'Simpan' }}
+              <button type="submit" :disabled="loading" class="px-4 py-2 rounded bg-yellow-400 hover:bg-yellow-300 text-black font-semibold text-sm">
+                {{ loading ? 'Menyimpan...' : (editId === null ? 'Tambah' : 'Simpan') }}
               </button>
             </div>
           </form>
@@ -138,66 +140,22 @@
 <script setup>
 import { ref, computed } from 'vue'
 import Swal from 'sweetalert2'
+import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
 
-const team = ref([
-  {
-    nama: 'Ahmad Natsrul Ulum',
-    nim: '23.11.5524',
-    peran: 'Frontend, Backend',
-    tugas: 'Homepage, Header, Navbar, Store',
-    github: 'https://github.com/natsrululum37',
-    image: '/cutsproject-web/images/team/arul.webp',
-  },
-  {
-    nama: 'Zulfa Meydita Rahma',
-    nim: '23.11.5512',
-    peran: 'Frontend, UI/UX Designer',
-    tugas: 'About, Team, Footer, Design Figma',
-    github: 'https://github.com/ulpaav',
-    image: '/cutsproject-web/images/team/ulpa.webp',
-  },
-  {
-    nama: 'Anung Binartanto',
-    nim: '23.11.5520',
-    peran: 'Fullstack',
-    tugas: 'Booking, auth, Admin, Backend',
-    github: 'https://github.com/anungbinartantoo',
-    image: '/cutsproject-web/images/team/anung.webp',
-  },
-  {
-    nama: 'Eria Syalwa',
-    nim: '23.11.5535',
-    peran: 'Frontend',
-    tugas: 'Kontak',
-    github: 'https://github.com/eriasy',
-    image: '/cutsproject-web/images/team/eria.webp',
-  },
-  {
-    nama: 'Agi Muhammad Tengku Aqamaddin',
-    nim: '23.11.5518',
-    peran: 'Frontend, UI/UX Designer',
-    tugas: 'Ulasan, Design Figma',
-    github: 'https://github.com/ATengkuuu',
-    image: '/cutsproject-web/images/team/agi.webp',
-  },
-  {
-    nama: 'Cleova Calista Aziza Kayviar',
-    nim: '23.11.5532',
-    peran: 'Frontend',
-    tugas: 'Layanan',
-    github: 'https://github.com/cleovacalista',
-    image: '/cutsproject-web/images/team/cleo.webp',
-  },
-  {
-    nama: 'Arya Kusuma Wijaya',
-    nim: '23.11.5554',
-    peran: 'Frontend, UI/UX Designer',
-    tugas: 'Galeri, Design Figma',
-    github: 'https://github.com/aryaks10235',
-    image: '/cutsproject-web/images/team/arya.webp',
-  },
-])
+const auth = useAuthStore()
 
+const team = ref([])
+const meta = ref({
+  total: 0,
+  page: 1,
+  limit: 5,
+  totalPages: 1
+})
+const search = ref('')
+const loading = ref(false)
+const showModal = ref(false)
+const editId = ref(null)
 const form = ref({
   nama: '',
   nim: '',
@@ -206,50 +164,86 @@ const form = ref({
   github: '',
   image: ''
 })
-const editIdx = ref(null)
-const showModal = ref(false)
-const search = ref('')
-const page = ref(1)
-const perPage = 5
+
+// Fetch team data from API
+const fetchTeam = async (page = 1) => {
+  loading.value = true
+  try {
+    const res = await axios.get('/api/team', {
+      params: {
+        page,
+        limit: meta.value.limit,
+        search: search.value.trim() || undefined
+      },
+      headers: {
+        Authorization: `Bearer ${auth.token}`
+      }
+    })
+    team.value = res.data.data
+    meta.value = res.data.meta
+  } catch (err) {
+    Swal.fire('Gagal', err.response?.data?.error || 'Gagal memuat data tim', 'error')
+  } finally {
+    loading.value = false
+  }
+}
 
 function openAddModal() {
   form.value = { nama: '', nim: '', peran: '', tugas: '', github: '', image: '' }
-  editIdx.value = null
+  editId.value = null
   showModal.value = true
 }
-function openEditModal(idx) {
-  form.value = { ...team.value[idx] }
-  editIdx.value = idx
+function openEditModal(member) {
+  form.value = { ...member }
+  editId.value = member.id
   showModal.value = true
 }
 function closeModal() {
   showModal.value = false
   resetForm()
 }
-function handleSubmit() {
+async function handleSubmit() {
   if (!form.value.nama || !form.value.nim || !form.value.peran || !form.value.tugas || !form.value.github || !form.value.image) return
-  if (editIdx.value !== null) {
-    team.value[editIdx.value] = { ...form.value }
-    Swal.fire({
-      icon: 'success',
-      title: 'Berhasil!',
-      text: 'Data anggota tim berhasil diubah.',
-      timer: 1200,
-      showConfirmButton: false
-    })
-  } else {
-    team.value.push({ ...form.value })
-    Swal.fire({
-      icon: 'success',
-      title: 'Berhasil!',
-      text: 'Anggota tim berhasil ditambahkan.',
-      timer: 1200,
-      showConfirmButton: false
-    })
+  loading.value = true
+  try {
+    if (editId.value === null) {
+      // Tambah anggota
+      await axios.post('/api/team', form.value, {
+        headers: {
+          Authorization: `Bearer ${auth.token}`
+        }
+      })
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: 'Anggota tim berhasil ditambahkan.',
+        timer: 1200,
+        showConfirmButton: false
+      })
+    } else {
+      // Edit anggota
+      await axios.put(`/api/team/${editId.value}`, form.value, {
+        headers: {
+          Authorization: `Bearer ${auth.token}`
+        }
+      })
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: 'Data anggota tim berhasil diubah.',
+        timer: 1200,
+        showConfirmButton: false
+      })
+    }
+    closeModal()
+    await fetchTeam(meta.value.page)
+  } catch (err) {
+    Swal.fire('Gagal', err.response?.data?.error || 'Gagal menyimpan data', 'error')
+  } finally {
+    loading.value = false
   }
-  closeModal()
 }
-function deleteMember(idx) {
+async function deleteMember(member) {
   Swal.fire({
     title: 'Yakin ingin menghapus anggota tim ini?',
     icon: 'warning',
@@ -258,44 +252,61 @@ function deleteMember(idx) {
     cancelButtonColor: '#d33',
     confirmButtonText: 'Ya, hapus!',
     cancelButtonText: 'Batal'
-  }).then((result) => {
+  }).then(async (result) => {
     if (result.isConfirmed) {
-      team.value.splice(idx, 1)
-      Swal.fire({
-        icon: 'success',
-        title: 'Terhapus!',
-        text: 'Anggota tim berhasil dihapus.',
-        timer: 1200,
-        showConfirmButton: false
-      })
-      resetForm()
-      if (paginatedTeam.value.length === 0 && page.value > 1) page.value--
+      try {
+        await axios.delete(`/api/team/${member.id}`, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Terhapus!',
+          text: 'Anggota tim berhasil dihapus.',
+          timer: 1200,
+          showConfirmButton: false
+        })
+        await fetchTeam(meta.value.page)
+      } catch (err) {
+        Swal.fire('Gagal', err.response?.data?.error || 'Gagal menghapus data', 'error')
+      }
     }
   })
 }
 function resetForm() {
   form.value = { nama: '', nim: '', peran: '', tugas: '', github: '', image: '' }
-  editIdx.value = null
+  editId.value = null
 }
 
-const filteredTeam = computed(() => {
-  let filtered = team.value
-  if (search.value.trim()) {
-    const s = search.value.trim().toLowerCase()
-    filtered = filtered.filter(m =>
-      m.nama.toLowerCase().includes(s) ||
-      m.nim.toLowerCase().includes(s) ||
-      m.peran.toLowerCase().includes(s) ||
-      m.tugas.toLowerCase().includes(s)
-    )
-  }
-  return filtered
+const paginationNumbers = computed(() => {
+  const numbers = []
+  const current = meta.value.page
+  const total = meta.value.totalPages
+  const start = Math.max(1, current - 2)
+  const end = Math.min(total, current + 2)
+  for (let i = start; i <= end; i++) numbers.push(i)
+  return numbers
 })
 
-const totalPages = computed(() => Math.ceil(filteredTeam.value.length / perPage))
-const paginatedTeam = computed(() =>
-  filteredTeam.value.slice((page.value - 1) * perPage, page.value * perPage)
-)
+function changePage(p) {
+  if (p < 1 || p > meta.value.totalPages || loading.value) return
+  meta.value.page = p
+  fetchTeam(p)
+}
+
+// Debounce search
+let searchTimeout = null
+function debouncedFetch() {
+  clearTimeout(searchTimeout)
+  searchTimeout = setTimeout(() => {
+    meta.value.page = 1
+    fetchTeam(1)
+  }, 400)
+}
+
+// Initial fetch
+fetchTeam(meta.value.page)
 </script>
 
 <style scoped>

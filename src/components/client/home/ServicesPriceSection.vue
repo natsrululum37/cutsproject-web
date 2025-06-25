@@ -61,7 +61,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getServices } from '../../../services/api'
+import axios from 'axios'
 
 const services = ref([])
 
@@ -80,9 +80,10 @@ const formatDuration = (minutes) => {
 
 onMounted(async () => {
   try {
-    const response = await getServices()
-    if (Array.isArray(response)) {
-      services.value = response
+    // Ambil semua layanan tanpa autentikasi (public)
+    const response = await axios.get('/api/services', { params: { limit: 12 } })
+    if (Array.isArray(response.data.data)) {
+      services.value = response.data.data
     }
   } catch (err) {
     console.error('Error:', err)
