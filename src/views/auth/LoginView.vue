@@ -140,6 +140,7 @@ async function handleLogin() {
     try {
       payload = JSON.parse(atob(token.split('.')[1]))
     } catch (e) {
+      console.error('Token tidak valid:', e)
       errors.value.password = 'Login gagal: token tidak valid'
       return
     }

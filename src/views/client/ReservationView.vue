@@ -188,11 +188,10 @@ const availableTimes = [
   '15:00', '16:00', '17:00', '18:00', '19:00',
 ]
 
-// Ambil daftar layanan dari backend
 const fetchServices = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/services')
-    services.value = res.data
+    const res = await axios.get('/api/services')
+    services.value = Array.isArray(res.data.data) ? res.data.data : []
   } catch (e) {
     console.error('Gagal mengambil daftar layanan:', e)
     toast.error('Gagal mengambil daftar layanan')

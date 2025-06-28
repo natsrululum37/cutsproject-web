@@ -327,7 +327,7 @@ const submitReview = async () => {
 onMounted(async () => {
   try {
     const res = await axios.get('/api/services')
-    services.value = res.data
+    services.value = Array.isArray(res.data.data) ? res.data.data : []
   } catch (err) {
     console.error('Gagal mengambil daftar layanan:', err)
     services.value = []

@@ -10,6 +10,7 @@ import Reservation from '@/views/client/ReservationView.vue'
 import Services from '@/views/client/ServiceView.vue'
 import Review from '@/views/client/ReviewViews.vue'
 import ProfileView from '@/views/auth/ProfileView.vue'
+import ResetPasswordView from '@/views/client/ResetPasswordView.vue'
 
 // 📁 Halaman Autentikasi
 import Login from '@/views/auth/LoginView.vue'
@@ -89,6 +90,15 @@ const routes = [
       title: 'Reservation',
       description: 'Pesan jadwal potong rambut Anda sekarang juga.',
     },
+  },
+  {
+    path: '/reset-password',
+    name: 'ResetPassword',
+    component: ResetPasswordView,
+    meta: {
+      title: 'Reset Password',
+      description: 'Atur ulang kata sandi akun Anda di CUT PROJECT.',
+    }
   },
 
   // Autentikasi
@@ -217,7 +227,9 @@ router.beforeEach((to, from, next) => {
   if (token) {
     try {
       role = JSON.parse(atob(token.split('.')[1])).role
-    } catch (e) {}
+    } catch (e) {
+      console.error('Token tidak valid:', e)
+    }
   }
 
   // Hanya admin yang boleh ke /admin
