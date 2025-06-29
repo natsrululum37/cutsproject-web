@@ -29,15 +29,23 @@
           <div class="relative">
             <input
               v-model="password"
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               required
-              class="w-full px-4 py-2 pl-10 rounded-lg bg-zinc-800 text-white border"
+              class="w-full px-4 py-2 pl-10 pr-10 rounded-lg bg-zinc-800 text-white border"
               :class="errors.password ? 'border-red-500' : 'border-zinc-700'"
               placeholder="••••••••"
             />
             <span class="absolute left-3 top-2.5 text-zinc-500">
               <i class="fa fa-lock"></i>
             </span>
+            <button
+              type="button"
+              @click="showPassword = !showPassword"
+              tabindex="-1"
+              class="absolute right-3 top-2.5 text-zinc-500 hover:text-yellow-400 focus:outline-none"
+            >
+              <i :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+            </button>
           </div>
           <p v-if="errors.password" class="text-red-500 text-sm mt-1">{{ errors.password }}</p>
         </div>
@@ -117,6 +125,7 @@ const forgotEmail = ref('')
 const forgotLoading = ref(false)
 const forgotSuccess = ref('')
 const forgotError = ref('')
+const showPassword = ref(false)
 
 const API_URL = '/api/auth/login' // atau ganti dengan URL ngrok jika remote
 

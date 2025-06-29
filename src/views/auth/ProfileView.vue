@@ -66,7 +66,21 @@
           <div class="bg-zinc-900 rounded-xl p-6 w-full max-w-xs sm:max-w-md shadow-lg border border-zinc-700 relative">
             <button @click="showEditModal = false" class="absolute top-2 right-2 text-gray-400 hover:text-yellow-400 text-xl">&times;</button>
             <h2 class="text-xl font-bold text-yellow-400 mb-4 text-center">Edit Profil</h2>
-            <form @submit.prevent="saveProfile" class="space-y-4">
+            <form @submit.prevent="saveProfile" class="space-y-4" enctype="multipart/form-data">
+              <div class="flex flex-col items-center gap-2">
+                <label class="block text-gray-300 mb-1">Foto Profil</label>
+                <img
+                  :src="photoPreview || (editForm.photo ? `${BACKEND_URL}/uploads/profileUsers/${editForm.photo}` : avatarUrl)"
+                  alt="Preview"
+                  class="w-20 h-20 rounded-full border-2 border-yellow-400 object-cover mb-2"
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  @change="onPhotoChange"
+                  class="w-full px-4 py-2 rounded bg-zinc-900 border border-zinc-700 text-white"
+                />
+              </div>
               <div>
                 <label class="block text-gray-300 mb-1">Nama</label>
                 <input v-model="editForm.name" type="text" required class="w-full px-4 py-2 rounded bg-zinc-900 border border-zinc-700 text-white focus:border-yellow-400" />
@@ -78,10 +92,6 @@
               <div>
                 <label class="block text-gray-300 mb-1">No. HP</label>
                 <input v-model="editForm.phone" type="text" class="w-full px-4 py-2 rounded bg-zinc-900 border border-zinc-700 text-white focus:border-yellow-400" />
-              </div>
-              <div>
-                <label class="block text-gray-300 mb-1">Avatar (URL)</label>
-                <input v-model="editForm.photo" type="url" class="w-full px-4 py-2 rounded bg-zinc-900 border border-zinc-700 text-white focus:border-yellow-400" />
               </div>
               <div class="flex gap-4 justify-end">
                 <button type="button" @click="showEditModal = false" class="flex items-center gap-2 px-6 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white font-semibold">
@@ -164,11 +174,19 @@ const editForm = ref({
   phone: ''
 })
 
-const avatarUrl = computed(() =>
-  showEditModal.value
-    ? (editForm.value.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(editForm.value.name || 'User')}&background=facc15&color=000`)
-    : (user.value?.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.value?.name || 'User')}&background=facc15&color=000`)
-)
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
+const photoFile = ref(null)
+const photoPreview = ref(null)
+
+const avatarUrl = computed(() => {
+  const photo = showEditModal.value ? editForm.value.photo : user.value?.photo
+  if (photo) {
+    if (/^https?:\/\//.test(photo)) return photo
+    return `${BACKEND_URL}/uploads/profileUsers/${photo}`
+  }
+  const name = showEditModal.value ? editForm.value.name : user.value?.name
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'User')}&background=facc15&color=000`
+})
 
 const joinDate = computed(() => {
   if (!user.value?.createdAt) return '-'
@@ -188,29 +206,46 @@ onMounted(async () => {
   }
 })
 
+function onPhotoChange(e) {
+  const file = e.target.files[0]
+  photoFile.value = file || null
+  photoPreview.value = file ? URL.createObjectURL(file) : null
+}
+
 function startEdit() {
   editForm.value = {
     name: user.value?.name || '',
     email: user.value?.email || '',
-    photo: user.value?.photo || '',
+    photo: user.value?.photo || '', // hanya nama file
     phone: user.value?.phone || ''
   }
+  photoFile.value = null
+  photoPreview.value = null
   showEditModal.value = true
 }
 
 async function saveProfile() {
-  // Validasi manual (opsional tapi disarankan)
-  if (!editForm.value.name || !editForm.value.email || !editForm.value.photo || !editForm.value.phone) {
-    return Swal.fire({ icon: 'error', title: 'Semua field wajib diisi!' })
-  }
-
-  if (!/^\d{10,15}$/.test(editForm.value.phone)) {
-    return Swal.fire({ icon: 'error', title: 'Format nomor HP tidak valid!' })
+  if (!editForm.value.name || !editForm.value.email) {
+    return Swal.fire({ icon: 'error', title: 'Nama dan email wajib diisi!' })
   }
 
   try {
-    const res = await axios.put('/api/users/profile', editForm.value, {
-      headers: { Authorization: `Bearer ${authStore.token}` }
+    const formData = new FormData()
+    formData.append('name', editForm.value.name)
+    formData.append('email', editForm.value.email)
+    formData.append('phone', editForm.value.phone || '')
+    if (photoFile.value) {
+      formData.append('photo', photoFile.value)
+    } else if (editForm.value.photo) {
+      // Jika tidak upload baru, tetap kirim nama file lama (opsional, tergantung backend)
+      formData.append('photo', editForm.value.photo)
+    }
+
+    const res = await axios.put('/api/users/profile', formData, {
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+        'Content-Type': 'multipart/form-data'
+      }
     })
     user.value = res.data
     showEditModal.value = false
@@ -257,6 +292,22 @@ const passwordForm = ref({
 async function changePassword() {
   if (!passwordForm.value.oldPassword || !passwordForm.value.newPassword || !passwordForm.value.confirmPassword) {
     Swal.fire({ icon: 'error', title: 'Semua field harus diisi!' })
+    return
+  }
+  if (passwordForm.value.oldPassword === passwordForm.value.newPassword) {
+    Swal.fire({ icon: 'error', title: 'Password baru tidak boleh sama dengan password lama!' })
+    return
+  }
+  if (passwordForm.value.newPassword.length < 6) {
+    Swal.fire({ icon: 'error', title: 'Password baru minimal 6 karakter!' })
+    return
+  }
+  if (!/[A-Z]/.test(passwordForm.value.newPassword)) {
+    Swal.fire({ icon: 'error', title: 'Password baru harus mengandung huruf kapital!' })
+    return
+  }
+  if (!/\d/.test(passwordForm.value.newPassword)) {
+    Swal.fire({ icon: 'error', title: 'Password baru harus mengandung angka!' })
     return
   }
   if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {

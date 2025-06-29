@@ -130,7 +130,7 @@
         style="animation-delay: 0.2s"
       >
         <h2 class="text-white font-semibold text-xl mb-4">Tulis Ulasan Anda</h2>
-        <form @submit.prevent="submitReview" class="space-y-4">
+        <form @submit.prevent="submitReview" class="space-y-4" enctype="multipart/form-data">
           <div>
             <label class="block text-gray-300 mb-1">Nama</label>
             <input
@@ -140,11 +140,16 @@
             />
           </div>
           <div>
-            <label class="block text-gray-300 mb-1">Avatar (URL)</label>
+            <label class="block text-gray-300 mb-1">Foto (Avatar)</label>
             <input
-              v-model="newReview.avatar"
+              type="file"
+              accept="image/*"
+              @change="onFileChange"
               class="w-full p-2 rounded bg-zinc-700 text-white focus:outline-none focus:ring-1 focus:ring-yellow-400"
             />
+            <div v-if="avatarPreview" class="mt-2 flex justify-center">
+              <img :src="avatarPreview" alt="Preview" class="w-16 h-16 object-cover rounded-full border-2 border-yellow-400" />
+            </div>
           </div>
           <div>
             <label class="block text-gray-300 mb-1">Rating</label>
@@ -224,9 +229,11 @@ const paginationNumbers = computed(() => {
   return numbers
 })
 
+const avatarFile = ref(null)
+const avatarPreview = ref(null)
+
 const newReview = ref({
   name: '',
-  avatar: '',
   rating: 5,
   comment: '',
   serviceId: '',
@@ -281,12 +288,18 @@ const openReviewForm = () => {
   showForm.value = !showForm.value
 }
 
+function onFileChange(e) {
+  const file = e.target.files[0]
+  avatarFile.value = file || null
+  avatarPreview.value = file ? URL.createObjectURL(file) : null
+}
+
 const submitReview = async () => {
   if (!newReview.value.name || !newReview.value.comment || !newReview.value.serviceId) {
     Swal.fire({
       icon: 'warning',
       title: 'Form tidak lengkap',
-      text: 'Semua field wajib diisi kecuali avatar.',
+      text: 'Semua field wajib diisi.',
     })
     return
   }
@@ -294,7 +307,18 @@ const submitReview = async () => {
   submitting.value = true
 
   try {
-    await axios.post('/api/reviews', newReview.value)
+    const formData = new FormData()
+    formData.append('name', newReview.value.name)
+    formData.append('rating', newReview.value.rating)
+    formData.append('comment', newReview.value.comment)
+    formData.append('serviceId', newReview.value.serviceId)
+    if (avatarFile.value) {
+      formData.append('avatar', avatarFile.value)
+    }
+
+    await axios.post('/api/reviews', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
 
     Swal.fire({
       icon: 'success',
@@ -306,14 +330,15 @@ const submitReview = async () => {
     showForm.value = false
 
     // Reset form
-    newReview.value = { name: '', avatar: '', rating: 5, comment: '', serviceId: '' }
+    newReview.value = { name: '', rating: 5, comment: '', serviceId: '' }
+    avatarFile.value = null
+    avatarPreview.value = null
 
     // Reload untuk menampilkan ulasan baru
-    pagination.value.page = 1 // Kembali ke halaman pertama
+    pagination.value.page = 1
     await loadReviews()
   } catch (error) {
     console.error('Gagal mengirim ulasan:', error)
-
     Swal.fire({
       icon: 'error',
       title: 'Gagal mengirim ulasan',
