@@ -28,7 +28,7 @@
             <td class="px-2 sm:px-4 py-3">{{ image.title }}</td>
             <td class="px-2 sm:px-4 py-3">
               <img
-                :src="image.image"
+                :src="image.image ? `${BACKEND_URL}/uploads/gallerySection/${image.image}` : ''"
                 :alt="image.title"
                 class="w-14 h-14 sm:w-20 sm:h-20 object-cover rounded shadow"
               />
@@ -95,7 +95,7 @@
           <h2 class="text-lg font-bold mb-4 text-yellow-400">
             {{ editId === null ? 'Tambah Foto' : 'Edit Foto' }}
           </h2>
-          <form @submit.prevent="handleSubmit" class="space-y-4">
+          <form @submit.prevent="handleSubmit" class="space-y-4" enctype="multipart/form-data">
             <div>
               <label class="block text-gray-300 mb-1">Judul Foto</label>
               <input
@@ -106,17 +106,19 @@
               />
             </div>
             <div>
-              <label class="block text-gray-300 mb-1">URL Foto</label>
+              <label class="block text-gray-300 mb-1">Foto</label>
               <input
-                v-model="form.image"
-                type="url"
+                type="file"
+                accept="image/*"
+                @change="onImageChange"
                 class="w-full px-4 py-2 rounded bg-zinc-800 border border-zinc-700 text-white"
-                required
+                :required="editId === null"
+                name="image"
               />
             </div>
-            <div v-if="form.image" class="mt-2 flex justify-center">
+            <div v-if="imagePreview" class="mt-2 flex justify-center">
               <img
-                :src="form.image"
+                :src="imagePreview"
                 alt="Preview"
                 class="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded shadow"
               />
@@ -149,10 +151,13 @@ import { ref, onMounted, computed } from 'vue'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
+
 const gallery = ref([])
 const showModal = ref(false)
 const editId = ref(null)
-const form = ref({ title: '', image: '' })
+const form = ref({ title: '', image: null })
+const imagePreview = ref('')
 const loading = ref(false)
 const meta = ref({
   total: 0,
@@ -193,26 +198,60 @@ const paginationNumbers = computed(() => {
 })
 
 function openAddModal() {
-  form.value = { title: '', image: '' }
+  form.value = { title: '', image: null }
+  imagePreview.value = ''
   editId.value = null
   showModal.value = true
 }
+
 function openEditModal(item) {
-  form.value = { title: item.title, image: item.image }
+  form.value = { title: item.title, image: null }
+  // Tampilkan preview foto lama
+  imagePreview.value = item.image
+    ? `${BACKEND_URL}/uploads/gallerySection/${item.image}`
+    : ''
   editId.value = item.id
   showModal.value = true
 }
+
 function closeModal() {
   showModal.value = false
   editId.value = null
+  imagePreview.value = ''
+}
+
+function onImageChange(e) {
+  const file = e.target.files[0]
+  form.value.image = file || null
+  if (file) {
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      imagePreview.value = ev.target.result
+    }
+    reader.readAsDataURL(file)
+  } else if (editId.value !== null) {
+    // Jika edit dan tidak pilih file baru, preview tetap foto lama
+    imagePreview.value = gallery.value.find(g => g.id === editId.value)?.image
+      ? `${BACKEND_URL}/uploads/gallerySection/${gallery.value.find(g => g.id === editId.value).image}`
+      : ''
+  } else {
+    imagePreview.value = ''
+  }
 }
 
 async function handleSubmit() {
-  if (!form.value.title || !form.value.image) return
+  if (!form.value.title) return
   loading.value = true
   try {
+    const formData = new FormData()
+    formData.append('title', form.value.title)
+    if (form.value.image) {
+      formData.append('image', form.value.image)
+    }
     if (editId.value === null) {
-      await axios.post('/api/gallery', form.value)
+      await axios.post('/api/gallery', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
       Swal.fire({
         icon: 'success',
         title: 'Berhasil!',
@@ -221,7 +260,9 @@ async function handleSubmit() {
         showConfirmButton: false
       })
     } else {
-      await axios.put(`/api/gallery/${editId.value}`, form.value)
+      await axios.put(`/api/gallery/${editId.value}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
       Swal.fire({
         icon: 'success',
         title: 'Berhasil!',
