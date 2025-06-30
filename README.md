@@ -52,7 +52,7 @@ Aplikasi ini menyediakan fitur lengkap untuk user dan admin, desain responsif, s
 ### 1. **Frontend**
 
 ```bash
-git clone https://github.com/username/cutsproject-web.git
+git clone https://github.com/natsrululum37/cutsproject-web.git
 cd cutsproject-web
 npm install
 npm run dev
@@ -62,7 +62,7 @@ npm run dev
 ### 2. **Backend**
 
 ```bash
-git clone https://github.com/username/cutsproject-backend.git
+git clone https://github.com/natsrululum37/cutsproject-backend.git
 cd cutsproject-backend
 npm install
 # Atur .env (lihat contoh di repo backend)
