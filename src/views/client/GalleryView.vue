@@ -116,15 +116,39 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
+
 const images = ref([])
 const loading = ref(true)
 const error = ref(null)
 const modalImage = ref(null)
 
-// Function to process image path (langsung pakai url dari backend)
 const processImagePath = (imagePath) => {
   if (!imagePath) return '/images/service-1.webp'
-  return imagePath
+  if (/^https?:\/\//.test(imagePath)) return imagePath
+  return `${BACKEND_URL}/uploads/gallerySection/${imagePath}`
+}
+
+const loadGallery = async () => {
+  loading.value = true
+  error.value = null
+  try {
+    const res = await axios.get(`${BACKEND_URL}/api/gallery`)
+    const data = Array.isArray(res.data.data) ? res.data.data : res.data
+    images.value = data.map((item, index) => ({
+      id: item.id || index,
+      src: processImagePath(item.image || item.src || item.url),
+      alt: item.title || item.alt || item.name || `Gambar ${index + 1}`,
+      description: item.description || item.desc || null,
+      loading: true,
+      error: false,
+      originalData: item
+    }))
+  } catch (err) {
+    error.value = err.response?.data?.error || err.message || 'Gagal memuat galeri. Silakan coba lagi.'
+  } finally {
+    loading.value = false
+  }
 }
 
 const handleImageError = (event, index) => {
@@ -148,29 +172,6 @@ const openModal = (image) => {
 const closeModal = () => {
   modalImage.value = null
   document.body.style.overflow = 'auto'
-}
-
-const loadGallery = async () => {
-  loading.value = true
-  error.value = null
-  try {
-    // Ambil semua data galeri dari endpoint backend
-    const res = await axios.get('/api/gallery')
-    const data = Array.isArray(res.data.data) ? res.data.data : res.data // support jika backend return array langsung
-    images.value = data.map((item, index) => ({
-      id: item.id || index,
-      src: processImagePath(item.image || item.src || item.url),
-      alt: item.title || item.alt || item.name || `Gambar ${index + 1}`,
-      description: item.description || item.desc || null,
-      loading: true,
-      error: false,
-      originalData: item
-    }))
-  } catch (err) {
-    error.value = err.response?.data?.error || err.message || 'Gagal memuat galeri. Silakan coba lagi.'
-  } finally {
-    loading.value = false
-  }
 }
 
 // Handle ESC key for modal

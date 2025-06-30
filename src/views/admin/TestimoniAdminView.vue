@@ -52,7 +52,7 @@
             class="border-b border-zinc-700 hover:bg-zinc-800 transition"
           >
             <td class="px-2 sm:px-4 py-3">
-              <img :src="review.avatar" :alt="review.name" class="w-10 h-10 rounded-full object-cover border-2 border-yellow-400" />
+              <img :src="getAvatarUrl(review.avatar)" :alt="review.name" class="w-10 h-10 rounded-full object-cover border-2 border-yellow-400" />
             </td>
             <td class="px-2 sm:px-4 py-3 font-medium text-white">{{ review.name }}</td>
             <td class="px-2 sm:px-4 py-3 text-gray-300">{{ review.serviceName }}</td>
@@ -120,6 +120,8 @@ const tab = ref('all')
 const search = ref('')
 const page = ref(1)
 const perPage = 5
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
 
 const reviews = ref([])
 const meta = ref({
@@ -211,6 +213,12 @@ async function deleteTestimoni(id) {
   })
 }
 
+function getAvatarUrl(avatar) {
+  if (!avatar) return '/images/avatar-default.png'
+  if (/^https?:\/\//.test(avatar)) return avatar
+  // Ganti path ke uploads/reviews
+  return `${BACKEND_URL}/uploads/reviews/${avatar}`
+}
 async function restoreTestimoni(id) {
   Swal.fire({
     title: 'Pulihkan testimoni ini?',
