@@ -115,15 +115,56 @@
             <form @submit.prevent="changePassword" class="space-y-4">
               <div>
                 <label class="block text-gray-300 mb-1">Password Lama</label>
-                <input v-model="passwordForm.oldPassword" type="password" required class="w-full px-4 py-2 rounded bg-zinc-800 border border-zinc-700 text-white" />
+                <div class="relative">
+                  <input
+                    v-model="passwordForm.oldPassword"
+                    :type="showOldPassword ? 'text' : 'password'"
+                    required
+                    class="w-full px-4 py-2 rounded bg-zinc-800 border border-zinc-700 text-white"
+                  />
+                  <span
+                    class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-lg"
+                    @click="showOldPassword = !showOldPassword"
+                    :title="showOldPassword ? 'Sembunyikan' : 'Lihat'"
+                  >{{ showOldPassword ? '🙈' : '👁️' }}</span>
+                </div>
               </div>
               <div>
                 <label class="block text-gray-300 mb-1">Password Baru</label>
-                <input v-model="passwordForm.newPassword" type="password" required class="w-full px-4 py-2 rounded bg-zinc-800 border border-zinc-700 text-white" />
+                <div class="relative">
+                  <input
+                    v-model="passwordForm.newPassword"
+                    :type="showNewPassword ? 'text' : 'password'"
+                    required
+                    class="w-full px-4 py-2 rounded bg-zinc-800 border border-zinc-700 text-white"
+                  />
+                  <span
+                    class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-lg"
+                    @click="showNewPassword = !showNewPassword"
+                    :title="showNewPassword ? 'Sembunyikan' : 'Lihat'"
+                  >{{ showNewPassword ? '🙈' : '👁️' }}</span>
+                </div>
+                <ul class="text-xs text-gray-400 mt-1 ml-2 list-disc">
+                  <li>Minimal 6 karakter</li>
+                  <li>Harus ada huruf kapital</li>
+                  <li>Harus ada angka</li>
+                </ul>
               </div>
               <div>
                 <label class="block text-gray-300 mb-1">Konfirmasi Password Baru</label>
-                <input v-model="passwordForm.confirmPassword" type="password" required class="w-full px-4 py-2 rounded bg-zinc-800 border border-zinc-700 text-white" />
+                <div class="relative">
+                  <input
+                    v-model="passwordForm.confirmPassword"
+                    :type="showConfirmPassword ? 'text' : 'password'"
+                    required
+                    class="w-full px-4 py-2 rounded bg-zinc-800 border border-zinc-700 text-white"
+                  />
+                  <span
+                    class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-lg"
+                    @click="showConfirmPassword = !showConfirmPassword"
+                    :title="showConfirmPassword ? 'Sembunyikan' : 'Lihat'"
+                  >{{ showConfirmPassword ? '🙈' : '👁️' }}</span>
+                </div>
               </div>
               <div class="flex gap-2 justify-end pt-2">
                 <button type="button" @click="showPasswordModal = false" class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white font-semibold text-sm">Batal</button>
@@ -220,7 +261,10 @@ function startEdit() {
     phone: user.value?.phone || ''
   }
   photoFile.value = null
-  photoPreview.value = null
+  // Tampilkan preview foto lama jika ada
+  photoPreview.value = editForm.value.photo
+    ? `${BACKEND_URL}/uploads/profileUsers/${editForm.value.photo}`
+    : null
   showEditModal.value = true
 }
 
@@ -288,6 +332,10 @@ const passwordForm = ref({
   newPassword: '',
   confirmPassword: ''
 })
+
+const showOldPassword = ref(false)
+const showNewPassword = ref(false)
+const showConfirmPassword = ref(false)
 
 async function changePassword() {
   if (!passwordForm.value.oldPassword || !passwordForm.value.newPassword || !passwordForm.value.confirmPassword) {
